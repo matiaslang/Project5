@@ -4,6 +4,7 @@ import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { Ionicons } from '@expo/vector-icons'
+import { Modal } from 'react-native-router-flux'
 
 /* 
 class LogoTitle extends React.Component {
@@ -20,22 +21,27 @@ class LogoTitle extends React.Component {
 class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: 'HoMe', //() => <LogoTitle />,
-      headerRight: () => (
-        <Button
-          onPress={navigation.getParam('increaseCount')}
-          title='+1'
-          color='#fff'
-        />
-      )
+      headerTitle: 'HoMe' //() => <LogoTitle />,
     }
   }
 
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Home Screen</Text>
-        <Button title='Tämä ei tee mitään:) ' />
+        <View style={styles.placesNearby}>
+          <Button
+            title='Places nearby'
+            onPress={() => this.props.navigation.navigate('Places')}
+          />
+        </View>
+        <View
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Button
+            title='History'
+            onPress={() => this.props.navigation.navigate('History')}
+          />
+        </View>
       </View>
     )
   }
@@ -50,21 +56,7 @@ class mapScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Details Screen</Text>
-        <Text>
-          itemId: {JSON.stringify(navigation.getParam('itemId', 'NO-ID'))}
-        </Text>
-        <Text>
-          otherParam:
-          {JSON.stringify(navigation.getParam('otherParam', 'default value'))}
-        </Text>
-        <Button
-          title='Go to Details... again'
-          onPress={() =>
-            navigation.push('Details', {
-              itemId: Math.floor(Math.random() * 100)
-            })
-          }
-        />
+        <Button title='Places nearby' />
       </View>
     )
   }
@@ -75,6 +67,26 @@ class QrScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Text>QR COODI TULEE TÄHÄN</Text>
+      </View>
+    )
+  }
+}
+
+class PlacesScreen extends React.Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Tähän tulee näkymä "places nearby"</Text>
+      </View>
+    )
+  }
+}
+
+class HistoryScreen extends React.Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Tähän tulee näkymä "History"</Text>
       </View>
     )
   }
@@ -92,7 +104,6 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     iconName = `ios-camera`
   }
 
-  // You can return any component that you like here!
   return <IconComponent name={iconName} size={25} color={tintColor} />
 }
 
@@ -103,15 +114,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  placesNearby: {
+    flex: 1,
+    backgroundColor: '#bfcfff',
+    borderColor: '#043353',
+    borderRadius: 10,
+    paddingVertical: 50,
+    paddingHorizontal: 20
+  },
 
   header: {}
 })
+
+const HomeStack = createStackNavigator(
+  {
+    Home: { screen: HomeScreen },
+    Places: { screen: PlacesScreen },
+    History: { screen: HistoryScreen }
+  },
+  {
+    mode: 'modal'
+  }
+)
+
+const config = {
+  animation: 'spring',
+  config: {
+    stiffness: 1000,
+    damping: 500,
+    mass: 3,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.01,
+    restSpeedThreshold: 0.01
+  }
+}
 
 export default createAppContainer(
   createBottomTabNavigator(
     {
       Map: { screen: mapScreen },
-      Home: { screen: HomeScreen },
+      Home: { screen: HomeStack },
       QRcode: { screen: QrScreen }
     },
     {
