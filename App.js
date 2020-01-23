@@ -5,6 +5,9 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { Ionicons } from '@expo/vector-icons'
 import { Modal } from 'react-native-router-flux'
+import mapScreen from './MapScreen'
+import QrScreen from './QrScreen'
+import HomeScreen from './Home'
 
 /* 
 class LogoTitle extends React.Component {
@@ -18,59 +21,6 @@ class LogoTitle extends React.Component {
   }
 }
  */
-class HomeScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerTitle: 'HoMe' //() => <LogoTitle />,
-    }
-  }
-
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <View style={styles.placesNearby}>
-          <Button
-            title='Places nearby'
-            onPress={() => this.props.navigation.navigate('Places')}
-          />
-        </View>
-        <View
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-        >
-          <Button
-            title='History'
-            onPress={() => this.props.navigation.navigate('History')}
-          />
-        </View>
-      </View>
-    )
-  }
-}
-
-class mapScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Deeetails! :)'
-  }
-  render() {
-    const { navigation } = this.props
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Details Screen</Text>
-        <Button title='Places nearby' />
-      </View>
-    )
-  }
-}
-
-class QrScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>QR COODI TULEE TÄHÄN</Text>
-      </View>
-    )
-  }
-}
 
 class PlacesScreen extends React.Component {
   render() {
