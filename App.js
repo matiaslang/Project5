@@ -4,10 +4,9 @@ import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { Ionicons } from '@expo/vector-icons'
-import { Modal } from 'react-native-router-flux'
-import mapScreen from './MapScreen'
-import QrScreen from './QrScreen'
-import HomeScreen from './Home'
+import mapScreen from './Screens/MapScreen'
+import QrScreen from './Screens/QrScreen'
+import HomeScreen from './Screens/HomeScreen'
 
 /* 
 class LogoTitle extends React.Component {
@@ -46,15 +45,17 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state
   let IconComponent = Ionicons
   let iconName
+  let iconSize = 25
   if (routeName === 'Home') {
     iconName = `ios-information-circle${focused ? '' : '-outline'}`
+    iconSize = 40
   } else if (routeName === 'Map') {
     iconName = `ios-map`
   } else if (routeName === 'QRcode') {
     iconName = `ios-camera`
   }
 
-  return <IconComponent name={iconName} size={25} color={tintColor} />
+  return <IconComponent name={iconName} size={iconSize} color={tintColor} />
 }
 
 const styles = StyleSheet.create({
@@ -111,6 +112,8 @@ export default createAppContainer(
         tabBarIcon: ({ focused, tintColor }) =>
           getTabBarIcon(navigation, focused, tintColor)
       }),
+      initialRouteName: 'Home',
+
       tabBarOptions: {
         activeTintColor: '#043353',
         inactiveTintColor: '#cad4db'
