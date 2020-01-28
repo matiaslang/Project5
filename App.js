@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View, Image } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
@@ -8,18 +8,16 @@ import mapScreen from './Screens/MapScreen'
 import QrScreen from './Screens/QrScreen'
 import HomeScreen from './Screens/HomeScreen'
 
-/* 
 class LogoTitle extends React.Component {
   render() {
     return (
       <Image
-        source={require('./spiro.png')}
+        source={require('./Ikonit/Kartta/Map_3-01.png')}
         style={{ width: 30, height: 30 }}
       />
     )
   }
 }
- */
 
 class PlacesScreen extends React.Component {
   render() {
@@ -43,19 +41,35 @@ class HistoryScreen extends React.Component {
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state
+
   let IconComponent = Ionicons
   let iconName
   let iconSize = 25
   if (routeName === 'Home') {
     iconName = `ios-information-circle${focused ? '' : '-outline'}`
-    iconSize = 40
   } else if (routeName === 'Map') {
     iconName = `ios-map`
   } else if (routeName === 'QRcode') {
     iconName = `ios-camera`
   }
 
-  return <IconComponent name={iconName} size={iconSize} color={tintColor} />
+  if (routeName === 'Home') {
+    return <IconComponent name={iconName} size={iconSize} color={tintColor} />
+  } else if (routeName === 'Map') {
+    return (
+      <Image
+        source={require('./Ikonit/Kartta/Map_3-01.png')}
+        style={{ width: 30, height: 30 }}
+      />
+    )
+  } else if (routeName === 'QRcode') {
+    return (
+      <Image
+        source={require('./Ikonit/QR/QR_2-01.png')}
+        style={{ width: 30, height: 30 }}
+      />
+    )
+  }
 }
 
 const styles = StyleSheet.create({

@@ -5,12 +5,32 @@ import {
   Text,
   View,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import Permissions from 'expo'
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu'
 import Markers from '../Markers'
+import FloatingButton from './FloatingButton'
+
+const marker1 = require('../Ikonit/Markkerit/Marker_1-01.png')
+const marker2 = require('../Ikonit/Markkerit/Marker_2-01.png')
+const marker3 = require('../Ikonit/Markkerit/Marker_3-01.png')
+const marker5 = require('../Ikonit/Markkerit/Marker_5-01.png')
+const marker6 = require('../Ikonit/Markkerit/Marker_6-01.png')
+const marker7 = require('../Ikonit/Markkerit/Marker_7-01.png')
+const marker8 = require('../Ikonit/Markkerit/Marker_8-01.png')
+
+const markerImages = {
+  1: marker1,
+  2: marker2,
+  3: marker3,
+  5: marker5,
+  6: marker6,
+  7: marker7,
+  8: marker8
+}
 
 const initialRegion = {
   latitude: 65.011358,
@@ -19,11 +39,6 @@ const initialRegion = {
   longitudeDelta: 0.0015
 }
 
-const marker = {
-  longitude: 25.464249,
-  latitude: 65.011358,
-  title: 'Tässä on villa victor'
-}
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 }
 
 export const getCurrentLocation = () => {
@@ -40,13 +55,14 @@ class mapScreen extends React.Component {
     title: 'MAAAP'
   }
 
+  /*
   setRegion(region) {
     if (this.state.ready) {
       setTimeout(() => this.map.mapview.animateToRegion(region), 10)
     }
     //this.setState({ region });
   }
-
+*/
   constructor(props) {
     super(props)
     this.state = {
@@ -90,7 +106,7 @@ class mapScreen extends React.Component {
       this.setState({ ready: true })
     }
   }
-
+  /*
   onRegionChange = region => {
     console.log('onRegionChange', region)
   }
@@ -98,17 +114,13 @@ class mapScreen extends React.Component {
   onRegionChangeComplete = region => {
     console.log('onRegionChangeComplete', region)
   }
+  */
 
   render() {
     const { navigation } = this.props
     const { region } = this.state
     return (
       <View style={styles.container}>
-        <View style={styles.Touchable}>
-          <TouchableOpacity>
-            <Text>Tekstiharjoittelua</Text>
-          </TouchableOpacity>
-        </View>
         <MapView
           ref={ref => {
             this.map = ref
@@ -124,9 +136,11 @@ class mapScreen extends React.Component {
               title={marker.Title}
               description={marker.Description}
               key={index}
+              image={markerImages[marker.image]}
             />
           ))}
         </MapView>
+        <FloatingButton style={{ top: 100, right: 50 }} />
       </View>
     )
   }
@@ -146,10 +160,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#2196F3'
   },
   mapStyle: {
-    flex: 3,
+    flex: 1,
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height / 2,
-    top: 20
+    height: Dimensions.get('window').height,
+    position: 'absolute',
+    top: 0
   },
   map: {
     flex: 3,
@@ -168,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#bfcfff'
   },
   Touchable: {
-    paddingTop: 50,
+    paddingTop: 2,
     backgroundColor: '#fff',
     opacity: 20,
     alignItems: 'center',
