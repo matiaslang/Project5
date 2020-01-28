@@ -59,14 +59,14 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     return (
       <Image
         source={require('./Ikonit/Kartta/Map_3-01.png')}
-        style={{ width: 30, height: 30 }}
+        style={{ width: 30, height: 30, opacity: focused ? 1 : 0.4 }}
       />
     )
   } else if (routeName === 'QRcode') {
     return (
       <Image
         source={require('./Ikonit/QR/QR_2-01.png')}
-        style={{ width: 30, height: 30 }}
+        style={{ width: 30, height: 30, opacity: focused ? 1 : 0.4 }}
       />
     )
   }
