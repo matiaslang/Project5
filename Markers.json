@@ -1,0 +1,12 @@
+[
+  {
+    "Title": "Villa Victor",
+    "Description": "This is a universal place to meet universal people :D ",
+    "coordinates": { "latitude": 65.011358, "longitude": 25.464249 }
+  },
+  {
+    "Title": "Juvenes Kahvila",
+    "Description": "This is a cafeteria in Uni!",
+    "coordinates": { "latitude": 65.058241, "longitude": 25.466755 }
+  }
+]
