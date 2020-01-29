@@ -12,7 +12,7 @@ export default class FloatingButton extends Component {
   render() {
     return (
       <View style={[styles.container, this.props.style]}>
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={this.props.toggle}>
           <Animated.View style={[styles.button, styles.menu]}>
             <AntDesign name='question' size={35} color='#5900FF' />
           </Animated.View>

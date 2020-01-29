@@ -13,6 +13,7 @@ import Permissions from 'expo'
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu'
 import Markers from '../Markers'
 import FloatingButton from './FloatingButton'
+import Modal from 'react-native-modal'
 
 const marker1 = require('../Ikonit/Markkerit/Marker_1-01.png')
 const marker2 = require('../Ikonit/Markkerit/Marker_2-01.png')
@@ -66,8 +67,13 @@ class mapScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      region: initialRegion
+      region: initialRegion,
+      isModalVisible: false
     }
+  }
+
+  toggleModal = () => {
+    this.setState({ isModalVisible: !this.state.isModalVisible })
   }
 
   handleCenter = () => {
@@ -140,7 +146,34 @@ class mapScreen extends React.Component {
             />
           ))}
         </MapView>
-        <FloatingButton style={{ top: 100, right: 50 }} />
+        <FloatingButton
+          style={{ top: 100, right: 50 }}
+          toggle={this.toggleModal}
+        />
+        <View style={{ flex: 1 }}>
+          <Modal
+            style={styles.popupContainer}
+            isVisible={this.state.isModalVisible}
+            onBackdropPress={() => this.setState({ isVisible: false })}
+            backdropColor='#B4B3DB'
+            backdropOpacity={0.8}
+            animationIn='zoomInDown'
+            animationOut='zoomOutUp'
+            animationInTiming={600}
+            animationOutTiming={600}
+            backdropTransitionInTiming={600}
+            backdropTransitionOutTiming={600}
+          >
+            <View style={styles.popupContent}>
+              <Text>
+                Hei kaikki ihmiset! Tähän on tulossa ingopläjäys, mutta tässähän
+                nyt kestää aivan saatanasti että sen saisi toimimaan. Mukavaa
+                kesänjatkoa!!
+              </Text>
+              <Button title='Hide modal' onPress={this.toggleModal} />
+            </View>
+          </Modal>
+        </View>
       </View>
     )
   }
@@ -188,6 +221,17 @@ const styles = StyleSheet.create({
     opacity: 20,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  popupContainer: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  popupContent: {
+    padding: 2,
+    width: Dimensions.get('window').width - 30,
+    height: 150,
+    backgroundColor: '#B53B3B',
+    color: '#B53B3B'
   }
 })
 
