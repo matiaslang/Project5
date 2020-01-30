@@ -14,7 +14,7 @@ export default class FloatingButton extends Component {
       <View style={[styles.container, this.props.style]}>
         <TouchableWithoutFeedback onPress={this.props.toggle}>
           <Animated.View style={[styles.button, styles.menu]}>
-            <AntDesign name='question' size={35} color='#5900FF' />
+            <AntDesign name={this.props.iconName} size={35} color='#5900FF' />
           </Animated.View>
         </TouchableWithoutFeedback>
       </View>
@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'absolute',
-    width: 45,
-    height: 45,
+    width: 36,
+    height: 36,
     borderRadius: 60 / 2,
     borderColor: '#000',
     borderWidth: 1,

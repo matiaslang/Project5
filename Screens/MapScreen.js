@@ -149,6 +149,7 @@ class mapScreen extends React.Component {
         <FloatingButton
           style={{ top: 100, right: 50 }}
           toggle={this.toggleModal}
+          iconName='question'
         />
         <View style={{ flex: 1 }}>
           <Modal
@@ -165,12 +166,21 @@ class mapScreen extends React.Component {
             backdropTransitionOutTiming={600}
           >
             <View style={styles.popupContent}>
+              <FloatingButton
+                toggle={this.toggleModal}
+                iconName='closecircleo'
+                style={{
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0
+                }}
+              />
               <Text>
-                Hei kaikki ihmiset! Tähän on tulossa ingopläjäys, mutta tässähän
+                Hei kaikki ihmiset! Tähän on tulossa infopläjäys, mutta tässähän
                 nyt kestää aivan saatanasti että sen saisi toimimaan. Mukavaa
                 kesänjatkoa!!
               </Text>
-              <Button title='Hide modal' onPress={this.toggleModal} />
             </View>
           </Modal>
         </View>
@@ -223,15 +233,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   popupContainer: {
-    alignItems: 'center',
-    justifyContent: 'center'
+    //alignItems: 'center',
+    //justifyContent: 'center',
+    textAlign: 'center',
+    padding: 10
   },
   popupContent: {
-    padding: 2,
-    width: Dimensions.get('window').width - 30,
-    height: 150,
-    backgroundColor: '#B53B3B',
-    color: '#B53B3B'
+    //width: Dimensions.get('window').width - 30,
+    //height: 150,
+    position: 'absolute',
+    alignContent: 'center',
+    backgroundColor: '#FFF',
+    color: '#FFF',
+    borderRadius: 20,
+    padding: 10,
+    textAlign: 'center',
+    justifyContent: 'center'
   }
 })
 
