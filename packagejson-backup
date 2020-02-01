@@ -1,4 +1,4 @@
-{
+/*{
   "expo": {
     "name": "Project5",
     "slug": "Project5",
@@ -21,19 +21,13 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "**"
     ],
     "ios": {
-      "supportsTablet": false
-    },
-    "android" : {
-      "permissions" : [
-        "VIBRATE",
-        "CAMERA",
-        "AUDIO_RECORDING"
-      ]
-
-
+      "supportsTablet": true
     }
+    
   }
 }
+*/
+
