@@ -26,14 +26,12 @@
     "ios": {
       "supportsTablet": false
     },
-    "android" : {
-      "permissions" : [
+    "android": {
+      "permissions": [
         "VIBRATE",
         "CAMERA",
         "AUDIO_RECORDING"
       ]
-
-
     }
   }
 }
