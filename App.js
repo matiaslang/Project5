@@ -4,9 +4,9 @@ import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { Ionicons } from '@expo/vector-icons'
-import mapScreen from './Screens/MapScreen'
+import mapScreen from './Screens/MapScreen/MapScreen'
 import QrScreen from './Screens/QrScreen'
-import HomeScreen from './Screens/HomeScreen/HomeScreen'
+import HomeScreen from './Screens/HomeScreen'
 
 class LogoTitle extends React.Component {
   render() {

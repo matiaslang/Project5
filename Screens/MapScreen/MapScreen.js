@@ -1,27 +1,17 @@
 import React from 'react'
-import {
-  Button,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  TouchableOpacity,
-  Image
-} from 'react-native'
+import { StyleSheet, Text, View, Dimensions, Image } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
-import Permissions from 'expo'
-import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu'
-import Markers from './HomeScreen/Markers'
-import FloatingButton from './HomeScreen/FloatingButton'
+import Markers from './Markers'
+import FloatingButton from './FloatingButton'
 import Modal from 'react-native-modal'
 
-const marker1 = require('../assets/Ikonit/Markkerit/Marker_1-01.png')
-const marker2 = require('../assets/Ikonit/Markkerit/Marker_2-01.png')
-const marker3 = require('../assets/Ikonit/Markkerit/Marker_3-01.png')
-const marker5 = require('../assets/Ikonit/Markkerit/Marker_5-01.png')
-const marker6 = require('../assets/Ikonit/Markkerit/Marker_6-01.png')
-const marker7 = require('../assets/Ikonit/Markkerit/Marker_7-01.png')
-const marker8 = require('../assets/Ikonit/Markkerit/Marker_8-01.png')
+const marker1 = require('../../assets/Ikonit/Markkerit/Marker_1-01.png')
+const marker2 = require('../../assets/Ikonit/Markkerit/Marker_2-01.png')
+const marker3 = require('../../assets/Ikonit/Markkerit/Marker_3-01.png')
+const marker5 = require('../../assets/Ikonit/Markkerit/Marker_5-01.png')
+const marker6 = require('../../assets/Ikonit/Markkerit/Marker_6-01.png')
+const marker7 = require('../../assets/Ikonit/Markkerit/Marker_7-01.png')
+const marker8 = require('../../assets/Ikonit/Markkerit/Marker_8-01.png')
 
 const markerImages = {
   1: marker1,
@@ -53,7 +43,7 @@ export const getCurrentLocation = () => {
 
 class mapScreen extends React.Component {
   static navigationOptions = {
-    title: 'MAAAP'
+    title: 'Map'
   }
 
   /*
@@ -102,7 +92,6 @@ class mapScreen extends React.Component {
             longitudeDelta: 0.02
           }
         })
-        console.log(this.state)
       }
     })
   }
@@ -112,7 +101,7 @@ class mapScreen extends React.Component {
       this.setState({ ready: true })
     }
   }
-  /*
+
   onRegionChange = region => {
     console.log('onRegionChange', region)
   }
@@ -120,7 +109,6 @@ class mapScreen extends React.Component {
   onRegionChangeComplete = region => {
     console.log('onRegionChangeComplete', region)
   }
-  */
 
   render() {
     const { navigation } = this.props
@@ -171,6 +159,7 @@ class mapScreen extends React.Component {
             title={'YOU ARE HERE'}
             Description={'This is where you are now'}
             image={markerImages[3]}
+            Flat
             //anchor={[0.5, 1]}
           />
         </MapView>
@@ -266,7 +255,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 10
   },
-  emptyStyle: {},
   modalContainer: {
     position: 'absolute',
     top: 100,
