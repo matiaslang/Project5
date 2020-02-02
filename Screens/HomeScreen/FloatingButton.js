@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
     position: 'absolute'
   },
   button: {
-    position: 'absolute',
-    width: 36,
-    height: 36,
+    //position: 'absolute',
+    width: 45,
+    height: 45,
     borderRadius: 60 / 2,
     borderColor: '#000',
     borderWidth: 1,

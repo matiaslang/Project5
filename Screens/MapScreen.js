@@ -11,17 +11,17 @@ import {
 import MapView, { Marker } from 'react-native-maps'
 import Permissions from 'expo'
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu'
-import Markers from '../Markers'
-import FloatingButton from './FloatingButton'
+import Markers from './HomeScreen/Markers'
+import FloatingButton from './HomeScreen/FloatingButton'
 import Modal from 'react-native-modal'
 
-const marker1 = require('../Ikonit/Markkerit/Marker_1-01.png')
-const marker2 = require('../Ikonit/Markkerit/Marker_2-01.png')
-const marker3 = require('../Ikonit/Markkerit/Marker_3-01.png')
-const marker5 = require('../Ikonit/Markkerit/Marker_5-01.png')
-const marker6 = require('../Ikonit/Markkerit/Marker_6-01.png')
-const marker7 = require('../Ikonit/Markkerit/Marker_7-01.png')
-const marker8 = require('../Ikonit/Markkerit/Marker_8-01.png')
+const marker1 = require('../assets/Ikonit/Markkerit/Marker_1-01.png')
+const marker2 = require('../assets/Ikonit/Markkerit/Marker_2-01.png')
+const marker3 = require('../assets/Ikonit/Markkerit/Marker_3-01.png')
+const marker5 = require('../assets/Ikonit/Markkerit/Marker_5-01.png')
+const marker6 = require('../assets/Ikonit/Markkerit/Marker_6-01.png')
+const marker7 = require('../assets/Ikonit/Markkerit/Marker_7-01.png')
+const marker8 = require('../assets/Ikonit/Markkerit/Marker_8-01.png')
 
 const markerImages = {
   1: marker1,
@@ -125,6 +125,23 @@ class mapScreen extends React.Component {
   render() {
     const { navigation } = this.props
     const { region } = this.state
+
+    const MarkerInfo = props => {
+      return (
+        <View style={{ flexDirection: 'row' }}>
+          <Image source={props.image} style={{ width: 50, height: 50 }} />
+          <View
+            style={{
+              flex: 1,
+              height: 50,
+              width: Dimensions.get('window').width
+            }}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
         <MapView
@@ -143,20 +160,33 @@ class mapScreen extends React.Component {
               description={marker.Description}
               key={index}
               image={markerImages[marker.image]}
+              //anchor={{ x: 0.5, y: 0.5 }}
+
+              //TODO Find a way to make sure that tip of the marker is in wanted location in any situation.
+              //For example if you rotate the map, the tip of the marker moves.
             />
           ))}
+          <Marker
+            coordinate={this.state.region}
+            title={'YOU ARE HERE'}
+            Description={'This is where you are now'}
+            image={markerImages[3]}
+            //anchor={[0.5, 1]}
+          />
         </MapView>
+
         <FloatingButton
           style={{ top: 100, right: 50 }}
           toggle={this.toggleModal}
           iconName='question'
         />
-        <View style={{ flex: 1 }}>
+
+        <View style={styles.popupContainer}>
           <Modal
-            style={styles.popupContainer}
+            style={styles.modalContainer}
             isVisible={this.state.isModalVisible}
-            onBackdropPress={() => this.setState({ isVisible: false })}
-            backdropColor='#B4B3DB'
+            onBackdropPress={() => this.setState({ isModalVisible: false })}
+            backdropColor='#043353'
             backdropOpacity={0.8}
             animationIn='zoomInDown'
             animationOut='zoomOutUp'
@@ -166,22 +196,20 @@ class mapScreen extends React.Component {
             backdropTransitionOutTiming={600}
           >
             <View style={styles.popupContent}>
-              <FloatingButton
-                toggle={this.toggleModal}
-                iconName='closecircleo'
-                style={{
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0
-                }}
+              <MarkerInfo
+                image={markerImages[3]}
+                text={'This icon means that you are here'}
               />
-              <Text>
-                Hei kaikki ihmiset! Tähän on tulossa infopläjäys, mutta tässähän
-                nyt kestää aivan saatanasti että sen saisi toimimaan. Mukavaa
-                kesänjatkoa!!
-              </Text>
+              <MarkerInfo
+                image={markerImages[5]}
+                text={'This icon is a place where you can go and talk Finnish'}
+              />
             </View>
+            <FloatingButton
+              toggle={this.toggleModal}
+              iconName='closecircleo'
+              style={{ bottom: 100, left: 0, right: 0 }}
+            />
           </Modal>
         </View>
       </View>
@@ -191,10 +219,10 @@ class mapScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+    //flex: 1,
+    backgroundColor: '#fff'
+    //alignItems: 'center',
+    //justifyContent: 'center'
   },
   button: {
     marginBottom: 30,
@@ -233,17 +261,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   popupContainer: {
-    //alignItems: 'center',
-    //justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     textAlign: 'center',
     padding: 10
+  },
+  emptyStyle: {},
+  modalContainer: {
+    position: 'absolute',
+    top: 100,
+    bottom: 150,
+    left: 0,
+    right: 0,
+    alignContent: 'center',
+    borderRadius: 20,
+    padding: 10,
+    textAlign: 'center',
+    justifyContent: 'center'
   },
   popupContent: {
     //width: Dimensions.get('window').width - 30,
     //height: 150,
     position: 'absolute',
+    top: 100,
+    bottom: 150,
+    left: 0,
+    right: 0,
     alignContent: 'center',
     backgroundColor: '#FFF',
+    borderColor: '#000',
+    borderWidth: 1,
     color: '#FFF',
     borderRadius: 20,
     padding: 10,

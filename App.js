@@ -6,13 +6,13 @@ import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { Ionicons } from '@expo/vector-icons'
 import mapScreen from './Screens/MapScreen'
 import QrScreen from './Screens/QrScreen'
-import HomeScreen from './Screens/HomeScreen'
+import HomeScreen from './Screens/HomeScreen/HomeScreen'
 
 class LogoTitle extends React.Component {
   render() {
     return (
       <Image
-        source={require('./Ikonit/Kartta/Map_3-01.png')}
+        source={require('./assets/Ikonit/Kartta/Map_3-01.png')}
         style={{ width: 30, height: 30 }}
       />
     )
@@ -58,14 +58,14 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   } else if (routeName === 'Map') {
     return (
       <Image
-        source={require('./Ikonit/Kartta/Map_3-01.png')}
+        source={require('./assets/Ikonit/Kartta/Map_3-01.png')}
         style={{ width: 30, height: 30, opacity: focused ? 1 : 0.4 }}
       />
     )
   } else if (routeName === 'QRcode') {
     return (
       <Image
-        source={require('./Ikonit/QR/QR_2-01.png')}
+        source={require('./assets/Ikonit/QR/QR_2-01.png')}
         style={{ width: 30, height: 30, opacity: focused ? 1 : 0.4 }}
       />
     )
