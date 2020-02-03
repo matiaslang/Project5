@@ -93,12 +93,12 @@ const styles = StyleSheet.create({
 
 const HomeStack = createStackNavigator(
   {
-    Home: { screen: HomeScreen },
+    Home: { screen: HomeScreen},
     Places: { screen: PlacesScreen },
     History: { screen: HistoryScreen }
   },
   {
-    mode: 'modal'
+    mode: 'modal',
   }
 )
 

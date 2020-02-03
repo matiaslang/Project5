@@ -1,54 +1,103 @@
-import React from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import React, {Component} from 'react'
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Navigator} from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 
 class HomeScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerTitle: 'HoMe' //() => <LogoTitle />,
-    }
-  }
+ 
+  //actionbar pitäs saada hävitettyä
 
   render() {
+    
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <View style={styles.placesNearby}>
-          <Button
-            title='Places nearby'
-            onPress={() => this.props.navigation.navigate('Places')}
-          />
-        </View>
-        <View
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+      <View style={styles.container}>
+         <View style={styles.placesNearby}>
+            <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate('Places')}
+            >
+            <Text style={styles.button}> 
+                Places nearby 
+            </Text>
+            </TouchableOpacity>
+            <Text style={styles.line}>
+            ________________________
+            </Text>
+          <View/>
+        </View> 
+        
+      
+
+      
+            <View style={styles.history}>
+            <TouchableOpacity 
+         onPress={() => this.props.navigation.navigate('History')}
         >
-          <Button
-            title='History'
-            onPress={() => this.props.navigation.navigate('History')}
-          />
-        </View>
+         <Text style={styles.button}> 
+         History 
+         </Text>
+       </TouchableOpacity>
+          </View>
       </View>
-    )
-  }
+    );
 }
-
+}
 const styles = StyleSheet.create({
+  
   container: {
-    flex: 1,
-    backgroundColor: '#d12a2a',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  placesNearby: {
-    flex: 1,
-    backgroundColor: '#bfcfff',
-    borderColor: '#043353',
-    borderRadius: 10,
-    paddingVertical: 50,
-    paddingHorizontal: 20
+    
+    backgroundColor: '#ffffff',
+    alignItems: 'center'
   },
 
-  header: {}
-})
+  line:{
+    color: '#101087',
+    textAlign: 'center',
+    paddingVertical: 375,
+    fontSize: 20
+
+  },
+
+ button:{
+  
+  
+  backgroundColor: '#101087',
+  color: '#ffffff',
+  fontSize: 25,
+  alignSelf: 'stretch',
+  paddingVertical: 10,
+  borderTopLeftRadius: 25,
+  borderTopRightRadius: 25,
+  textAlign: 'center'
+  
+   
+   
+ },
+
+  placesNearby: {
+    
+    backgroundColor: '#ffffff',
+    borderColor: '#101087',
+    borderRadius: 30,
+    borderWidth: 3,
+    height:500,
+    width: 350
+    
+    
+  },
+  history:{
+    
+    backgroundColor: '#ffffff',
+    borderColor: '#101087',
+    borderRadius: 30,
+    borderWidth: 3,
+    height:250,
+    width: 350,
+    fontSize: 25,
+    marginVertical: 8
+    
+    
+    
+  },
+});
 
 export default HomeScreen
