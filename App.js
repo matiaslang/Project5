@@ -93,12 +93,12 @@ const styles = StyleSheet.create({
 
 const HomeStack = createStackNavigator(
   {
-    Home: { screen: HomeScreen},
+    Home: { screen: HomeScreen },
     Places: { screen: PlacesScreen },
     History: { screen: HistoryScreen }
   },
   {
-    mode: 'modal',
+    mode: 'modal'
   }
 )
 
@@ -118,7 +118,7 @@ export default createAppContainer(
   createBottomTabNavigator(
     {
       Map: { screen: mapScreen },
-      Home: { screen: HomeStack },
+      Home: { screen: HomeScreen },
       QRcode: { screen: QrScreen }
     },
     {
