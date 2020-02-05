@@ -30,7 +30,7 @@ class HomeScreen extends React.Component {
           />
         </View>
         <Image
-          style={{ width: 250, height: 250 }}
+          style={{ width: 250, height: 300 }}
           source={require('../assets/Logo/Logo_2-01.png')}
         />
         <View>

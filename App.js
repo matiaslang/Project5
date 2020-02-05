@@ -7,6 +7,8 @@ import { Ionicons } from '@expo/vector-icons'
 import mapScreen from './Screens/MapScreen/MapScreen'
 import QrScreen from './Screens/QrScreen'
 import HomeScreen from './Screens/HomeScreen'
+import HistoryScreen from './Screens/HistoryScreen'
+import PlacesScreen from './Screens/PlacesScreen'
 
 class LogoTitle extends React.Component {
   render() {
@@ -15,26 +17,6 @@ class LogoTitle extends React.Component {
         source={require('./assets/Ikonit/Kartta/Map_3-01.png')}
         style={{ width: 30, height: 30 }}
       />
-    )
-  }
-}
-
-class PlacesScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Tähän tulee näkymä "places nearby"</Text>
-      </View>
-    )
-  }
-}
-
-class HistoryScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Tähän tulee näkymä "History"</Text>
-      </View>
     )
   }
 }
