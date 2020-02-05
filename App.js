@@ -8,6 +8,9 @@ import mapScreen from './Screens/MapScreen'
 import QrScreen from './Screens/QrScreen'
 import HomeScreen from './Screens/HomeScreen'
 
+ 
+
+
 class LogoTitle extends React.Component {
   render() {
     return (
@@ -18,6 +21,7 @@ class LogoTitle extends React.Component {
     )
   }
 }
+
 
 class PlacesScreen extends React.Component {
   render() {
@@ -38,6 +42,7 @@ class HistoryScreen extends React.Component {
     )
   }
 }
+
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state
@@ -91,6 +96,7 @@ const styles = StyleSheet.create({
   header: {}
 })
 
+
 const HomeStack = createStackNavigator(
   {
     Home: { screen: HomeScreen },
@@ -98,9 +104,11 @@ const HomeStack = createStackNavigator(
     History: { screen: HistoryScreen }
   },
   {
-    mode: 'modal'
+    mode: 'modal',
+    headerMode: 'none'
   }
 )
+
 
 const config = {
   animation: 'spring',
@@ -118,7 +126,7 @@ export default createAppContainer(
   createBottomTabNavigator(
     {
       Map: { screen: mapScreen },
-      Home: { screen: HomeScreen },
+      Home: { screen: HomeStack },
       QRcode: { screen: QrScreen }
     },
     {

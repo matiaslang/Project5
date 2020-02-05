@@ -11,8 +11,9 @@ import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 
 class HomeScreen extends React.Component {
-  //actionbar pitäs saada hävitettyä
-
+  
+  
+  
   render() {
     return (
       <View style={styles.container}>
@@ -22,7 +23,7 @@ class HomeScreen extends React.Component {
           >
             <Text style={styles.button}>Places nearby</Text>
           </TouchableOpacity>
-          <Text style={styles.line}>________________________</Text>
+          <Text style={styles.linePlaces}>________________________</Text>
           <View />
         </View>
 
@@ -32,6 +33,7 @@ class HomeScreen extends React.Component {
           >
             <Text style={styles.button}>History</Text>
           </TouchableOpacity>
+          <Text style={styles.lineHistory}>________________________</Text>
         </View>
       </View>
     )
@@ -41,13 +43,20 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     alignItems: 'center',
-    top: 0
+    top: 50
   },
 
-  line: {
+  linePlaces: {
     color: '#101087',
     textAlign: 'center',
     paddingVertical: 375,
+    fontSize: 20
+  },
+
+  lineHistory: {
+    color: '#101087',
+    textAlign: 'center',
+    paddingVertical: 120,
     fontSize: 20
   },
 
