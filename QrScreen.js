@@ -26,22 +26,27 @@ import { TextInput } from 'react-native-gesture-handler';
 import ReactDom from 'react-dom'
 
 /* funktio Qrcamera Qr koodi lukemiseen
+  Decsription:
+      for reading qr code
+      TODO decide qr code format.
   variables:
-  constants
-  hasPermission, setHasPermission 
-  scanned, setScanner
-  handleBarCodeScanned
+      hasPermission : tracks phone permission for app 
+      setHasPermission : hook for hasPermission
+      
+      scanned :  tracks if qr value has been read.
+      setScanner : hook for scanned
+      
+      handleChange : callback function from QrScreen passed from Componentrender
 
 
   hooks:
-  useEffect( )
-
-  TODO 
-  Input ikkunan 
+      useEffect : waits for permission from. Uses BarCodeScanner library
+      handleBarCodeScanned : changes state scanned and handleChange.
+      handleChange : 
 
 */
 function Qrcamera( props ) {
-  
+  const key = props.key;
   const handleChange = props.handleChange;
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -54,7 +59,7 @@ function Qrcamera( props ) {
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
+    setScanned( true );
     handleChange( true )
     alert(`Luin tyypin ${type} ja datan ${data}!`);
   };
@@ -82,17 +87,16 @@ function Qrcamera( props ) {
 
 /* inputfield 
    Description: 
-
+      renders text input field. 
    variables: 
-        value 
-        onChangeText
-   functions:
-        return 
+        value : input value
+        onChangeText : handler not defined explicitly
+    
 */
 function Inputfield( ){
   const [ value, onChangeText ] = useState( null );
   return (
-     <TextInput style = {styles.inputfield}
+     <TextInput style = {styles.inputfield} multiline = {true}
        onChangeText={text => onChangeText( text ) }
        value = {value}>
         
@@ -100,25 +104,51 @@ function Inputfield( ){
   )
 }
 
-function Screenrender( props ){
+/* Componentrender
+  Description:
+        Responsible choosing component that is rendered.
+  variables:
+        qrsscanned : QrScreen state that tracks status of qrscanner. Used to pick right component to be rended.
+        handleChange : handler function for tracking status, defined in and passed from QrScreen, further passed to Qrcamera function 
+*/
+
+function Componentrender( props ){
   const qrsscanned = props.qrsscanned;
   const handleChange = props.handleChange;
+  const numbers = [ 1, 2 ]
   if( qrsscanned === false ){
-    return <Qrcamera handleChange= { handleChange }/>
+  return ([
+          <Text key="1"> Ota kuva </Text>,
+          <Qrcamera  handleChange= { handleChange }/>
+         ]);
+
   }
   if( qrsscanned === true ){
-    return <Inputfield/>
+  return([<Text key="2">Mitä sanoit </Text>,
+          <Inputfield key="key4"/>
+        ]);
   }
-  return <Text> No bueno </Text>
+  return <Text> No bueno qrscanned is null </Text>
 }
 
-
+/*
+  QrScreen
+   Description:
+      Parent component for this view. 
+      Children Components:
+      function Componentrender
+               Button
+   Variables:
+       qrsscanned : tracks status of qrcamera
+       handleChange : handlesChange changes value of qrsscanned
+       render : 
+*/
 
 class QrScreen extends React.Component{
   constructor( props ){
     super( props );
     this.state = {
-      qrsscanned : false,
+      qrsscanned : false, /*true,*/
     };
     this.handleChange = this.handleChange.bind( this );
   }
@@ -126,22 +156,37 @@ class QrScreen extends React.Component{
   handleChange( is_scanned ){
     this.setState( { qrsscanned : is_scanned });
   }
+  handleClick( e ){
+
+  }
   
   render( ){
     const qrsscanned = this.state.qrsscanned;
     return (
       <View style={styles.container}>
-        <Screenrender handleChange = {this.handleChange} qrsscanned = {qrsscanned}/>
+        <Componentrender handleChange = {this.handleChange} qrsscanned = {qrsscanned}/>
+        <Button title="takaisin"></Button>
         <Text> Qr componentti ja input ovat ylhäällä ja toivottavasti kuva ja kenttä </Text>
       
       </View>
     )
   }
-  //<Screenrender qrsscanned= {this.state.qrsscanned}/>
-  //<Screenrender qrsscanned= {qrsscanned} onChange={this.handleChange}/>
+  /* define button's handleclick here. We might want to use same button with different logo.
+  <Button title="takaisin onClick={this.handleClick}*/ 
 }
 
+/* const styles
+   TODO check for inconsistencies, inputfile  and qrcamera are a mess right now.
+   Description: 
+            for gathering different stylesheets for QrScreen.js
+    
+    Styles:
+          container : 
+          qrcamera :
+          inputfield :
+          placesNearby : 
 
+*/
 
 const styles = StyleSheet.create({
   container: {
@@ -150,24 +195,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  screenRender : {
-    flex : 1,
-  },
+  // style to be TODO 
   qrcamera : {
-    flex : 4,
-    flexDirection : 'row', 
+    flex : 6,
+    alignItems : 'center',
+    alignSelf : 'center', 
     marginTop : '10%',
     marginBottom : '10%',
-    width : 200,
-    height : 400,
+    marginLeft : '5%',
+    marginRight : '5%',
+    width : 300,
+    height :100,
   },
 
   inputfield : {
-    backgroundColor : '#ff0000',
-    flex : 2,
-    flexDirection : 'row',
-    alignItems : 'flex-start',
-    justifyContent : 'flex-start',
+    backgroundColor : '#CFCFCF',
+    borderWidth : 5,
+    height : 200,
+    width : 200,
+    borderColor : 'gray',
+    alignItems : 'center',
+    alignSelf : 'center',
+    justifyContent : 'center',
   },
   
   placesNearby: {
