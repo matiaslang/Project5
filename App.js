@@ -98,7 +98,8 @@ const HomeStack = createStackNavigator(
     History: { screen: HistoryScreen }
   },
   {
-    mode: 'modal'
+    mode: 'modal',
+    headerMode: 'none'
   }
 )
 

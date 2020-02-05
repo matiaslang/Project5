@@ -154,14 +154,6 @@ class mapScreen extends React.Component {
               //For example if you rotate the map, the tip of the marker moves.
             />
           ))}
-          <Marker
-            coordinate={this.state.region}
-            title={'YOU ARE HERE'}
-            Description={'This is where you are now'}
-            image={markerImages[3]}
-            Flat
-            //anchor={[0.5, 1]}
-          />
         </MapView>
 
         <FloatingButton
