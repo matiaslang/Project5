@@ -41,7 +41,8 @@ import ReactDom from 'react-dom'
 
 */
 function Qrcamera( props ) {
-  const scannedWindow = props.scannedWindow;
+  
+  const handleChange = props.handleChange;
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -54,6 +55,7 @@ function Qrcamera( props ) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
+    handleChange( true )
     alert(`Luin tyypin ${type} ja datan ${data}!`);
   };
 
@@ -99,15 +101,17 @@ function Inputfield( ){
 }
 
 function Screenrender( props ){
-
+  const qrsscanned = props.qrsscanned;
+  const handleChange = props.handleChange;
   if( qrsscanned === false ){
-    return <Qrcamera/>
+    return <Qrcamera handleChange= { handleChange }/>
   }
   if( qrsscanned === true ){
     return <Inputfield/>
   }
   return <Text> No bueno </Text>
 }
+
 
 
 class QrScreen extends React.Component{
@@ -118,16 +122,16 @@ class QrScreen extends React.Component{
     };
     this.handleChange = this.handleChange.bind( this );
   }
-  handleChange( e ){
-    this.setState({
-      qrsscanned : !e.target.qrsscanned
-    })
+
+  handleChange( is_scanned ){
+    this.setState( { qrsscanned : is_scanned });
   }
+  
   render( ){
     const qrsscanned = this.state.qrsscanned;
     return (
       <View style={styles.container}>
-        <Screenrender qrsscanned= {qrsscanned} onChange={this.handleChange}/>
+        <Screenrender handleChange = {this.handleChange} qrsscanned = {qrsscanned}/>
         <Text> Qr componentti ja input ovat ylhäällä ja toivottavasti kuva ja kenttä </Text>
       
       </View>
