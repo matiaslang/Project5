@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const ScreenWidth = Dimensions.get('window').width
 const ScreenHeight = Dimensions.get('window').height
@@ -36,6 +37,10 @@ class HomeScreen extends React.Component {
             <Text style={styles.upperButton}>Places</Text>
           </TouchableOpacity>
 
+
+
+          <View style={styles.boxesInside}>
+
           <TouchableOpacity style={styles.box}>
             <Text style={styles.boxText}>PlaceName</Text>
             <Image
@@ -43,6 +48,39 @@ class HomeScreen extends React.Component {
               style={styles.boxImage}
             />
           </TouchableOpacity>
+
+          <TouchableOpacity style={styles.box}>
+            <Text style={styles.boxText}>PlaceName</Text>
+            <Image
+              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+              style={styles.boxImage}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.box}>
+            <Text style={styles.boxText}>PlaceName</Text>
+            <Image
+              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+              style={styles.boxImage}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.box}>
+            <Text style={styles.boxText}>PlaceName</Text>
+            <Image
+              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+              style={styles.boxImage}
+            />
+          </TouchableOpacity>
+
+          </View>
+
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Places')}
+          >
+            <Text style={styles.lowerButton}>Show more</Text>
+          </TouchableOpacity>
+
 
           </View>
         
@@ -55,18 +93,25 @@ class HomeScreen extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.boxText}>PlaceName</Text>
+            <Text style={styles.boxText}>kävit merikoskessa</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
             />
           </TouchableOpacity>
 
+
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('History')}
+          >
+            <Text style={styles.lowerButton}>Show more</Text>
+          </TouchableOpacity>
+
           </View>
 
 
        
-
+          <Text></Text>
           </View>
         
       
@@ -77,83 +122,104 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    alignItems: 'center'
+    alignItems: 'center',
+    flex: 1
     
   },
   
+  boxesInside:{
+    flex: 1,
+    flexDirection: "column"
+    
+  },
+
+
+
   boxImage: {
-    width: 40,
-    height: 40,
-    marginRight: 100,
-    justifyContent: 'flex-end'
+    width: wp('9%'),
+    height: hp('6%')
   },
 
   boxText: {
     color: '#043353',
-    textAlign: 'left',
+    
     textAlignVertical: 'center',
-    height: 75,
-    fontSize: 16,
-    marginLeft: 10
+    
+    fontSize: hp('2.5%'),
   },
 
   box: {
+    flex: 1,
     color: '#D4DDE6',
-    height: 75,
-    borderColor: '#F7F7F7',
+    
+    borderColor: '#D4DDE6',
     borderWidth: 2,
-    width: '90%',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    
   },
 
   image: {
-    width: 150,
-    height: 150,
-    top: '2.5%'
+    width: wp('20%'),
+    height: hp('13%'),
+    top: hp('2%')
   },
-/*
+  
+
   lowerButton: {
     backgroundColor: '#043353',
     color: '#F7F7F7',
-    fontSize: 25,
-    alignSelf: 'stretch',
-    paddingVertical: 10,
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    textAlign: 'center'
+    fontSize: hp('3%'),
+    
+    paddingVertical: hp('0.1%'),
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+    textAlign: 'center',
+    justifyContent: 'flex-end'
+    
   },
-*/
+
  
 
   upperButton: {
+    
     backgroundColor: '#043353',
     color: '#F7F7F7',
-    fontSize: 25,
-    alignSelf: 'stretch',
-    paddingVertical: '3%',
+    fontSize: hp('3.5%'),
+    
+    paddingVertical: hp('0.5%'),
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     textAlign: 'center'
   },
 
   placesNearby: {
+    flex: 2,
     backgroundColor: '#F7F7F7',
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
+    /*
     width: '90%',
     aspectRatio: 1/1,
-    fontSize: 25,
+    */
+    width: wp('90%'),
+    
+    
     overflow: 'hidden'
   },
   history: {
+    flex: 1,
     backgroundColor: '#F7F7F7',
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
-    width: '90%',
+    /*
+    width: "90%",
     aspectRatio: 1.3/1,
-    fontSize: 25,
+    */
+    width: wp('90%'),
+    
+    
     overflow: 'hidden',
     top: '2%'
   }
