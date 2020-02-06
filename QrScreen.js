@@ -195,17 +195,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  // style to be TODO 
   qrcamera : {
     flex : 6,
     alignItems : 'center',
     alignSelf : 'center', 
     marginTop : '10%',
     marginBottom : '10%',
-    marginLeft : '5%',
-    marginRight : '5%',
-    width : 300,
-    height :100,
+    marginLeft : '20',
+    marginRight : '30',
+    width : 600,
+    height :200,
   },
 
   inputfield : {
