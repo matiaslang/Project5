@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Button, StyleSheet, Text, View, Image, Dimensions } from 'react-native'
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
+import {
+  TouchableOpacity,
+  ScrollView,
+  FlatList
+} from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import placehistory from './placehistory'
 
@@ -9,7 +13,13 @@ const ScreenWidth = Dimensions.get('window').width
 const ListItem = props => {
   return (
     <View style={styles.listItem}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          flex: 1
+        }}
+      >
         <Text style={{ fontSize: 20 }}>{props.place}</Text>
         <Text style={{ fontSize: 20 }}>{props.date}</Text>
       </View>
@@ -23,7 +33,9 @@ export default class HistoryScreen extends Component {
   }
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      enabled: true
+    }
   }
 
   render() {
@@ -55,11 +67,13 @@ export default class HistoryScreen extends Component {
             </View>
             <View style={styles.hairline} />
           </View>
-          <ScrollView style={{}}>
-            {placehistory.map((place, index) => (
-              <ListItem place={place.place} date={place.date} key={index} />
-            ))}
-          </ScrollView>
+          <FlatList
+            data={placehistory}
+            renderItem={({ item, index }) => (
+              <ListItem place={item.place} date={item.date} />
+            )}
+            keyExtractor={item => item.key}
+          />
         </View>
       </View>
     )
