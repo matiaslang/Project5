@@ -46,14 +46,13 @@ class mapScreen extends React.Component {
     title: 'Map'
   }
 
-  /*
   setRegion(region) {
     if (this.state.ready) {
       setTimeout(() => this.map.mapview.animateToRegion(region), 10)
     }
     //this.setState({ region });
   }
-*/
+
   constructor(props) {
     super(props)
     this.state = {

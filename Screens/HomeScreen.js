@@ -73,15 +73,8 @@ class HomeScreen extends React.Component {
           </TouchableOpacity>
           
         </View>
-
-        
       </View>
-
-      
-
-
-
-    );
+    )
   }
 }
 
@@ -126,10 +119,10 @@ const styles = StyleSheet.create({
 
   },
 
-  image:{
-        width: 150,
-        height: 150,
-        top: 20
+  image: {
+    width: 150,
+    height: 150,
+    top: 20
   },
 
   lowerButton:{
