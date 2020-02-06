@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons'
 import mapScreen from './Screens/MapScreen/MapScreen'
 import QrScreen from './Screens/QrScreen'
 import HomeScreen from './Screens/HomeScreen'
-import HistoryScreen from './Screens/HistoryScreen'
+import HistoryScreen from './Screens/HistoryScreen/HistoryScreen'
 import PlacesScreen from './Screens/PlacesScreen'
 
 class LogoTitle extends React.Component {
