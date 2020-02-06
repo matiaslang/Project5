@@ -64,7 +64,9 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: ScreenHeight,
+    width: ScreenWidth
   },
 
   boxImage: {
@@ -139,8 +141,8 @@ const styles = StyleSheet.create({
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
-    height: (ScreenHeight * 35) / 100,
-    width: (ScreenWidth * 90) / 100,
+    height: '47%',
+    width: '90%',
     overflow: 'hidden'
   },
   history: {
@@ -148,8 +150,8 @@ const styles = StyleSheet.create({
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
-    height: (ScreenHeight * 30) / 100,
-    width: (ScreenWidth * 90) / 100,
+    height: '30%',
+    width: '90%',
     fontSize: 25,
     marginVertical: 15,
     overflow: 'hidden'
