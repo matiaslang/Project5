@@ -44,19 +44,32 @@ class HomeScreen extends React.Component {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity></TouchableOpacity>
+          </View>
+        
 
-          <View />
-        </View>
-
-        <View style={styles.history}>
+          <View style={styles.history}>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('History')}
           >
             <Text style={styles.upperButton}>History</Text>
           </TouchableOpacity>
-        </View>
-      </View>
+
+          <TouchableOpacity style={styles.box}>
+            <Text style={styles.boxText}>PlaceName</Text>
+            <Image
+              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+              style={styles.boxImage}
+            />
+          </TouchableOpacity>
+
+          </View>
+
+
+       
+
+          </View>
+        
+      
     )
   }
 }
@@ -64,11 +77,10 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    alignItems: 'center',
-    height: ScreenHeight,
-    width: ScreenWidth
+    alignItems: 'center'
+    
   },
-
+  
   boxImage: {
     width: 40,
     height: 40,
@@ -90,17 +102,16 @@ const styles = StyleSheet.create({
     height: 75,
     borderColor: '#F7F7F7',
     borderWidth: 2,
-    width: 275,
-    width: 350,
+    width: '90%',
     flexDirection: 'row'
   },
 
   image: {
     width: 150,
     height: 150,
-    top: 20
+    top: '2.5%'
   },
-
+/*
   lowerButton: {
     backgroundColor: '#043353',
     color: '#F7F7F7',
@@ -111,26 +122,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     textAlign: 'center'
   },
-
-  linePlaces: {
-    color: '#043353',
-    textAlign: 'center',
-    fontSize: 20
-  },
-
-  lineHistory: {
-    color: '#043353',
-    textAlign: 'center',
-    paddingVertical: 135,
-    fontSize: 20
-  },
+*/
+ 
 
   upperButton: {
     backgroundColor: '#043353',
     color: '#F7F7F7',
     fontSize: 25,
     alignSelf: 'stretch',
-    paddingVertical: 10,
+    paddingVertical: '3%',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     textAlign: 'center'
@@ -141,8 +141,9 @@ const styles = StyleSheet.create({
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
-    height: '47%',
     width: '90%',
+    aspectRatio: 1/1,
+    fontSize: 25,
     overflow: 'hidden'
   },
   history: {
@@ -150,11 +151,11 @@ const styles = StyleSheet.create({
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
-    height: '30%',
     width: '90%',
+    aspectRatio: 1.3/1,
     fontSize: 25,
-    marginVertical: 15,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    top: '2%'
   }
 })
 
