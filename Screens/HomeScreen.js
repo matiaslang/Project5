@@ -6,7 +6,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Navigator,
-  Image
+  Image,
+  ScrollView
 } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -19,12 +20,9 @@ class HomeScreen extends React.Component {
   render() {
     return (
       
-     
-     
-      
-        
-      
       <View style={styles.container}>
+      
+
        <Image 
        source={require('../assets/Logo/Logo_2-01.png')}
        style={styles.image}
@@ -34,9 +32,36 @@ class HomeScreen extends React.Component {
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Places')}
           >
-            <Text style={styles.button}>Places nearby</Text>
+            <Text style={styles.upperButton}>Places</Text>
           </TouchableOpacity>
-          <Text style={styles.linePlaces}>________________________</Text>
+          
+          
+
+
+
+          <TouchableOpacity style={styles.box}>
+          <Text style={styles.boxText}>PlaceName</Text>
+          <Image 
+          source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+          style={styles.boxImage}
+       />
+          </TouchableOpacity>
+          
+
+
+
+
+          <TouchableOpacity>
+          
+          </TouchableOpacity>
+          
+          
+          
+
+
+
+
+          
           <View />
         </View>
 
@@ -44,9 +69,9 @@ class HomeScreen extends React.Component {
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('History')}
           >
-            <Text style={styles.button}>History</Text>
+            <Text style={styles.upperButton}>History</Text>
           </TouchableOpacity>
-          <Text style={styles.lineHistory}>________________________</Text>
+          
         </View>
 
         
@@ -65,6 +90,40 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     alignItems: 'center'
     
+    
+  },
+
+  boxImage:{
+    width: 40,
+    height: 40,
+    marginRight: 100,
+    justifyContent: 'flex-end'
+    
+    
+  },
+
+  boxText:{
+    
+    color:'#043353',
+    textAlign: 'left',
+    textAlignVertical:'center',
+    height: 75,
+    fontSize: 16,
+    marginLeft: 10,
+    
+    
+  },
+
+  box:{
+    
+    color: '#D4DDE6',
+    height: 75,
+    borderColor: '#F7F7F7',
+    borderWidth: 2,
+    width: 275,
+    width: 350,               
+    flexDirection: 'row'
+
   },
 
   image:{
@@ -73,10 +132,23 @@ const styles = StyleSheet.create({
         top: 20
   },
 
+  lowerButton:{
+    backgroundColor: '#043353',
+    color: '#F7F7F7',
+    fontSize: 25,
+    alignSelf: 'stretch',
+    paddingVertical: 10,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    textAlign: 'center'
+
+  },
+
+
+
   linePlaces: {
     color: '#043353',
     textAlign: 'center',
-    paddingVertical: 275,
     fontSize: 20
   },
 
@@ -87,7 +159,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
 
-  button: {
+  upperButton: {
     backgroundColor: '#043353',
     color: '#F7F7F7',
     fontSize: 25,
@@ -103,18 +175,20 @@ const styles = StyleSheet.create({
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
-    height: 400,
-    width: 350
+    height: '48%',
+    width: '90%',
+    overflow:'hidden'
   },
   history: {
     backgroundColor: '#F7F7F7',
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
-    height: 260,
-    width: 350,
+    height: '30%',
+    width: '90%',
     fontSize: 25,
-    marginVertical: 15
+    marginVertical: 15,
+    overflow:'hidden'
   }
 })
 
