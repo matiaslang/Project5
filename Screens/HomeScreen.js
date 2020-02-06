@@ -18,18 +18,12 @@ class HomeScreen extends React.Component {
 
   render() {
     return (
-      
-     
-     
-      
-        
-      
       <View style={styles.container}>
-       <Image 
-       source={require('../assets/Logo/Logo_2-01.png')}
-       style={styles.image}
-       />
-      
+        <Image
+          source={require('../assets/Logo/Logo_2-01.png')}
+          style={styles.image}
+        />
+
         <View style={styles.placesNearby}>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Places')}
@@ -48,15 +42,8 @@ class HomeScreen extends React.Component {
           </TouchableOpacity>
           <Text style={styles.lineHistory}>________________________</Text>
         </View>
-
-        
       </View>
-
-      
-
-
-
-    );
+    )
   }
 }
 
@@ -64,13 +51,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     alignItems: 'center'
-    
   },
 
-  image:{
-        width: 150,
-        height: 150,
-        top: 20
+  image: {
+    width: 150,
+    height: 150,
+    top: 20
   },
 
   linePlaces: {
@@ -104,7 +90,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 3,
     height: 400,
-    width: 350
+    width: 350,
+    overflow: 'hidden'
   },
   history: {
     backgroundColor: '#F7F7F7',
@@ -114,7 +101,8 @@ const styles = StyleSheet.create({
     height: 260,
     width: 350,
     fontSize: 25,
-    marginVertical: 15
+    marginVertical: 15,
+    overflow: 'hidden'
   }
 })
 
