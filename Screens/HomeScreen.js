@@ -30,7 +30,7 @@ class HomeScreen extends React.Component {
           style={styles.image}
         />
 
-        <View style={styles.placesNearby}>
+        <View style={styles.placesBox}>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Places')}
           >
@@ -42,7 +42,8 @@ class HomeScreen extends React.Component {
           <View style={styles.boxesInside}>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.boxText}>PlaceName</Text>
+            <Text style={styles.placeBoxText}>Villa Victor</Text>
+            <Text style={styles.boxDistance}>325m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -50,7 +51,8 @@ class HomeScreen extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.boxText}>PlaceName</Text>
+            <Text style={styles.placeBoxText}>Kaupunginteatteri</Text>
+            <Text style={styles.boxDistance}>650m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -58,7 +60,8 @@ class HomeScreen extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.boxText}>PlaceName</Text>
+            <Text style={styles.placeBoxText}>Coffee House</Text>
+            <Text style={styles.boxDistance}>875m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -66,7 +69,8 @@ class HomeScreen extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.boxText}>PlaceName</Text>
+            <Text style={styles.placeBoxText}>Kaupungin kirjasto</Text>
+            <Text style={styles.boxDistance}>1000m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -86,18 +90,33 @@ class HomeScreen extends React.Component {
         
 
           <View style={styles.history}>
+
+          
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('History')}
           >
             <Text style={styles.upperButton}>History</Text>
           </TouchableOpacity>
 
+
+
+          
+          <View style={styles.historyCounter}>
+          <Text style={styles.historyBoxText}>Places visited: 5</Text>
+          <Text style={styles.boxDate}>Times used: 16</Text>
+          </View>
+
+          
+              
+            
+          
+              
+            
+
+          <View style={styles.historyVisitedPlaces}>
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.boxText}>kävit merikoskessa</Text>
-            <Image
-              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-              style={styles.boxImage}
-            />
+            <Text style={styles.historyBoxText}>Subway Tuira</Text>
+            <Text style={styles.boxDate}>21.01.2020</Text>
           </TouchableOpacity>
 
 
@@ -106,12 +125,15 @@ class HomeScreen extends React.Component {
           >
             <Text style={styles.lowerButton}>Show more</Text>
           </TouchableOpacity>
-
+          
+          
+          
+          </View>
           </View>
 
 
        
-          <Text></Text>
+          <Text style={styles.bottomUpper}></Text>
           </View>
         
       
@@ -127,25 +149,60 @@ const styles = StyleSheet.create({
     
   },
   
+  historyCounter:{
+    flex:1,
+    flexDirection: 'row'
+  },
+
+  historyVisitedPlaces:{
+    flex: 3
+  },
+
+  boxDate:{
+    flex: 1,
+    flexDirection: 'row',
+    color: '#043353',
+    fontSize: hp('2.5%'),
+    textAlignVertical: "center"
+  },
+
   boxesInside:{
     flex: 1,
     flexDirection: "column"
     
   },
 
-
-
-  boxImage: {
-    width: wp('9%'),
-    height: hp('6%')
+  boxDistance:{
+    flex: 1,
+    color: '#043353',
+    textAlignVertical: 'center',
+    fontSize: hp('2.5%')
   },
 
-  boxText: {
+  boxImage: {
+    
+    height: hp('5%'),
+    flex: 1,
+    alignSelf:'center',
+    resizeMode: 'contain'
+  },
+
+  placeBoxText: {
+    flex: 3,
     color: '#043353',
+    alignSelf:'center',
+    marginLeft: wp('2%'),
     
-    textAlignVertical: 'center',
+    fontSize: hp('2.5%')
+  },
+
+  historyBoxText: {
+    flex: 1.5,
+    color: '#043353',
+    alignSelf:'center',
+    marginLeft: wp('2%'),
+    fontSize: hp('2.5%')
     
-    fontSize: hp('2.5%'),
   },
 
   box: {
@@ -173,8 +230,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp('0.1%'),
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
-    textAlign: 'center',
-    justifyContent: 'flex-end'
+    textAlign: 'center'
     
   },
 
@@ -192,16 +248,13 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
 
-  placesNearby: {
+  placesBox: {
     flex: 2,
     backgroundColor: '#F7F7F7',
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
-    /*
-    width: '90%',
-    aspectRatio: 1/1,
-    */
+    
     width: wp('90%'),
     
     
@@ -213,15 +266,16 @@ const styles = StyleSheet.create({
     borderColor: '#043353',
     borderRadius: 30,
     borderWidth: 3,
-    /*
-    width: "90%",
-    aspectRatio: 1.3/1,
-    */
+   
     width: wp('90%'),
     
     
     overflow: 'hidden',
     top: '2%'
+  },
+
+  bottomUpper:{
+    height: hp('4%')
   }
 })
 
