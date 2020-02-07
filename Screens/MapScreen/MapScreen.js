@@ -178,12 +178,17 @@ class mapScreen extends React.Component {
             <View style={styles.popupContent}>
               <MarkerInfo
                 image={markerImages[3]}
-                text={'This icon means that you are here'}
+                text={
+                  'This icon is a place where you can go and talk in Finnish!'
+                }
               />
-              <MarkerInfo
-                image={markerImages[5]}
-                text={'This icon is a place where you can go and talk Finnish'}
-              />
+              <View style={styles.infoText}>
+                <Text style={{}}>
+                  Here we have a map which includes markers, where you can go
+                  and speak Finnish. All these places have an QR -code
+                  (sometimes behind counter). Go talk to them! :){' '}
+                </Text>
+              </View>
             </View>
             <FloatingButton
               toggle={this.toggleModal}
@@ -275,6 +280,11 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: 'center',
     justifyContent: 'center'
+  },
+  infoText: {
+    justifyContent: 'center',
+    textAlign: 'center',
+    padding: 10
   }
 })
 
