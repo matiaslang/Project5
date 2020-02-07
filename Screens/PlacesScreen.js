@@ -11,18 +11,42 @@ export default class PlacesScreen extends Component {
   }
 
   render() {
+    const { navigate } = this.props.navigation
     return (
       <View style={styles.container}>
         <Text style={styles.upperBottom}></Text>
 
+
+
         <View style={styles.placesBox}>
 
-        <Text style={styles.upperButton}>Places</Text>
+        
+          
+        <View style={styles.bothButtons}>
+
         
 
+        <TouchableOpacity
+        onPress={() => navigate('Home')}
+        >
+        <Text style={styles.backButton}>Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.upperButton}>Places</Text>
+        </View>
+        
+
+        
         <ScrollView style={styles.boxesInside}>
 
           <TouchableOpacity style={styles.box}>
+            <Text style={styles.placeBoxText}>Crecian</Text>
+            <Text style={styles.boxDistance}>100m</Text>
+            <Image
+              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+              style={styles.boxImage}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.box}>
             <Text style={styles.placeBoxText}>Villa Victor</Text>
             <Text style={styles.boxDistance}>325m</Text>
             <Image
@@ -31,9 +55,30 @@ export default class PlacesScreen extends Component {
             />
           </TouchableOpacity>
 
+          
+
+          <TouchableOpacity style={styles.box}>
+            <Text style={styles.placeBoxText}>Viikinkiravintola Harald</Text>
+            <Text style={styles.boxDistance}>525m</Text>
+            <Image
+              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+              style={styles.boxImage}
+            />
+          </TouchableOpacity>
+
+         
           <TouchableOpacity style={styles.box}>
             <Text style={styles.placeBoxText}>Kaupunginteatteri</Text>
             <Text style={styles.boxDistance}>650m</Text>
+            <Image
+              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+              style={styles.boxImage}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.box}>
+            <Text style={styles.placeBoxText}>Amarillo</Text>
+            <Text style={styles.boxDistance}>850m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -59,8 +104,8 @@ export default class PlacesScreen extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Villa Victor</Text>
-            <Text style={styles.boxDistance}>325m</Text>
+            <Text style={styles.placeBoxText}>Noodle Bar 9</Text>
+            <Text style={styles.boxDistance}>1150m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -68,8 +113,8 @@ export default class PlacesScreen extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Kaupunginteatteri</Text>
-            <Text style={styles.boxDistance}>650m</Text>
+            <Text style={styles.placeBoxText}>Star Elokuvateatteri</Text>
+            <Text style={styles.boxDistance}>1250m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -77,8 +122,8 @@ export default class PlacesScreen extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Coffee House</Text>
-            <Text style={styles.boxDistance}>875m</Text>
+            <Text style={styles.placeBoxText}>Subway Linnanmaa</Text>
+            <Text style={styles.boxDistance}>1700m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -86,8 +131,8 @@ export default class PlacesScreen extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Kaupungin kirjasto</Text>
-            <Text style={styles.boxDistance}>1000m</Text>
+            <Text style={styles.placeBoxText}>Yliopiston kirjasto</Text>
+            <Text style={styles.boxDistance}>1700m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -95,40 +140,15 @@ export default class PlacesScreen extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Villa Victor</Text>
-            <Text style={styles.boxDistance}>325m</Text>
+            <Text style={styles.placeBoxText}>Prisma Linnanmaa</Text>
+            <Text style={styles.boxDistance}>1900m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
             />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Kaupunginteatteri</Text>
-            <Text style={styles.boxDistance}>650m</Text>
-            <Image
-              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-              style={styles.boxImage}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Coffee House</Text>
-            <Text style={styles.boxDistance}>875m</Text>
-            <Image
-              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-              style={styles.boxImage}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Kaupungin kirjasto</Text>
-            <Text style={styles.boxDistance}>1000m</Text>
-            <Image
-              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-              style={styles.boxImage}
-            />
-          </TouchableOpacity>
+          
 
           </ScrollView>
 
@@ -147,11 +167,41 @@ const styles = StyleSheet.create({
     flex: 1
   },
 
+  bothButtons:{
+    flexDirection:'row',
+    
+    backgroundColor: '#043353',
+    color: '#F7F7F7',
+    
+    
+    paddingVertical: hp('0.5%'),
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25
+    
+  },
+
+  backButton:{
+    flex: 1,
+    fontSize: hp('2%'),
+    color: '#F7F7F7',
+    alignSelf:'center',
+    marginLeft: wp('2%'),
+    textAlignVertical: 'center'
+  },
+
+  upperButton: {
+    flex: 1,
+    fontSize: hp('3.5%'),
+    color: '#F7F7F7',
+    marginLeft: wp('25%')
+    //:DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+   
+  },
   boxDistance:{
     flex: 1,
     color: '#043353',
-    textAlignVertical: 'center',
-    fontSize: hp('2.5%')
+    alignSelf:'center',
+    fontSize: hp('2%')
   },
 
   boxImage: {
@@ -196,17 +246,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
 
-  upperButton: {
-    
-    backgroundColor: '#043353',
-    color: '#F7F7F7',
-    fontSize: hp('3.5%'),
-    
-    paddingVertical: hp('0.5%'),
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    textAlign: 'center'
-  },
+  
 
   upperBottom:{
     height: hp('6%')

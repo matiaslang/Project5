@@ -42,6 +42,14 @@ class HomeScreen extends React.Component {
           <View style={styles.boxesInside}>
 
           <TouchableOpacity style={styles.box}>
+            <Text style={styles.placeBoxText}>Crecian</Text>
+            <Text style={styles.boxDistance}>100m</Text>
+            <Image
+              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+              style={styles.boxImage}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.box}>
             <Text style={styles.placeBoxText}>Villa Victor</Text>
             <Text style={styles.boxDistance}>325m</Text>
             <Image
@@ -50,27 +58,21 @@ class HomeScreen extends React.Component {
             />
           </TouchableOpacity>
 
+          
+
+          <TouchableOpacity style={styles.box}>
+            <Text style={styles.placeBoxText}>Viikinkiravintola Harald</Text>
+            <Text style={styles.boxDistance}>525m</Text>
+            <Image
+              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+              style={styles.boxImage}
+            />
+          </TouchableOpacity>
+
+         
           <TouchableOpacity style={styles.box}>
             <Text style={styles.placeBoxText}>Kaupunginteatteri</Text>
             <Text style={styles.boxDistance}>650m</Text>
-            <Image
-              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-              style={styles.boxImage}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Coffee House</Text>
-            <Text style={styles.boxDistance}>875m</Text>
-            <Image
-              source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-              style={styles.boxImage}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.box}>
-            <Text style={styles.placeBoxText}>Kaupungin kirjasto</Text>
-            <Text style={styles.boxDistance}>1000m</Text>
             <Image
               source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
               style={styles.boxImage}
@@ -102,8 +104,8 @@ class HomeScreen extends React.Component {
 
           
           <View style={styles.historyCounter}>
-          <Text style={styles.historyBoxText}>Places visited: 5</Text>
-          <Text style={styles.boxDate}>Times used: 16</Text>
+          <Text style={styles.historyPlacesVisited}>Places visited: 5</Text>
+          <Text style={styles.boxTimesUsed}>Times used: 16</Text>
           </View>
 
           
@@ -152,18 +154,30 @@ const styles = StyleSheet.create({
   historyCounter:{
     flex:1,
     flexDirection: 'row'
+    
   },
 
   historyVisitedPlaces:{
     flex: 3
   },
 
+  boxTimesUsed:{
+    flex: 1,
+    flexDirection: 'row',
+    color: '#043353',
+    fontSize: hp('2%'),
+    alignSelf:'center',
+    textAlignVertical: 'center'
+  },
+
+
   boxDate:{
     flex: 1,
     flexDirection: 'row',
     color: '#043353',
     fontSize: hp('2.5%'),
-    textAlignVertical: "center"
+    alignSelf:'center',
+    textAlignVertical: 'center'
   },
 
   boxesInside:{
@@ -175,8 +189,8 @@ const styles = StyleSheet.create({
   boxDistance:{
     flex: 1,
     color: '#043353',
-    textAlignVertical: 'center',
-    fontSize: hp('2.5%')
+    alignSelf:'center',
+    fontSize: hp('2%')
   },
 
   boxImage: {
@@ -202,6 +216,16 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     marginLeft: wp('2%'),
     fontSize: hp('2.5%')
+    
+  },
+
+  historyPlacesVisited: {
+    flex: 1.5,
+    color: '#043353',
+    alignSelf:'center',
+    fontSize: hp('2%'),
+    marginLeft: wp('2%')
+    
     
   },
 
