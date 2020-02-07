@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, StyleSheet, Text, View, Image, Dimensions } from 'react-native'
 import {
   TouchableOpacity,
+  TouchableWithoutFeedback,
   ScrollView,
   FlatList
 } from 'react-native-gesture-handler'
@@ -9,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import placehistory from './placehistory'
 
 const ScreenWidth = Dimensions.get('window').width
+const ScreenHeight = Dimensions.get('window').height
 
 const ListItem = props => {
   return (
@@ -16,12 +18,16 @@ const ListItem = props => {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          flex: 1
+          justifyContent: 'space-between'
+          //flex: 1
         }}
       >
-        <Text style={{ fontSize: 20 }}>{props.place}</Text>
-        <Text style={{ fontSize: 20 }}>{props.date}</Text>
+        <TouchableOpacity>
+          <Text style={{ fontSize: 20 }}>{props.place}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={{ fontSize: 20 }}>{props.date}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -68,6 +74,7 @@ export default class HistoryScreen extends Component {
             <View style={styles.hairline} />
           </View>
           <FlatList
+            style={{ flex: 1 }}
             data={placehistory}
             renderItem={({ item, index }) => (
               <ListItem place={item.place} date={item.date} />
@@ -86,6 +93,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    //height: ScreenHeight,
     backgroundColor: '#fff',
     padding: 30,
     paddingTop: 40
@@ -93,9 +101,10 @@ const styles = StyleSheet.create({
   History: {
     //padding: 30,
     borderRadius: 25,
-    borderWidth: 1,
+    borderWidth: 3,
     borderColor: '#043353',
     flex: 1,
+    //height: ScreenHeight,
     bottom: 0,
     top: 0,
     overflow: 'hidden'
@@ -120,7 +129,7 @@ const styles = StyleSheet.create({
     fontSize: 24
   },
   bluebar: {
-    flex: 0.2,
+    flex: 0.13,
     backgroundColor: '#043353',
     padding: 10,
     paddingRight: 40,
@@ -134,14 +143,15 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
     borderColor: '#000',
-    flex: 0.3,
+    flex: 0.15,
+
     justifyContent: 'space-around',
     flexDirection: 'column'
   },
   listItem: {
-    borderWidth: 0.5,
-
-    borderColor: '#000',
+    borderWidth: 2,
+    paddingVertical: 20,
+    borderColor: '#D4DDE6',
     padding: 10
   },
   hairline: {
