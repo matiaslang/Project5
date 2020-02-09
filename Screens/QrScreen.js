@@ -94,6 +94,7 @@ function Qrcamera( props ) {
 */
 function Inputfield( ){
   const [ value, onChangeText ] = useState( null );
+
   return (
      <View style={styles.inputcontainer}>
        <TextInput style = {styles.inputfield} multiline = {true}
@@ -147,14 +148,17 @@ class QrScreen extends React.Component{
     };
     this.handleChange = this.handleChange.bind( this );
     this.handlePress = this.handlePress.bind( this );
+    this.onSubmit = this.onSubmit.bind( this );
   }
 
   handleChange( is_scanned ){
     this.setState( { qrsscanned : is_scanned });
   }
   handlePress( e ){
-    navigator 
+    const {navigate } = this.props.navigation
     this.setState( {qrsscanned : false });
+    this.onSubmit(  );
+    navigate( 'Home' );
   }
   
   render( ){
@@ -162,7 +166,7 @@ class QrScreen extends React.Component{
     return (
       <View style={styles.container}>
         <Componentrender qrsscanned = { qrsscanned } handleChange={this.handleChange} ></Componentrender>
-        <Button title="Go back" onPress={this.handlePress}></Button>
+        <Button title="Return to home page" onPress={this.handlePress}></Button>
       </View>
 
     )
