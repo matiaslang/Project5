@@ -71,15 +71,11 @@ function Qrcamera( props ) {
   }
 
   return (
-    <View
-      style = {
-        styles.qrcamera}>
-      <BarCodeScanner
+    <BarCodeScanner
            onBarCodeScanned = { scanned ? undefined : handleBarCodeScanned }
            style = { styles.qrcamera }
       ></BarCodeScanner>
-    </View>
-    //{ scanned && <Button title = {"Paina minua jos haluta skannata uudelleen "} onPress={ () => setScanned( false ) } /> }
+      
   );
    
 }
@@ -148,7 +144,6 @@ class QrScreen extends React.Component{
     };
     this.handleChange = this.handleChange.bind( this );
     this.handlePress = this.handlePress.bind( this );
-    this.onSubmit = this.onSubmit.bind( this );
   }
 
   handleChange( is_scanned ){
@@ -157,9 +152,8 @@ class QrScreen extends React.Component{
   handlePress( e ){
     const {navigate } = this.props.navigation
     this.setState( {qrsscanned : false });
-    this.onSubmit(  );
     navigate( 'Home' );
-  }
+  } 
   
   render( ){
     const qrsscanned = this.state.qrsscanned;
@@ -196,15 +190,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
 
+  qrcontainer : {
+    flex : 5,
+    flexDirection : 'row',
+    alignContent : 'center',
+    alignSelf : 'center',
+  },
+
   qrcamera : {
-    flex : 6,
+    flex : 1,
     alignItems : 'center',
     alignSelf : 'center', 
-    marginTop : '10%',
-    marginBottom : '10%',
-    marginLeft : '20%',
-    marginRight : '20%',
-    width : 600,
+    width : 200,
     height :200,
   },
 
