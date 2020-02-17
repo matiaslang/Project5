@@ -1,4 +1,4 @@
-import LocalizedStrings from 'react-native-localization'
+import * as Localization from 'expo-localization'
 export const DEFAULT_LANGUAGE = 'fi'
 
 const translations = {
@@ -19,5 +19,7 @@ const translations = {
     HOME: 'Koti'
   }
 }
+
+i18n.locale = Localization.locale
 
 export default new LocalizedStrings(translations)

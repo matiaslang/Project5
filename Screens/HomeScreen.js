@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import translations, { DEFAULT_LANGUAGE } from '../translations'
+//import translations, { DEFAULT_LANGUAGE } from '../translations'
+import LanguageOptions from '../LanguageOptions'
 import {
   StyleSheet,
   Text,
@@ -9,7 +10,8 @@ import {
   Navigator,
   Image,
   Dimensions,
-  ScrollView
+  ScrollView,
+  Button
 } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -29,11 +31,18 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            onPress={() => alert('You pushed')}
+            style={styles.flag}
+          >
+            <Text> Touch Here </Text>
+          </TouchableOpacity>
+        </View>
         <Image
           source={require('../assets/Logo/Logo_2-01.png')}
           style={styles.image}
         />
-
         <View style={styles.placesBox}>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Places')}
@@ -258,6 +267,28 @@ const styles = StyleSheet.create({
 
   bottomUpper: {
     height: hp('4%')
+  },
+  flag: {
+    borderWidth: 5,
+    borderColor: '#F00',
+    backgroundColor: '#213577',
+    color: '#9ACD32',
+    width: 50,
+    height: 50,
+    left: 0
+    //position: "absolute",
+    //alignItems: 'flex-start'
+  },
+  topBar: {
+    flex: 1,
+    alignItems: 'center',
+    //flexDirection: 'row',
+    //justifyContent: 'space-between',
+    borderColor: '#F00',
+    backgroundColor: '#213577',
+    position: 'absolute',
+    left: 20,
+    top: 45
   }
 })
 

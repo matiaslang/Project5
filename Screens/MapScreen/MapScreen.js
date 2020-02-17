@@ -179,14 +179,14 @@ class mapScreen extends React.Component {
               <MarkerInfo
                 image={markerImages[3]}
                 text={
-                  'This icon is a place where you can go and talk in Finnish!'
+                  'This icon shows the place where you can go and practice your Finnish.'
                 }
               />
               <View style={styles.infoText}>
                 <Text style={{}}>
-                  Here we have a map which includes markers, where you can go
-                  and speak Finnish. All these places have an QR -code
-                  (sometimes behind counter). Go talk to them! :){' '}
+                  Here we have a map that includes multiple markers, where you
+                  can go and practice your Finnish. All these places have a
+                  QR-code which you can scan and save your visit.{' '}
                 </Text>
               </View>
             </View>
