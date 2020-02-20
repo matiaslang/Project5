@@ -84,10 +84,17 @@ function Qrcamera(props) {
   }
 
   return (
-    <Camera
-      onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-      style={StyleSheet.absoluteFill}
-    ></Camera>
+    <View style={StyleSheet.container}>
+      <View style={{ alignSelf: 'center', flex: 10 }}></View>
+      <Camera
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={{ flex: 5, alignSelf: 'center', height: 300, width: 200 }}
+        barCodeScannerSettings={{
+          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
+        }}
+      ></Camera>
+      <View style={{ alignItems: 'center', flex: 10 }}></View>
+    </View>
   )
   /*
 <QRCodeScanner onRead={this.onSuccess} flashMode={QRCodeScanner.Constants.flashMode.torch}
