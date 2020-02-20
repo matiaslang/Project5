@@ -1,9 +1,17 @@
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions, Image } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  AsyncStorage
+} from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import Markers from './Markers'
 import FloatingButton from './FloatingButton'
 import Modal from 'react-native-modal'
+import { t } from '../../Locales'
 
 const marker1 = require('../../assets/Ikonit/Markkerit/Marker_1-01.png')
 const marker2 = require('../../assets/Ikonit/Markkerit/Marker_2-01.png')
@@ -46,19 +54,40 @@ class mapScreen extends React.Component {
     title: 'Map'
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      region: initialRegion,
+      isModalVisible: false,
+      fi: ''
+    }
+  }
+
+  _getItem = async key => {
+    console.log('We are here - MAPSCREEN')
+    try {
+      await AsyncStorage.getItem('fi', (err, value) => {
+        if (err) {
+          console.log('virher 2')
+          console.log(err)
+        } else {
+          value = JSON.parse(value)
+          console.log('Palautusarvo on: - MAPSCREEN')
+          console.log(value)
+          return value
+        }
+      })
+    } catch (error) {
+      console.log('virher 1')
+      console.log(error)
+    }
+  }
+
   setRegion(region) {
     if (this.state.ready) {
       setTimeout(() => this.map.mapview.animateToRegion(region), 10)
     }
     //this.setState({ region });
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      region: initialRegion,
-      isModalVisible: false
-    }
   }
 
   toggleModal = () => {
@@ -81,6 +110,7 @@ class mapScreen extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({ fi: this._getItem('FIN') })
     return getCurrentLocation().then(position => {
       if (position) {
         this.setState({
@@ -178,16 +208,10 @@ class mapScreen extends React.Component {
             <View style={styles.popupContent}>
               <MarkerInfo
                 image={markerImages[3]}
-                text={
-                  'This icon shows the place where you can go and practice your Finnish.'
-                }
+                text={t('MAPMARKERINFOTEXT', this.state.fi)}
               />
               <View style={styles.infoText}>
-                <Text style={{}}>
-                  Here we have a map that includes multiple markers, where you
-                  can go and practice your Finnish. All these places have a
-                  QR-code which you can scan and save your visit.{' '}
-                </Text>
+                <Text style={{}}>{t('MAPINFOTEXT', this.state.fi)}</Text>
               </View>
             </View>
             <FloatingButton

@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from 'react'
-//import translations, { DEFAULT_LANGUAGE } from '../translations'
-import LanguageOptions from '../LanguageOptions'
+import React, { Component, Fragment, useState } from 'react'
+
 import {
   StyleSheet,
   Text,
@@ -11,7 +10,8 @@ import {
   Image,
   Dimensions,
   ScrollView,
-  Button
+  Button,
+  AsyncStorage
 } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -20,23 +20,67 @@ import {
   heightPercentageToDP as hp
 } from 'react-native-responsive-screen'
 
+import { t } from '../Locales'
+
 const ScreenWidth = Dimensions.get('window').width
 const ScreenHeight = Dimensions.get('window').height
 
 class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      fi: true
+    }
+  }
+  _getItem = async key => {
+    try {
+      await AsyncStorage.getItem('fi', (err, value) => {
+        if (err) {
+          console.log(err)
+        } else {
+          value = JSON.parse(value)
+          console.log('Palautusarvo on:')
+          console.log(value)
+          return value
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  _setItem = async (key, lang) => {
+    try {
+      await AsyncStorage.setItem('fi', JSON.stringify(lang))
+      console.log('tallennettu arvo on')
+      console.log(JSON.stringify(lang))
+    } catch (error) {
+      console.log('THERE HAS BEEN AN ERROR SAVING DATA')
+    }
+  }
+
+  _languageChanged(event) {
+    this.setState({ fi: !this.state.fi })
+    this._setItem('FIN', this.state.fi)
+    //this._getItem('FIN')
+  }
   static navigationOptions = ({ navigation }) => {
     return {}
   }
 
   render() {
+    const { fi } = this.state
+
     return (
       <View style={styles.container}>
         <View style={styles.topBar}>
           <TouchableOpacity
-            onPress={() => alert('You pushed')}
+            onPress={() => {
+              this._languageChanged(this)
+            }}
             style={styles.flag}
           >
-            <Text> Touch Here </Text>
+            <Text> {this.state.fi} </Text>
           </TouchableOpacity>
         </View>
         <Image
@@ -45,9 +89,11 @@ class HomeScreen extends React.Component {
         />
         <View style={styles.placesBox}>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Places')}
+            onPress={() =>
+              this.props.navigation.navigate('Places', { fi: this.state.fi })
+            }
           >
-            <Text style={styles.upperButton}>Places</Text>
+            <Text style={styles.upperButton}>{t('PLACES', this.state.fi)}</Text>
           </TouchableOpacity>
 
           <View style={styles.boxesInside}>
@@ -88,22 +134,34 @@ class HomeScreen extends React.Component {
           </View>
 
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Places')}
+            onPress={() =>
+              this.props.navigation.navigate('Places', { fi: this.state.fi })
+            }
           >
-            <Text style={styles.lowerButton}>Show more</Text>
+            <Text style={styles.lowerButton}>
+              {t('SHOW_MORE', this.state.fi)}
+            </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.history}>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('History')}
+            onPress={() =>
+              this.props.navigation.navigate('History', { fi: this.state.fi })
+            }
           >
-            <Text style={styles.upperButton}>History</Text>
+            <Text style={styles.upperButton}>
+              {t('HISTORY', this.state.fi)}
+            </Text>
           </TouchableOpacity>
 
           <View style={styles.historyCounter}>
-            <Text style={styles.historyPlacesVisited}>Places visited: 5</Text>
-            <Text style={styles.boxTimesUsed}>Times used: 16</Text>
+            <Text style={styles.historyPlacesVisited}>
+              {t('PLACES_VISITED', this.state.fi)}: 5
+            </Text>
+            <Text style={styles.boxTimesUsed}>
+              {t('TIMES_USED', this.state.fi)}: 16
+            </Text>
           </View>
 
           <View style={styles.historyVisitedPlaces}>
@@ -113,9 +171,13 @@ class HomeScreen extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('History')}
+              onPress={() =>
+                this.props.navigation.navigate('History', { fi: this.state.fi })
+              }
             >
-              <Text style={styles.lowerButton}>Show more</Text>
+              <Text style={styles.lowerButton}>
+                {t('SHOW_MORE', this.state.fi)}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -1,14 +1,23 @@
 import React from 'react'
-import { Button, StyleSheet, Text, View, Image } from 'react-native'
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  AsyncStorage
+} from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
+
 import { Ionicons } from '@expo/vector-icons'
 import mapScreen from './Screens/MapScreen/MapScreen'
 import QrScreen from './Screens/QrScreen'
 import HomeScreen from './Screens/HomeScreen'
 import HistoryScreen from './Screens/HistoryScreen/HistoryScreen'
 import PlacesScreen from './Screens/PlacesScreen'
+import { AuthSession } from 'expo'
 
 class LogoTitle extends React.Component {
   render() {

@@ -8,6 +8,7 @@ import {
 } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import placehistory from './placehistory'
+import { t } from '../../Locales'
 
 const ScreenWidth = Dimensions.get('window').width
 const ScreenHeight = Dimensions.get('window').height
@@ -40,7 +41,8 @@ export default class HistoryScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      enabled: true
+      enabled: true,
+      fi: this.props.navigation.state.params.fi
     }
   }
 
@@ -54,11 +56,13 @@ export default class HistoryScreen extends Component {
               style={styles.Backbutton}
               onPress={() => navigate('Home')}
             >
-              <Text style={styles.Backbutton}>Back</Text>
+              <Text style={styles.Backbutton}>{t('BACK', this.state.fi)}</Text>
             </TouchableOpacity>
 
             <View style={styles.HistoryText}>
-              <Text style={styles.HistoryText}>History</Text>
+              <Text style={styles.HistoryText}>
+                {t('HISTORY', this.state.fi)}
+              </Text>
             </View>
             <View style={styles.blank}>
               <Text></Text>
@@ -68,8 +72,8 @@ export default class HistoryScreen extends Component {
             <View
               style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}
             >
-              <Text>Places visited: 5</Text>
-              <Text>Times used: 16</Text>
+              <Text>{t('PLACES_VISITED', this.state.fi)}: 5</Text>
+              <Text>{t('TIMES_USED', this.state.fi)}: 16</Text>
             </View>
             <View style={styles.hairline} />
           </View>

@@ -1,12 +1,20 @@
-'use string';
+'use string'
 
-import React, {Component, useState,useEffect} from 'react'
-import { Button, StyleSheet, Text, 
-        View, LayoutAnimation, Dimensions, 
-        StatusBar, TouchableOpacity, Alert, 
-        Linking, 
-        Vibration,
-        AsyncStorage} from 'react-native'
+import React, { Component, useState, useEffect } from 'react'
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  LayoutAnimation,
+  Dimensions,
+  StatusBar,
+  TouchableOpacity,
+  Alert,
+  Linking,
+  Vibration,
+  AsyncStorage
+} from 'react-native'
 import ReactDome from 'react-dom'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -18,14 +26,17 @@ import { Modal } from 'react-native-router-flux'
 import { Camera } from 'expo-camera'
 //import QRCodeScanner from 'react-native-qrcode-scanner'
 import { BarCodeScanner } from 'expo-barcode-scanner'
-import * as Permissions  from 'expo-permissions'
+import * as Permissions from 'expo-permissions'
 
 // for Textinput
-import {Textinput} from 'react-native'
-import { TextInput } from 'react-native-gesture-handler';
+import { Textinput } from 'react-native'
+import { TextInput } from 'react-native-gesture-handler'
 
 // for render control
 import ReactDom from 'react-dom'
+
+//For translations
+import { t } from '../Locales'
 
 /* funktio Qrcamera Qr koodi lukemiseen
   Decsription:
@@ -47,37 +58,37 @@ import ReactDom from 'react-dom'
       handleChange : 
 
 */
-function Qrcamera( props ) {
-  const handleChange = props.handleChange;
-  const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
+function Qrcamera(props) {
+  const handleChange = props.handleChange
+  const [hasPermission, setHasPermission] = useState(null)
+  const [scanned, setScanned] = useState(false)
 
   useEffect(() => {
-    (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, []);
+    ;(async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync()
+      setHasPermission(status === 'granted')
+    })()
+  }, [])
 
   const handleBarCodeScanned = ({ type, data }) => {
-    setScanned( true );
-    handleChange( true )
+    setScanned(true)
+    handleChange(true)
     //alert(`Luin tyypin ${type} ja datan ${data}!`);
-  };
+  }
 
   if (hasPermission === null) {
-    return <Text> Camera requires a permission for camera. </Text>;
+    return <Text> Camera requires a permission for camera. </Text>
   }
   if (hasPermission === false) {
-    return <Text> Permission not granted. </Text>;
+    return <Text> Permission not granted. </Text>
   }
 
   return (
     <Camera
-           onBarCodeScanned = { scanned ? undefined : handleBarCodeScanned }
-           style = {StyleSheet.absoluteFill} 
-      ></Camera>
-  );
+      onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+      style={StyleSheet.absoluteFill}
+    ></Camera>
+  )
   /*
 <QRCodeScanner onRead={this.onSuccess} flashMode={QRCodeScanner.Constants.flashMode.torch}
                    bottomContent= {
@@ -92,7 +103,6 @@ function Qrcamera( props ) {
            style = {StyleSheet.absoluteFill} 
       ></BarCodeScanner>
   */
-  
 }
 
 /* inputfield 
@@ -103,16 +113,18 @@ function Qrcamera( props ) {
         onChangeText : handler not defined explicitly
     
 */
-function Inputfield( props ){
-  const [ value, onChangeText ] = useState( null );
-  const storeInput = props.storeInput;
+function Inputfield(props) {
+  const [value, onChangeText] = useState(null)
+  const storeInput = props.storeInput
 
   return (
-     <View style={styles.inputcontainer}>
-       <TextInput style = {styles.inputfield} multiline = {true}
-            onChangeText={text => onChangeText( text ), text => storeInput( text) }
-            value = {value}>
-      </TextInput>
+    <View style={styles.inputcontainer}>
+      <TextInput
+        style={styles.inputfield}
+        multiline={true}
+        onChangeText={(text => onChangeText(text), text => storeInput(text))}
+        value={value}
+      ></TextInput>
     </View>
   )
 }
@@ -125,20 +137,23 @@ function Inputfield( props ){
         handleChange : handler function for tracking status, defined in and passed from QrScreen, further passed to Qrcamera function 
 */
 
-function Componentrender( props ){
-  const qrsscanned = props.qrsscanned;
-  const handleChange = props.handleChange;
-  const storeInput = props.storeInput;
-  if( qrsscanned === false ){
-    return( [<Text key={"qrtext"}> Scan a code</Text>,
-           <Qrcamera key={"qrscam"}  handleChange= { handleChange }/>] );
+function Componentrender(props) {
+  const qrsscanned = props.qrsscanned
+  const handleChange = props.handleChange
+  const storeInput = props.storeInput
+  if (qrsscanned === false) {
+    return [
+      <Text key={'qrtext'}> Scan a code</Text>,
+      <Qrcamera key={'qrscam'} handleChange={handleChange} />
+    ]
   }
-  if( qrsscanned === true ){
-    return( [ <Text key={"intext"}> What did you say? </Text>,
-             <Inputfield key={"infield"} storeInput={storeInput}/> 
-    ] );
+  if (qrsscanned === true) {
+    return [
+      <Text key={'intext'}> What did you say? </Text>,
+      <Inputfield key={'infield'} storeInput={storeInput} />
+    ]
   }
-  return( <Text> No bueno qrscanned is null </Text> )
+  return <Text> No bueno qrscanned is null </Text>
 }
 /*
   QrScreen
@@ -157,48 +172,50 @@ function Componentrender( props ){
        
 */
 
-class QrScreen extends React.Component{
-  constructor( props ){
-    super( props );
+class QrScreen extends React.Component {
+  constructor(props) {
+    super(props)
     this.state = {
-      qrsscanned : false,
-      message : undefined,
+      qrsscanned: false,
+      message: undefined
     }
-    this.handleChange = this.handleChange.bind( this );
-    this.storeInput = this.storeInput.bind( this );
-    this.onPress = this.onPress.bind( this );
+    this.handleChange = this.handleChange.bind(this)
+    this.storeInput = this.storeInput.bind(this)
+    this.onPress = this.onPress.bind(this)
   }
 
-  handleChange( is_scanned ){
-    this.setState( { qrsscanned : is_scanned });
+  handleChange(is_scanned) {
+    this.setState({ qrsscanned: is_scanned })
   }
 
-  storeInput( text ){
-    if( this.message == undefined ){
-      this.message = text;
+  storeInput(text) {
+    if (this.message == undefined) {
+      this.message = text
+    } else {
+      this.message += text
     }
-    else{
-      this.message += text;
-    }
-  } 
-  onPress( ){
-    const { navigate } = this.props.navigation;
-    alert( "Viestisi on " + this.message );
-    navigate( 'Home' );
   }
-  
-  render( ){
-    const qrsscanned = this.state.qrsscanned;
+  onPress() {
+    const { navigate } = this.props.navigation
+    alert('Viestisi on ' + this.message)
+    navigate('Home')
+  }
+
+  render() {
+    const qrsscanned = this.state.qrsscanned
     return (
       <View style={styles.container}>
-        <Componentrender qrsscanned = { qrsscanned } handleChange={this.handleChange} storeInput={this.storeInput}></Componentrender>
-        <Button title="Return to home page" onPress={this.onPress}></Button>
+        <Componentrender
+          qrsscanned={qrsscanned}
+          handleChange={this.handleChange}
+          storeInput={this.storeInput}
+        ></Componentrender>
+        <Button title='Return to home page' onPress={this.onPress}></Button>
       </View>
-
     )
   }
   /* define button's handleclick here. We might want to use same button with different logo.
-  <Button title="takaisin onClick={this.handleClick}*/ 
+  <Button title="takaisin onClick={this.handleClick}*/
 }
 
 /* const styles
@@ -222,31 +239,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
 
-  qrcamera : {
-    flex : 1,
+  qrcamera: {
+    flex: 1
   },
 
-  inputcontainer : {
-    borderColor : 'black',
-    backgroundColor : '#CFCFCF',
-    paddingRight : 5,
-    paddingLeft : 5,
-    alignItems : 'center',
-    alignSelf : 'center',
-    justifyContent : 'center',
+  inputcontainer: {
+    borderColor: 'black',
+    backgroundColor: '#CFCFCF',
+    paddingRight: 5,
+    paddingLeft: 5,
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center'
   },
 
-  inputfield : {
-    backgroundColor : '#CFCFCF',
-    borderWidth : 5,
-    height : 200,
-    width : 200,
-    borderColor : '#CFCFCF',
-    alignItems : 'center',
-    alignSelf : 'center',
-    justifyContent : 'center',
+  inputfield: {
+    backgroundColor: '#CFCFCF',
+    borderWidth: 5,
+    height: 200,
+    width: 200,
+    borderColor: '#CFCFCF',
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center'
   },
-  
+
   placesNearby: {
     flex: 1,
     backgroundColor: '#bfcfff',
@@ -257,5 +274,5 @@ const styles = StyleSheet.create({
   },
 
   header: {}
-}) 
+})
 export default QrScreen
