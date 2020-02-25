@@ -123,7 +123,7 @@ function Qrcamera(props) {
 function Inputfield(props) {
   const [value, onChangeText] = useState(null)
   const storeInput = props.storeInput
-
+  
   return (
     <View style={styles.inputcontainer}>
       <TextInput
@@ -189,6 +189,7 @@ class QrScreen extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.storeInput = this.storeInput.bind(this)
     this.onPress = this.onPress.bind(this)
+    this.submitMessage = this.submitMessage.bind( this )
   }
 
   handleChange(is_scanned) {
@@ -202,9 +203,26 @@ class QrScreen extends React.Component {
       this.message += text
     }
   }
+
+  async submitMessage( item ){
+    let nItem = JSON.stringify( item );
+    let token;
+    AsyncStorage.getItem( 'WORDS',  ( error, value )  => {
+      if( !error ){
+        token = {WORDS:value};
+      }
+    })
+    alert( "stuff in submitmessage " + nItem + " token is " + token )
+    await AsyncStorage.setItem( 'WORDS', nItem );
+  }
   onPress() {
+    let item = {
+      words : this.message,
+      number_of : 1,
+    }
     const { navigate } = this.props.navigation
-    alert('Viestisi on ' + this.message)
+    this.submitMessage( item );
+    this.setState( { message : undefined } );
     navigate('Home')
   }
 
