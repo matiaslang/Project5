@@ -38,6 +38,9 @@ import ReactDom from 'react-dom'
 //For translations
 import { t } from '../Locales'
 
+// for asyncstorage
+const STORAGE_KEY = '@words'
+
 /* funktio Qrcamera Qr koodi lukemiseen
   Decsription:
       for reading qr code
@@ -123,13 +126,13 @@ function Qrcamera(props) {
 function Inputfield(props) {
   const [value, onChangeText] = useState(null)
   const storeInput = props.storeInput
-  
+  const qrscanned = props.qrscanned;
   return (
     <View style={styles.inputcontainer}>
-      <TextInput
+      <TextInput 
         style={styles.inputfield}
         multiline={true}
-        onChangeText={(text => onChangeText(text), text => storeInput(text))}
+        onChangeText={(text => onChangeText(text), text => storeInput(text) )}
         value={value}
       ></TextInput>
     </View>
@@ -145,19 +148,21 @@ function Inputfield(props) {
 */
 
 function Componentrender(props) {
-  const qrsscanned = props.qrsscanned
+  const qrscanned = props.qrscanned
   const handleChange = props.handleChange
   const storeInput = props.storeInput
-  if (qrsscanned === false) {
+  const thisInput = undefined;
+
+  if (qrscanned === false) {
     return [
       <Text key={'qrtext'}> Scan a code</Text>,
       <Qrcamera key={'qrscam'} handleChange={handleChange} />
     ]
   }
-  if (qrsscanned === true) {
+  if (qrscanned === true) {
     return [
       <Text key={'intext'}> What did you say? </Text>,
-      <Inputfield key={'infield'} storeInput={storeInput} />
+      <Inputfield key={'infield'} storeInput={storeInput} qrscanned={ qrscanned } />
     ]
   }
   return <Text> No bueno qrscanned is null </Text>
@@ -183,7 +188,7 @@ class QrScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      qrsscanned: false,
+      qrscanned: false,
       message: undefined
     }
     this.handleChange = this.handleChange.bind(this)
@@ -193,7 +198,7 @@ class QrScreen extends React.Component {
   }
 
   handleChange(is_scanned) {
-    this.setState({ qrsscanned: is_scanned })
+    this.setState({ qrscanned: is_scanned })
   }
 
   storeInput(text) {
@@ -207,13 +212,16 @@ class QrScreen extends React.Component {
   async submitMessage( item ){
     let nItem = JSON.stringify( item );
     let token;
-    AsyncStorage.getItem( 'WORDS',  ( error, value )  => {
-      if( !error ){
-        token = {WORDS:value};
-      }
-    })
-    alert( "stuff in submitmessage " + nItem + " token is " + token )
-    await AsyncStorage.setItem( 'WORDS', nItem );
+
+    AsyncStorage.setItem( STORAGE_KEY, nItem );
+    try{
+      const token = await AsyncStorage.getItem( STORAGE_KEY );
+      const message = JSON.parse( token );
+      alert( "AsyncStorage getItem. message is " + message.words + " number is " + message.number_of );
+    }
+    catch( error ){
+      alert( "fuck up in submitmessage asyncget " + error.message)
+    }
   }
   onPress() {
     let item = {
@@ -227,11 +235,11 @@ class QrScreen extends React.Component {
   }
 
   render() {
-    const qrsscanned = this.state.qrsscanned
+    const qrscanned = this.state.qrscanned
     return (
       <View style={styles.container}>
         <Componentrender
-          qrsscanned={qrsscanned}
+          qrscanned={qrscanned}
           handleChange={this.handleChange}
           storeInput={this.storeInput}
         ></Componentrender>
