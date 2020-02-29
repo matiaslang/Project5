@@ -197,6 +197,8 @@ class QrScreen extends React.Component {
     this.storeInput = this.storeInput.bind(this)
     this.onPress = this.onPress.bind(this)
     this.submitMessage = this.submitMessage.bind( this )
+
+    this.getkeys = this.getkeys.bind( this );
   }
 
   handleChange(is_scanned) {
@@ -207,18 +209,31 @@ class QrScreen extends React.Component {
     this.message = text;
   }
 
+  async getkeys( ){
+    try{
+      console.log( "inside try")
+      const keys = await AsyncStorage.getAllKeys( );
+      console.log( "keys are " + keys)
+      const result = await AsyncStorage.multiGet( keys );
+      console.log( "results are " + result);
+    }
+    catch( error ){
+      console.error( error )
+    }
+  }
+
   async submitMessage( item ){
     let nItem = JSON.stringify( item );
     let token;
-
+    this.getkeys( )
     AsyncStorage.setItem( STORAGE_KEY, nItem );
     try{
       const token = await AsyncStorage.getItem( STORAGE_KEY );
       const message = JSON.parse( token );
-      alert( "AsyncStorage getItem. message is " + message.words + " number is " + message.number_of );
+      console.log( "AsyncStorage getItem. message is " + message.words + " number is " + message.number_of );
     }
     catch( error ){
-      alert( "fuck up in submitmessage asyncget " + error.message)
+      console.log( "fuck up in submitmessage asyncget " + error.message)
     }
   }
   onPress() {
@@ -230,7 +245,7 @@ class QrScreen extends React.Component {
     this.setState( { qrscanned : false})
     const { navigate } = this.props.navigation
     this.submitMessage( item );
-    alert( "message is " + this.message)
+    console.log( "message is " + this.message)
     navigate('Home')
   }
 
