@@ -127,14 +127,15 @@ function Inputfield(props) {
   const [value, onChangeText] = useState(null)
   const storeInput = props.storeInput
   const qrscanned = props.qrscanned;
+  const text = props.text
+  
   return (
     <View style={styles.inputcontainer}>
-      <TextInput 
-        style={styles.inputfield}
-        multiline={true}
-        onChangeText={(text => onChangeText(text), text => storeInput(text) )}
-        value={value}
-      ></TextInput>
+      <TextInput
+                style= {styles.inputfield}
+                multiline= {true}
+                onChangeText= {( text => onChangeText( text ), value => storeInput( value ) )}
+              />
     </View>
   )
 }
@@ -151,7 +152,7 @@ function Componentrender(props) {
   const qrscanned = props.qrscanned
   const handleChange = props.handleChange
   const storeInput = props.storeInput
-  const thisInput = undefined;
+  const screenText = props.text;
 
   if (qrscanned === false) {
     return [
@@ -162,7 +163,7 @@ function Componentrender(props) {
   if (qrscanned === true) {
     return [
       <Text key={'intext'}> What did you say? </Text>,
-      <Inputfield key={'infield'} storeInput={storeInput} qrscanned={ qrscanned } />
+      <Inputfield key={'infield'} storeInput={storeInput} qrscanned={ qrscanned } text={screenText} />
     ]
   }
   return <Text> No bueno qrscanned is null </Text>
@@ -191,6 +192,7 @@ class QrScreen extends React.Component {
       qrscanned: false,
       message: undefined
     }
+    this.submitButton = this.button;
     this.handleChange = this.handleChange.bind(this)
     this.storeInput = this.storeInput.bind(this)
     this.onPress = this.onPress.bind(this)
@@ -202,11 +204,7 @@ class QrScreen extends React.Component {
   }
 
   storeInput(text) {
-    if (this.message == undefined) {
-      this.message = text
-    } else {
-      this.message += text
-    }
+    this.message = text;
   }
 
   async submitMessage( item ){
@@ -228,9 +226,11 @@ class QrScreen extends React.Component {
       words : this.message,
       number_of : 1,
     }
+    this.setState( { message : ''})
+    this.setState( { qrscanned : false})
     const { navigate } = this.props.navigation
     this.submitMessage( item );
-    this.setState( { message : undefined } );
+    alert( "message is " + this.message)
     navigate('Home')
   }
 
@@ -238,12 +238,13 @@ class QrScreen extends React.Component {
     const qrscanned = this.state.qrscanned
     return (
       <View style={styles.container}>
-        <Componentrender
+        <Componentrender 
           qrscanned={qrscanned}
           handleChange={this.handleChange}
           storeInput={this.storeInput}
+          text={this.message}
         ></Componentrender>
-        <Button title='Return to home page' onPress={this.onPress}></Button>
+        <Button ref={this.submitButton} title='Return to home page' onPress={this.onPress}></Button>
       </View>
     )
   }
