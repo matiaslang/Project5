@@ -65,6 +65,8 @@ function Qrcamera(props) {
   const handleChange = props.handleChange
   const [hasPermission, setHasPermission] = useState(null)
   const [scanned, setScanned] = useState(false)
+  const window = Dimensions.get( 'window' )
+  
 
   useEffect(() => {
     ;(async () => {
@@ -76,7 +78,7 @@ function Qrcamera(props) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true)
     handleChange(true)
-    //alert(`Luin tyypin ${type} ja datan ${data}!`);
+    console.log(`Luin tyypin ${type} ja datan ${data}!`);
   }
 
   if (hasPermission === null) {
@@ -87,16 +89,17 @@ function Qrcamera(props) {
   }
 
   return (
-    <View style={StyleSheet.container}>
-      <View style={{ alignSelf: 'center', flex: 10 }}></View>
+    <View style={ styles.qrcontainer}>
+      <View style={ styles.viewpaddingcamera}></View>
+      <Text> Scan a code </Text>
       <Camera
+        style= {{ flex : 8,  width : window.width/1.2, height: window.height/3 }}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={{ flex: 5, alignSelf: 'center', height: 300, width: 200 }}
         barCodeScannerSettings={{
           barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
         }}
       ></Camera>
-      <View style={{ alignItems: 'center', flex: 10 }}></View>
+      <View style={ styles.viewpaddingcamera}></View>
     </View>
   )
   /*
@@ -130,12 +133,17 @@ function Inputfield(props) {
   const text = props.text
   
   return (
-    <View style={styles.inputcontainer}>
-      <TextInput
+    <View >
+      <View style={styles.viewpaddingtext}/>
+      <Text style= { {alignSelf:'center' } }> What did you say?</Text>
+      <View style={ styles.bordercontainer }>
+        <TextInput
                 style= {styles.inputfield}
                 multiline= {true}
                 onChangeText= {( text => onChangeText( text ), value => storeInput( value ) )}
               />
+      </View>
+      <View style={ styles.viewpaddingtext }></View>
     </View>
   )
 }
@@ -156,13 +164,11 @@ function Componentrender(props) {
 
   if (qrscanned === false) {
     return [
-      <Text key={'qrtext'}> Scan a code</Text>,
       <Qrcamera key={'qrscam'} handleChange={handleChange} />
     ]
   }
   if (qrscanned === true) {
     return [
-      <Text key={'intext'}> What did you say? </Text>,
       <Inputfield key={'infield'} storeInput={storeInput} qrscanned={ qrscanned } text={screenText} />
     ]
   }
@@ -190,7 +196,7 @@ class QrScreen extends React.Component {
     super(props)
     this.state = {
       qrscanned: false,
-      message: undefined
+      message: undefined,
     }
     this.submitButton = this.button;
     this.handleChange = this.handleChange.bind(this)
@@ -211,7 +217,6 @@ class QrScreen extends React.Component {
 
   async getkeys( ){
     try{
-      console.log( "inside try")
       const keys = await AsyncStorage.getAllKeys( );
       console.log( "keys are " + keys)
       const result = await AsyncStorage.multiGet( keys );
@@ -226,7 +231,7 @@ class QrScreen extends React.Component {
     let nItem = JSON.stringify( item );
     let token;
     this.getkeys( )
-    AsyncStorage.setItem( STORAGE_KEY, nItem );
+    AsyncStorage.setItem( nItem.parse( ), nItem );
     try{
       const token = await AsyncStorage.getItem( STORAGE_KEY );
       const message = JSON.parse( token );
@@ -253,13 +258,13 @@ class QrScreen extends React.Component {
     const qrscanned = this.state.qrscanned
     return (
       <View style={styles.container}>
-        <Componentrender 
+        <Componentrender
           qrscanned={qrscanned}
           handleChange={this.handleChange}
           storeInput={this.storeInput}
           text={this.message}
         ></Componentrender>
-        <Button ref={this.submitButton} title='Return to home page' onPress={this.onPress}></Button>
+        <Button style={styles.button} ref={this.submitButton} title='Return to home page' onPress={this.onPress}></Button>
       </View>
     )
   }
@@ -282,35 +287,73 @@ class QrScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 5,
     backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center'
   },
 
+  qrcontainer : {
+    flex : 30,
+    flexDirection : 'column',
+    alignItems : 'center',
+    borderColor : 'red',
+  },
+
   qrcamera: {
-    flex: 1
+    flex: 20, 
+    flexDirection : 'row',
+    alignSelf: 'center',
+    justifyContent : 'center',
+    borderColor : 'gray',
+  },
+
+  textfield:{
+    flex : 100,
+    alignSelf : 'center',
   },
 
   inputcontainer: {
-    borderColor: 'black',
-    backgroundColor: '#CFCFCF',
-    paddingRight: 5,
-    paddingLeft: 5,
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center'
+    flex : 10,
+    flexDirection : 'row',
+    alignItems : 'center',
+    alignSelf : 'center',
+    backgroundColor : "#ffffff",
+  },
+
+  bordercontainer : {
+    flex : 5,
+    borderColor : 'gray',
+    borderRadius : 10,
+    borderWidth : 10,
   },
 
   inputfield: {
-    backgroundColor: '#CFCFCF',
-    borderWidth: 5,
-    height: 200,
-    width: 200,
-    borderColor: '#CFCFCF',
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center'
+    width : 300,
+    flex : 50,
+    flexDirection : 'column',
+    alignSelf : 'center',
+    backgroundColor : '#ffffff',
+    textAlignVertical : 'top',
+  },
+
+  viewpaddingtext: {
+    flex : 2,
+    flexDirection : 'row',
+    alignSelf : 'center',
+    backgroundColor : '#ff0000',
+  },
+
+
+  viewpaddingcamera: {
+    flex : 10,
+    flexDirection : 'row',
+    alignSelf : 'center',
+    backgroundColor : '#ff0000',
+  },
+
+  button : {
+    flex : 5,
   },
 
   placesNearby: {
