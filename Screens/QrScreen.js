@@ -16,6 +16,7 @@ import {
   AsyncStorage,
   useWindowDimensions
 } from 'react-native'
+import 'react-native-gesture-handler'
 import ReactDome from 'react-dom'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
