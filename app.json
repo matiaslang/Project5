@@ -4,11 +4,8 @@
     "slug": "Project5",
     "privacy": "public",
     "sdkVersion": "36.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
+    "description": "Project 5 is an upcoming application for international students in language and communication education. Application’s goal is to encourage these students to use Finnish language outside the class. Please feel free to test the application and give us any kind of feedback for us to improve it even further. Thank you!",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/Logo/logo1.png",
@@ -20,18 +17,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false
     },
     "android": {
-      "permissions": [
-        "VIBRATE",
-        "CAMERA",
-        "AUDIO_RECORDING"
-      ]
+      "permissions": ["VIBRATE", "CAMERA", "AUDIO_RECORDING"]
     }
   }
 }

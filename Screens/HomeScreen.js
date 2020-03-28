@@ -29,12 +29,13 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      fi: true
+      fi: true,
+      flagUri: require('../assets/Ikonit/Kielivalinta/Lippu2-01.png')
     }
   }
   _getItem = async key => {
     try {
-      await AsyncStorage.getItem('fi', (err, value) => {
+      await AsyncStorage.getItem(key, (err, value) => {
         if (err) {
           console.log(err)
         } else {
@@ -62,6 +63,12 @@ class HomeScreen extends React.Component {
   _languageChanged(event) {
     this.setState({ fi: !this.state.fi })
     this._setItem('FIN', this.state.fi)
+    this.setState({
+      flagUri:
+        this.state.fi == true
+          ? require('../assets/Ikonit/Kielivalinta/Lippu1-01.png')
+          : require('../assets/Ikonit/Kielivalinta/Lippu2-01.png')
+    })
     //this._getItem('FIN')
   }
   static navigationOptions = ({ navigation }) => {
@@ -78,9 +85,9 @@ class HomeScreen extends React.Component {
             onPress={() => {
               this._languageChanged(this)
             }}
-            style={styles.flag}
+            //style={styles.flag}
           >
-            <Text> {this.state.fi} </Text>
+            <Image source={this.state.flagUri} style={styles.flagImage} />
           </TouchableOpacity>
         </View>
         <Image
@@ -333,8 +340,8 @@ const styles = StyleSheet.create({
   flag: {
     borderWidth: 5,
     borderColor: '#F00',
-    backgroundColor: '#213577',
-    color: '#9ACD32',
+    //backgroundColor: '#213577',
+    //color: '#9ACD32',
     width: 50,
     height: 50,
     left: 0
@@ -347,10 +354,19 @@ const styles = StyleSheet.create({
     //flexDirection: 'row',
     //justifyContent: 'space-between',
     borderColor: '#F00',
-    backgroundColor: '#213577',
+    backgroundColor: '#000',
     position: 'absolute',
     left: 20,
     top: 45
+  },
+  flagImage: {
+    height: 50,
+    width: 100,
+    resizeMode: 'contain'
+
+    //position: 'absolute',
+    //left: 20,
+    //top: 45
   }
 })
 
