@@ -29,8 +29,9 @@ import { BarCodeScanner } from 'expo-barcode-scanner'
 import * as Permissions from 'expo-permissions'
 
 // for Textinput
-import { Textinput } from 'react-native'
+import { Textinput, ScrollView } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
+
 
 // for render control
 import ReactDom from 'react-dom'
@@ -137,11 +138,14 @@ function Inputfield(props) {
       <View style={styles.viewpaddingtext}/>
       <Text style= { {alignSelf:'center' } }> What did you say?</Text>
       <View style={ styles.bordercontainer }>
-        <TextInput
+        <ScrollView style={styles.ScrollView}>
+          <TextInput
                 style= {styles.inputfield}
                 multiline= {true}
+                
                 onChangeText= {( text => onChangeText( text ), value => storeInput( value ) )}
               />
+        </ScrollView>
       </View>
       <View style={ styles.viewpaddingtext }></View>
     </View>
