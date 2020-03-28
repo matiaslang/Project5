@@ -137,10 +137,9 @@ function Inputfield(props) {
   return (
     <View >
       <View style={styles.viewpaddingtext}/>
-      <ScrollView style={styles.ScrollView}>
+      <ScrollView style={styles.ScrollView}></ScrollView>
       <Text style= { {alignSelf:'center' } }> What did you say?</Text>
       <View style={ styles.bordercontainer }>
-        
           <TextInput
                 style= {styles.inputfield}
                 multiline= {true}
@@ -148,7 +147,7 @@ function Inputfield(props) {
                 onChangeText= {( text => onChangeText( text ), value => storeInput( value ) )}
               />
       </View>
-      </ScrollView>
+      <ScrollView style={styles.ScrollView}></ScrollView>
       <View style={ styles.viewpaddingtext }></View>
     </View>
   )
@@ -370,7 +369,7 @@ const styles = StyleSheet.create({
 
   // inputfield top view
   viewpaddingtext: {
-    flex : 3,
+    flex : 1,
     flexDirection : 'row',
     alignSelf : 'center',
     backgroundColor : '#ff0000',
