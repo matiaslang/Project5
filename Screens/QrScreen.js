@@ -201,7 +201,7 @@ class QrScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      qrscanned: true,
+      qrscanned: false,
       message: undefined,
       firstMessage : 0,
     }
