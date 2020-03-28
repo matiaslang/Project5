@@ -13,7 +13,8 @@ import {
   Alert,
   Linking,
   Vibration,
-  AsyncStorage
+  AsyncStorage,
+  useWindowDimensions
 } from 'react-native'
 import ReactDome from 'react-dom'
 import { createAppContainer } from 'react-navigation'
@@ -136,17 +137,18 @@ function Inputfield(props) {
   return (
     <View >
       <View style={styles.viewpaddingtext}/>
+      <ScrollView style={styles.ScrollView}>
       <Text style= { {alignSelf:'center' } }> What did you say?</Text>
       <View style={ styles.bordercontainer }>
-        <ScrollView style={styles.ScrollView}>
+        
           <TextInput
                 style= {styles.inputfield}
                 multiline= {true}
                 
                 onChangeText= {( text => onChangeText( text ), value => storeInput( value ) )}
               />
-        </ScrollView>
       </View>
+      </ScrollView>
       <View style={ styles.viewpaddingtext }></View>
     </View>
   )
@@ -199,7 +201,7 @@ class QrScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      qrscanned: false,
+      qrscanned: true,
       message: undefined,
       firstMessage : 0,
     }
@@ -315,12 +317,14 @@ class QrScreen extends React.Component {
 
 */
 
+
+
 const styles = StyleSheet.create({
   container: {
-    flex: 5,
+    flex: 10,
     backgroundColor: '#ffffff',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent : 'flex-end',
   },
 
   qrcontainer : {
@@ -338,37 +342,35 @@ const styles = StyleSheet.create({
     borderColor : 'gray',
   },
 
-  textfield:{
-    flex : 100,
-    alignSelf : 'center',
-  },
 
   inputcontainer: {
-    flex : 10,
+    flex : 5,
     flexDirection : 'row',
     alignItems : 'center',
     alignSelf : 'center',
     backgroundColor : "#ffffff",
   },
 
+  // inputfield field borders
   bordercontainer : {
     flex : 5,
     borderColor : 'gray',
     borderRadius : 10,
-    borderWidth : 10,
+    borderWidth : 5,
   },
-
+  // textinput
   inputfield: {
     width : 300,
-    flex : 50,
+    flex : 10,
     flexDirection : 'column',
     alignSelf : 'center',
     backgroundColor : '#ffffff',
     textAlignVertical : 'top',
   },
 
+  // inputfield top view
   viewpaddingtext: {
-    flex : 2,
+    flex : 3,
     flexDirection : 'row',
     alignSelf : 'center',
     backgroundColor : '#ff0000',
@@ -383,7 +385,9 @@ const styles = StyleSheet.create({
   },
 
   button : {
-    flex : 5,
+    flex : 10,
+    flexDirection : 'column',
+    alignSelf : 'center',
   },
 
   placesNearby: {
