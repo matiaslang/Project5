@@ -197,6 +197,7 @@ class QrScreen extends React.Component {
     this.state = {
       qrscanned: false,
       message: undefined,
+      firstMessage : 0,
     }
     this.submitButton = this.button;
     this.handleChange = this.handleChange.bind(this)
@@ -229,17 +230,43 @@ class QrScreen extends React.Component {
 
   async submitMessage( item ){
     let nItem = JSON.stringify( item );
+    console.log( "message is " + nItem );
     let token;
-    this.getkeys( )
-    AsyncStorage.setItem( nItem.parse( ), nItem );
     try{
-      const token = await AsyncStorage.getItem( STORAGE_KEY );
-      const message = JSON.parse( token );
-      console.log( "AsyncStorage getItem. message is " + message.words + " number is " + message.number_of );
+      if( this.firstMessage === 0 ){
+        await AsyncStorage.clear( );
+        await AsyncStorage.setItem( "phrases", nItem );
+        console.log( " first message " + this.firstMessage);
+        this.numOfMessage = 1;
+        this.firstMessage = 1;
+        console.log( "if message " + this.firstMessage );
+      }
+      else{
+        const keyValuePair = await AsyncStorage.getItem( "phrases" );
+        if( keyValuePair === null){
+             await AsyncStorage.setItem( "phrases", nItem );
+             console.log( "if message " + this.firstMessage );
+        }
+        else{
+          console.log( "keyValuePair is " + keyValuePair );
+          value = JSON.parse( keyValuePair );
+          await AsyncStorage.removeItem( keyValuePair );
+          console.log( "value is " + value );
+          value.number_of++;
+          console.log( "value is " + value);
+          newValue = JSON.stringify( value );
+          await AsyncStorage.setItem( newValue );
+          console.log( "else message " + this.firstMessage );
+        }
+      }
+      await AsyncStorage.getItem( "phrases" ).then( message  => {
+        console.log( message );
+      } );
     }
     catch( error ){
       console.log( "fuck up in submitmessage asyncget " + error.message)
     }
+  
   }
   onPress() {
     let item = {
@@ -250,7 +277,6 @@ class QrScreen extends React.Component {
     this.setState( { qrscanned : false})
     const { navigate } = this.props.navigation
     this.submitMessage( item );
-    console.log( "message is " + this.message)
     navigate('Home')
   }
 
