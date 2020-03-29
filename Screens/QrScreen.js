@@ -14,9 +14,11 @@ import {
   Linking,
   Vibration,
   AsyncStorage,
-  useWindowDimensions
+  useWindowDimensions,
+  Keyboard
 } from 'react-native'
-import 'react-native-gesture-handler'
+
+
 import ReactDome from 'react-dom'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -144,7 +146,8 @@ function Inputfield(props) {
           <TextInput
                 style= {styles.inputfield}
                 multiline= {true}
-                
+                returnKeyType = "done"
+                onKeyPress = {( key ) => { Keyboard.dismiss( ) } }
                 onChangeText= {( text => onChangeText( text ), value => storeInput( value ) )}
               />
       </View>
