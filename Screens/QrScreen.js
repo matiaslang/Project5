@@ -42,6 +42,7 @@ import ReactDom from 'react-dom'
 
 //For translations
 import { t } from '../Locales'
+import { AuthSession } from 'expo'
 
 // for asyncstorage
 const STORAGE_KEY = '@words'
@@ -147,7 +148,7 @@ function Inputfield(props) {
                 style= {styles.inputfield}
                 multiline= {true}
                 returnKeyType = "done"
-                onKeyPress = {( key ) => { Keyboard.dismiss( ) } }
+                //onKeyPress = {( key ) => { Keyboard.dismiss( ) } }
                 onChangeText= {( text => onChangeText( text ), value => storeInput( value ) )}
               />
       </View>
@@ -238,6 +239,7 @@ class QrScreen extends React.Component {
   }
 
   async submitMessage( item ){
+    await AsyncStorage.clear( );
     let nItem = JSON.stringify( item );
     console.log( "message is " + nItem );
     let token;
@@ -257,20 +259,20 @@ class QrScreen extends React.Component {
              console.log( "if message " + this.firstMessage );
         }
         else{
+          const keys = await AsyncStorage.getAllKeys( );
+          const result = await AsyncStorage.multiGet( keys );
+          console.log( "keys are " + keys );
+          result.map( req => JSON.parse( req ) ).forEach( console.log( ) );
+          
+          
           console.log( "keyValuePair is " + keyValuePair );
           value = JSON.parse( keyValuePair );
           await AsyncStorage.removeItem( keyValuePair );
-          console.log( "value is " + value );
           value.number_of++;
-          console.log( "value is " + value);
           newValue = JSON.stringify( value );
           await AsyncStorage.setItem( newValue );
-          console.log( "else message " + this.firstMessage );
         }
       }
-      await AsyncStorage.getItem( "phrases" ).then( message  => {
-        console.log( message );
-      } );
     }
     catch( error ){
       console.log( "fuck up in submitmessage asyncget " + error.message)
@@ -291,7 +293,8 @@ class QrScreen extends React.Component {
 
   render() {
     const qrscanned = this.state.qrscanned
-    return (
+    try{
+      return (
       <View style={styles.container}>
         <Componentrender
           qrscanned={qrscanned}
@@ -302,6 +305,10 @@ class QrScreen extends React.Component {
         <Button style={styles.button} ref={this.submitButton} title='Return to home page' onPress={this.onPress}></Button>
       </View>
     )
+    }
+    catch( error ){
+      console.log( error.message )
+    }
   }
   /* define button's handleclick here. We might want to use same button with different logo.
   <Button title="takaisin onClick={this.handleClick}*/
@@ -323,6 +330,10 @@ class QrScreen extends React.Component {
 
 
 const styles = StyleSheet.create({
+
+  ScrollView: {
+    backgroundColor: '#0000ff'
+  },
   container: {
     flex: 10,
     backgroundColor: '#ffffff',
