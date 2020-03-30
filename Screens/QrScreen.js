@@ -45,7 +45,7 @@ import { t } from '../Locales'
 import { AuthSession } from 'expo'
 
 // for asyncstorage
-const STORAGE_KEY = '@words'
+const STORAGE_KEY = ''
 
 /* funktio Qrcamera Qr koodi lukemiseen
   Decsription:
@@ -209,7 +209,6 @@ class QrScreen extends React.Component {
       message: undefined,
       firstMessage : 0,
     }
-    this.submitButton = this.button;
     this.handleChange = this.handleChange.bind(this)
     this.storeInput = this.storeInput.bind(this)
     this.onPress = this.onPress.bind(this)
@@ -253,24 +252,14 @@ class QrScreen extends React.Component {
         console.log( "if message " + this.firstMessage );
       }
       else{
-        const keyValuePair = await AsyncStorage.getItem( "phrases" );
+        const keyValuePair = await AsyncStorage.getItem( STORAGE_KEY );
         if( keyValuePair === null){
-             await AsyncStorage.setItem( "phrases", nItem );
+             await AsyncStorage.setItem( KEY, nItem );
              console.log( "if message " + this.firstMessage );
         }
         else{
-          const keys = await AsyncStorage.getAllKeys( );
-          const result = await AsyncStorage.multiGet( keys );
-          console.log( "keys are " + keys );
-          result.map( req => JSON.parse( req ) ).forEach( console.log( ) );
+          const struct = await AsyncStorage.getItem( STORAGE_KEY );
           
-          
-          console.log( "keyValuePair is " + keyValuePair );
-          value = JSON.parse( keyValuePair );
-          await AsyncStorage.removeItem( keyValuePair );
-          value.number_of++;
-          newValue = JSON.stringify( value );
-          await AsyncStorage.setItem( newValue );
         }
       }
     }
