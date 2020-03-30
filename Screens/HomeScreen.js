@@ -52,7 +52,7 @@ class HomeScreen extends React.Component {
 
   _setItem = async (key, lang) => {
     try {
-      await AsyncStorage.setItem('fi', JSON.stringify(lang))
+      await AsyncStorage.setItem(key, JSON.stringify(lang))
       console.log('tallennettu arvo on')
       console.log(JSON.stringify(lang))
     } catch (error) {
@@ -62,12 +62,11 @@ class HomeScreen extends React.Component {
 
   _languageChanged(event) {
     this.setState({ fi: !this.state.fi })
-    this._setItem('FIN', this.state.fi)
+    this._setItem('fi', this.state.fi)
     this.setState({
-      flagUri:
-        this.state.fi == true
-          ? require('../assets/Ikonit/Kielivalinta/Lippu1-01.png')
-          : require('../assets/Ikonit/Kielivalinta/Lippu2-01.png')
+      flagUri: this.state.fi
+        ? require('../assets/Ikonit/Kielivalinta/Lippu1-01.png')
+        : require('../assets/Ikonit/Kielivalinta/Lippu2-01.png')
     })
     //this._getItem('FIN')
   }

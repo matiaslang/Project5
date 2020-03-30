@@ -59,26 +59,23 @@ class mapScreen extends React.Component {
     this.state = {
       region: initialRegion,
       isModalVisible: false,
-      fi: ''
+      fi: true
     }
   }
 
   _getItem = async key => {
-    console.log('We are here - MAPSCREEN')
     try {
-      await AsyncStorage.getItem('fi', (err, value) => {
+      await AsyncStorage.getItem(key, (err, value) => {
         if (err) {
-          console.log('virher 2')
           console.log(err)
         } else {
-          value = JSON.parse(value)
-          console.log('Palautusarvo on: - MAPSCREEN')
+          var value = JSON.parse(value)
+          console.log('Funktio _getItem ajettu, fi arvona on: ')
           console.log(value)
           return value
         }
       })
     } catch (error) {
-      console.log('virher 1')
       console.log(error)
     }
   }
@@ -91,7 +88,17 @@ class mapScreen extends React.Component {
   }
 
   toggleModal = () => {
+    //this._languageChanged(this)
     this.setState({ isModalVisible: !this.state.isModalVisible })
+    AsyncStorage.getItem('fi').then(fiValue => {
+      this.setState({ fi: fiValue })
+    })
+    //let fi = this._getItem('fi')
+    //Joo, piti kokeilla että tuleeko se läpi vaikka sijoittais muuttujaan
+    //this.setState({ fi: { fi } })
+    this.getkeys()
+    console.log('TÄMÄ ON STATE MAPISSA')
+    console.log(this.state.fi)
   }
 
   handleCenter = () => {
@@ -109,8 +116,23 @@ class mapScreen extends React.Component {
     })
   }
 
+  async getkeys() {
+    try {
+      const keys = await AsyncStorage.getAllKeys()
+      console.log('keys are ' + keys)
+      const result = await AsyncStorage.multiGet(keys)
+      console.log('results are ' + result)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  _languageChanged(event) {
+    this.setState({ fi: this._getItem('fi') })
+    //this._getItem('FIN')
+  }
+
   componentDidMount() {
-    this.setState({ fi: this._getItem('FIN') })
     return getCurrentLocation().then(position => {
       if (position) {
         this.setState({
@@ -125,6 +147,14 @@ class mapScreen extends React.Component {
     })
   }
 
+  componentDidUpdate() {
+    console.log('LOADED')
+    AsyncStorage.getItem('fi').then(fiValue => {
+      if (fiValue != this.state.fi) {
+        this.setState({ fi: fiValue })
+      }
+    })
+  }
   onMapReady = e => {
     if (!this.state.ready) {
       this.setState({ ready: true })
