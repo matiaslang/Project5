@@ -45,7 +45,12 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   }
 
   if (routeName === 'Home') {
-    return <IconComponent name={iconName} size={iconSize} color={tintColor} />
+    return (
+      <Image
+        source={require('./assets/Ikonit/Home/Home-01.png')}
+        style={{ width: 30, height: 30, opacity: focused ? 1 : 0.4 }}
+      />
+    )
   } else if (routeName === 'Map') {
     return (
       <Image
