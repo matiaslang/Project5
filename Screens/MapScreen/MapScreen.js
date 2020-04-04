@@ -87,6 +87,18 @@ class mapScreen extends React.Component {
     //this.setState({ region });
   }
 
+  checkLanguage = () => {
+    if (this.state.fi == 'true') {
+      return false
+    }
+    if (this.state.fi == 'false') {
+      return true
+    } else {
+      console.log('Something is wrong')
+      return null
+    }
+  }
+
   toggleModal = () => {
     //this._languageChanged(this)
     this.setState({ isModalVisible: !this.state.isModalVisible })
@@ -97,8 +109,6 @@ class mapScreen extends React.Component {
     //Joo, piti kokeilla että tuleeko se läpi vaikka sijoittais muuttujaan
     //this.setState({ fi: { fi } })
     this.getkeys()
-    console.log('TÄMÄ ON STATE MAPISSA')
-    console.log(this.state.fi)
   }
 
   handleCenter = () => {
@@ -148,7 +158,6 @@ class mapScreen extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log('LOADED')
     AsyncStorage.getItem('fi').then(fiValue => {
       if (fiValue != this.state.fi) {
         this.setState({ fi: fiValue })
@@ -209,7 +218,7 @@ class mapScreen extends React.Component {
               image={markerImages[marker.image]}
               //anchor={{ x: 0.5, y: 0.5 }}
 
-              //TODO Find a way to make sure that tip of the marker is in wanted location in any situation.
+              //TODO: Find a way to make sure that tip of the marker is in wanted location in any situation.
               //For example if you rotate the map, the tip of the marker moves.
             />
           ))}
@@ -238,10 +247,10 @@ class mapScreen extends React.Component {
             <View style={styles.popupContent}>
               <MarkerInfo
                 image={markerImages[3]}
-                text={t('MAPMARKERINFOTEXT', this.state.fi)}
+                text={t('MAPMARKERINFOTEXT', this.checkLanguage())}
               />
               <View style={styles.infoText}>
-                <Text style={{}}>{t('MAPINFOTEXT', this.state.fi)}</Text>
+                <Text style={{}}>{t('MAPINFOTEXT', this.checkLanguage())}</Text>
               </View>
             </View>
             <FloatingButton
