@@ -15,7 +15,8 @@ import {
   Vibration,
   AsyncStorage,
   useWindowDimensions,
-  Keyboard
+  Keyboard,
+  Image
 } from 'react-native'
 
 
@@ -25,6 +26,12 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { Ionicons } from '@expo/vector-icons'
 import { Modal } from 'react-native-router-flux'
+
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from 'react-native-responsive-screen'
 
 // for Qrcamera
 import { Camera } from 'expo-camera'
@@ -45,7 +52,9 @@ import { t } from '../Locales'
 import { AuthSession } from 'expo'
 
 // for asyncstorage
-const STORAGE_KEY = ''
+const STORAGE_KEY = 'key'
+const STORAGE_DELIMITER = ':'
+const PASSPHRASE = 'YouShallPass'
 
 /* funktio Qrcamera Qr koodi lukemiseen
   Decsription:
@@ -68,6 +77,7 @@ const STORAGE_KEY = ''
 
 */
 function Qrcamera(props) {
+  const storePlace = props.storePlace
   const handleChange = props.handleChange
   const [hasPermission, setHasPermission] = useState(null)
   const [scanned, setScanned] = useState(false)
@@ -84,7 +94,7 @@ function Qrcamera(props) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true)
     handleChange(true)
-    console.log(`Luin tyypin ${type} ja datan ${data}!`);
+    storePlace( data );
   }
 
   if (hasPermission === null) {
@@ -135,7 +145,6 @@ function Qrcamera(props) {
 function Inputfield(props) {
   const [value, onChangeText] = useState(null)
   const storeInput = props.storeInput
-  const qrscanned = props.qrscanned;
   const text = props.text
   
   return (
@@ -148,7 +157,7 @@ function Inputfield(props) {
                 style= {styles.inputfield}
                 multiline= {true}
                 returnKeyType = "done"
-                //onKeyPress = {( key ) => { Keyboard.dismiss( ) } }
+                onKeyPress = {( key ) => { if( key.nativeEvent.key === "done" ){Keyboard.dismiss( )} } }
                 onChangeText= {( text => onChangeText( text ), value => storeInput( value ) )}
               />
       </View>
@@ -171,10 +180,11 @@ function Componentrender(props) {
   const handleChange = props.handleChange
   const storeInput = props.storeInput
   const screenText = props.text;
+  const storePlace = props.storePlace
 
   if (qrscanned === false) {
     return [
-      <Qrcamera key={'qrscam'} handleChange={handleChange} />
+      <Qrcamera key={'qrscam'} handleChange={handleChange} storePlace={ storePlace } />
     ]
   }
   if (qrscanned === true) {
@@ -207,14 +217,14 @@ class QrScreen extends React.Component {
     this.state = {
       qrscanned: false,
       message: undefined,
-      firstMessage : 0,
+      newPlace : '',
+      passed : false
     }
     this.handleChange = this.handleChange.bind(this)
     this.storeInput = this.storeInput.bind(this)
     this.onPress = this.onPress.bind(this)
     this.submitMessage = this.submitMessage.bind( this )
-
-    this.getkeys = this.getkeys.bind( this );
+    this.storePlace = this.storePlace.bind( this )
   }
 
   handleChange(is_scanned) {
@@ -222,61 +232,62 @@ class QrScreen extends React.Component {
   }
 
   storeInput(text) {
-    this.message = text;
+    this.message = text
   }
 
-  async getkeys( ){
-    try{
-      const keys = await AsyncStorage.getAllKeys( );
-      console.log( "keys are " + keys)
-      const result = await AsyncStorage.multiGet( keys );
-      console.log( "results are " + result);
+  storePlace( data ){
+    var parsedData = data.split( STORAGE_DELIMITER );
+    console.log( "parsedData " + parsedData )
+    if( parsedData[0] == PASSPHRASE ){
+      this.newPlace = parsedData[1]
+      this.passed = true;
     }
-    catch( error ){
-      console.error( error )
+    else{
+      this.passed = false;
     }
   }
 
-  async submitMessage( item ){
-    await AsyncStorage.clear( );
-    let nItem = JSON.stringify( item );
-    console.log( "message is " + nItem );
-    let token;
-    try{
-      if( this.firstMessage === 0 ){
-        await AsyncStorage.clear( );
-        await AsyncStorage.setItem( "phrases", nItem );
-        console.log( " first message " + this.firstMessage);
-        this.numOfMessage = 1;
-        this.firstMessage = 1;
-        console.log( "if message " + this.firstMessage );
-      }
-      else{
-        const keyValuePair = await AsyncStorage.getItem( STORAGE_KEY );
-        if( keyValuePair === null){
-             await AsyncStorage.setItem( KEY, nItem );
-             console.log( "if message " + this.firstMessage );
+  async submitMessage( ){
+    if( this.passed === true ){
+      try{
+        console.log( "You shall pass")
+        var day = new Date().getDate( );
+        var year = new Date().getFullYear( );
+        var month = new Date().getMonth( );
+        var hour = new Date().getHours( );
+        var minute = new Date( ).getMinutes( );
+        var date = day + "." + month + "." + year + " " + hour + "." + minute;
+        let localData = await AsyncStorage.getItem( STORAGE_KEY )
+        let newData = {
+          place : this.newPlace,
+          time : date,
+          phrase : this.message
+        }
+        console.log( "paikka " + newData.place + " aika " + newData.time + " lause " + newData.phrase );
+        if( localData == undefined ){
+          await AsyncStorage.setItem( STORAGE_KEY, JSON.stringify( newData ) );
         }
         else{
-          const struct = await AsyncStorage.getItem( STORAGE_KEY );
           
+          await AsyncStorage.setItem( STORAGE_KEY, localData += JSON.stringify( newData ));
         }
+        const curData = await AsyncStorage.getItem( STORAGE_KEY )
+        console.log( "Data on \n " + curData );
+      }
+      catch( error ){
+        console.log( "fuck up in submitmessage asyncget " + error.message)
       }
     }
-    catch( error ){
-      console.log( "fuck up in submitmessage asyncget " + error.message)
+    else{
+      console.log( "You shall't pass" )
     }
-  
   }
-  onPress() {
-    let item = {
-      words : this.message,
-      number_of : 1,
-    }
+
+  onPress( ) {
     this.setState( { message : ''})
     this.setState( { qrscanned : false})
     const { navigate } = this.props.navigation
-    this.submitMessage( item );
+    this.submitMessage( );
     navigate('Home')
   }
 
@@ -286,12 +297,19 @@ class QrScreen extends React.Component {
       return (
       <View style={styles.container}>
         <Componentrender
+          storePlace = {this.storePlace}
           qrscanned={qrscanned}
           handleChange={this.handleChange}
           storeInput={this.storeInput}
           text={this.message}
         ></Componentrender>
-        <Button style={styles.button} ref={this.submitButton} title='Return to home page' onPress={this.onPress}></Button>
+        <TouchableOpacity style={styles.box} ref={this.submitButton} onPress={this.onPress}>
+          <Image
+            source={ require('../assets/Ikonit/QR/Home-01.png' ) }
+            style={styles.boxImage}>
+          </Image>
+            
+        </TouchableOpacity>
       </View>
     )
     }
@@ -391,6 +409,21 @@ const styles = StyleSheet.create({
     flex : 10,
     flexDirection : 'column',
     alignSelf : 'center',
+  },
+
+  box: {
+    color: '#D4DDE6',
+    height: hp('9%'),
+    borderColor: '#D4DDE6',
+    borderWidth: 2,
+    flexDirection: 'row'
+  },
+
+  boxImage: {
+      width: wp('20%' ),
+      height: hp('20%' ),
+      justifyContent : 'center',
+      alignSelf : 'center'
   },
 
   placesNearby: {
