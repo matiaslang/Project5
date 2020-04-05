@@ -74,6 +74,32 @@ class HomeScreen extends React.Component {
     return {}
   }
 
+  async componentDidMount() {
+    const places = require('../assets/Places.json')
+    try {
+      await AsyncStorage.setItem('AllPlaces', JSON.stringify(places))
+    } catch (e) {
+      console.log(e)
+    }
+    try {
+      await AsyncStorage.setItem('VisitedPlaces', ' ')
+      this.getkeys()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  async getkeys() {
+    try {
+      const keys = await AsyncStorage.getAllKeys()
+      console.log('keys are ' + keys)
+      const result = await AsyncStorage.multiGet(keys)
+      console.log('results are ' + result)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   render() {
     const { fi } = this.state
 

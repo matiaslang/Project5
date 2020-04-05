@@ -16,10 +16,32 @@ import {
 
 import { t } from '../Locales'
 
+const ListItem = props => {
+  return (
+    <View style={styles.listItem}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between'
+          //flex: 1
+        }}
+      >
+        <TouchableOpacity>
+          <Text style={{ fontSize: 20 }}>{props.place}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={{ fontSize: 20 }}>{props.date}</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}
+
 export default class PlacesScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      enabled: true,
       fi: this.props.navigation.state.params.fi
     }
   }
