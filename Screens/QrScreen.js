@@ -16,8 +16,10 @@ import {
   AsyncStorage,
   useWindowDimensions,
   Keyboard,
-  Image,
+  KeyboardAvoidingView,
+  Image
 } from 'react-native'
+
 
 import ReactDome from 'react-dom'
 import { createAppContainer } from 'react-navigation'
@@ -26,9 +28,10 @@ import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { Ionicons } from '@expo/vector-icons'
 import { Modal } from 'react-native-router-flux'
 
+
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
+  heightPercentageToDP as hp
 } from 'react-native-responsive-screen'
 
 // for Qrcamera
@@ -41,6 +44,7 @@ import * as Permissions from 'expo-permissions'
 import { Textinput, ScrollView } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
+
 // for render control
 import ReactDom from 'react-dom'
 
@@ -49,9 +53,11 @@ import { t } from '../Locales'
 import { AuthSession } from 'expo'
 
 // for asyncstorage
-const STORAGE_KEY = 'key'
+const STORAGE_KEY = 'Key'
 const STORAGE_DELIMITER = ':'
 const PASSPHRASE = 'YouShallPass'
+const filePath = '../assets/Ikonit/QR/Home-01.png'
+
 
 /* funktio Qrcamera Qr koodi lukemiseen
   Decsription:
@@ -60,9 +66,11 @@ const PASSPHRASE = 'YouShallPass'
   variables:
       hasPermission : tracks phone permission for app 
       setHasPermission : hook for hasPermission
-      
       scanned :  tracks if qr value has been read.
       setScanner : hook for scanned
+      window : 
+      storePlace : function. 
+      storePlace : function. 
       
       handleChange : callback function from QrScreen and passed by Componentrender, updates Qrscreen qrsscanned state
 
@@ -76,9 +84,10 @@ const PASSPHRASE = 'YouShallPass'
 function Qrcamera(props) {
   const storePlace = props.storePlace
   const handleChange = props.handleChange
-  const [hasPermission, setHasPermission] = useState(null)
+  const [hasPermission, setHasPermission] = useState(undefined)
   const [scanned, setScanned] = useState(false)
-  const window = Dimensions.get('window')
+  const window = Dimensions.get( 'window' )
+  
 
   useEffect(() => {
     ;(async () => {
@@ -90,10 +99,10 @@ function Qrcamera(props) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true)
     handleChange(true)
-    storePlace(data)
+    storePlace( data );
   }
 
-  if (hasPermission === null) {
+  if (hasPermission === undefined) {
     return <Text> Camera requires a permission for camera. </Text>
   }
   if (hasPermission === false) {
@@ -101,21 +110,17 @@ function Qrcamera(props) {
   }
 
   return (
-    <View style={styles.qrcontainer}>
-      <View style={styles.viewpaddingcamera}></View>
+    <View style={ styles.qrcontainer}>
+      <View style={ styles.viewpaddingcamera}></View>
       <Text> Scan a code </Text>
       <Camera
-        style={{
-          flex: 8,
-          width: window.width / 1.2,
-          height: window.height / 3,
-        }}
+        style= {{ flex : 8,  width : window.width/1.2, height: window.height/3 }}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         barCodeScannerSettings={{
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
         }}
       ></Camera>
-      <View style={styles.viewpaddingcamera}></View>
+      <View style={ styles.viewpaddingcamera}></View>
     </View>
   )
   /*
@@ -140,35 +145,38 @@ function Qrcamera(props) {
    variables: 
         value : input value
         onChangeText : handler not defined explicitly
+        storeInput : hook function from QrScreen
+        text : written text. Isn't equal to value in inputfield. 
+        textQuestion = defines text about inputfield
+    return:
+           ScrollViews : allow shutting keyboard
+           returnKeyType, onKeyPress : dismisses keyboard on enter press, works in IOS.
+
     
 */
 function Inputfield(props) {
-  const [value, onChangeText] = useState(null)
+  const [value, onChangeText] = useState(undefined)
   const storeInput = props.storeInput
   const text = props.text
-
+  const textQuestion = props.textQuestion
+  
   return (
-    <View>
-      <View style={styles.viewpaddingtext} />
-      <ScrollView style={styles.ScrollView}></ScrollView>
-      <Text style={{ alignSelf: 'center' }}> What did you say?</Text>
-      <View style={styles.bordercontainer}>
-        <TextInput
-          style={styles.inputfield}
-          multiline={true}
-          returnKeyType='done'
-          onKeyPress={(key) => {
-            if (key.nativeEvent.key === 'Enter') {
-              Keyboard.dismiss()
-            }
-          }}
-          onChangeText={
-            ((text) => onChangeText(text), (value) => storeInput(value))
-          }
-        />
+    <View >
+      <View style={styles.viewpaddingtext}/>
+      <ScrollView style={styles.ScrollViewVertical}></ScrollView>
+      <Text style= { {alignSelf:'center' } }> { textQuestion }</Text>
+      <View style={ styles.bordercontainer }>
+          <TextInput
+                style= {styles.inputfield}
+                multiline= {true}
+                returnKeyType = "done"
+                onKeyPress = {( key ) => { if( key.nativeEvent.key == "enter" ){Keyboard.dismiss( )} } }
+                onChangeText= {( text => onChangeText( text ), value => storeInput( value ) )}
+              />
       </View>
-      <ScrollView style={styles.ScrollView}></ScrollView>
-      <View style={styles.viewpaddingtext}></View>
+      
+      <ScrollView style={styles.ScrollViewVertical}></ScrollView>
+      <View style={ styles.viewpaddingtext }></View>
     </View>
   )
 }
@@ -178,33 +186,30 @@ function Inputfield(props) {
         Responsible choosing component that is rendered.
   variables:
         qrsscanned : QrScreen state that tracks status of qrscanner. Used to pick right component to be rended.
-        handleChange : handler function for tracking status, defined in and passed from QrScreen, further passed to Qrcamera function 
+        handleChange : handler function for tracking status, defined in and passed from QrScreen, further passed to Qrcamera function.
+        storeInput : Check inputfield function. This function only passes hook functions down.
+        screenText : Check inputfield function. This function only passes hook functions down.
+        storePlace :  Check qrcamera function. This function only passes hook functions down.
+        textQuestion : Check inputfield function. This function only passes variable down
+  setText : Solves in which language text is shown. 
 */
 
 function Componentrender(props) {
   const qrscanned = props.qrscanned
   const handleChange = props.handleChange
   const storeInput = props.storeInput
-  const screenText = props.text
+  const screenText = props.text;
   const storePlace = props.storePlace
+  const textQuestion = props.textQuestion
 
   if (qrscanned === false) {
     return [
-      <Qrcamera
-        key={'qrscam'}
-        handleChange={handleChange}
-        storePlace={storePlace}
-      />,
+      <Qrcamera key={'qrscam'} handleChange={handleChange} storePlace={ storePlace } />
     ]
   }
   if (qrscanned === true) {
     return [
-      <Inputfield
-        key={'infield'}
-        storeInput={storeInput}
-        qrscanned={qrscanned}
-        text={screenText}
-      />,
+      <Inputfield key={'infield'} storeInput={storeInput} qrscanned={ qrscanned } text={screenText} textQuestion={textQuestion} />
     ]
   }
   return <Text> No bueno qrscanned is null </Text>
@@ -212,17 +217,19 @@ function Componentrender(props) {
 /*
   QrScreen
    Description:
-      Parent component for this view. 
-      Children Components:
-      function Componentrender
-               Button
+          Defines screens functions 
    Variables:
-       qrsscanned : tracks status of qrcamera
-       message : undefined. Tracks content of Inputfield
+       qrsscanned : tracks status of qrcamera. Passed down to qrcamera function.
+       message : Tracks content of Inputfield. Passed down to inputfield function.
+       newPlace : Used to save place name.
+       passed : Tracks if qr code is valid
+       textQuestion : check inputfield. Defines text above for inputfield.
 
     handleChange : callback function for Componentrender handlesChange changes value of qrsscanned
     storeInput : callback function for saving text from Inputfieeld  to message variable. 
     onPress : callback function for button "Return home page".   
+    submitMessage : async function. stores time, place and message to asyncstorage
+    storePlace :  stores a place to variable.
        
 */
 
@@ -230,16 +237,17 @@ class QrScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      qrscanned: false,
+      qrscanned: true,
       message: undefined,
-      newPlace: '',
-      passed: false,
+      newPlace : '',
+      passed : false,
+      textQuestion : 'What did you say?',
     }
     this.handleChange = this.handleChange.bind(this)
     this.storeInput = this.storeInput.bind(this)
     this.onPress = this.onPress.bind(this)
-    this.submitMessage = this.submitMessage.bind(this)
-    this.storePlace = this.storePlace.bind(this)
+    this.submitMessage = this.submitMessage.bind( this )
+    this.storePlace = this.storePlace.bind( this )
   }
 
   handleChange(is_scanned) {
@@ -250,93 +258,92 @@ class QrScreen extends React.Component {
     this.message = text
   }
 
-  storePlace(data) {
-    var parsedData = data.split(STORAGE_DELIMITER)
-    console.log('parsedData ' + parsedData)
-    if (parsedData[0] == PASSPHRASE) {
+  storePlace( data ){
+    var parsedData = data.split( STORAGE_DELIMITER );
+    console.log( "parsedData " + parsedData )
+    if( parsedData[0] == PASSPHRASE ){
       this.newPlace = parsedData[1]
-      this.passed = true
-    } else {
-      this.passed = false
+      this.passed = true;
+    }
+    else{
+      this.passed = false;
     }
   }
+  //async checkLanguage( ){this.textQuestion = ""}
 
-  async submitMessage() {
-    if (this.passed === true) {
-      try {
-        console.log('You shall pass')
-        var day = new Date().getDate()
-        var year = new Date().getFullYear()
-        var month = new Date().getMonth()
-        var hour = new Date().getHours()
-        var minute = new Date().getMinutes()
-        var date = day + '.' + month + '.' + year + ' ' + hour + '.' + minute
-        let localData = await AsyncStorage.getItem(STORAGE_KEY)
+  async submitMessage( ){
+    if( this.passed === true ){
+      try{
+        console.log( "You shall pass")
+        var day = new Date().getDate( );
+        var year = new Date().getFullYear( );
+        var month = new Date().getMonth( );
+        var hour = new Date().getHours( );
+        var minute = new Date( ).getMinutes( );
+        var date = day + "." + month + "." + year + " " + hour + "." + minute;
+        let localData = await AsyncStorage.getItem( STORAGE_KEY )
         let newData = {
-          place: this.newPlace,
-          time: date,
-          phrase: this.message,
+          place : this.newPlace,
+          time : date,
+          phrase : this.message
         }
-        console.log(
-          'paikka ' +
-            newData.place +
-            ' aika ' +
-            newData.time +
-            ' lause ' +
-            newData.phrase
-        )
-        if (localData == undefined) {
-          await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newData))
-        } else {
-          await AsyncStorage.setItem(
-            STORAGE_KEY,
-            (localData += JSON.stringify(newData))
-          )
+        console.log( "paikka " + newData.place + " aika " + newData.time + " lause " + newData.phrase );
+        if( localData == undefined ){
+          await AsyncStorage.setItem( STORAGE_KEY, JSON.stringify( newData ) );
         }
-        const curData = await AsyncStorage.getItem(STORAGE_KEY)
-        console.log('Data on \n ' + curData)
-      } catch (error) {
-        console.log('fuck up in submitmessage asyncget ' + error.message)
+        else{
+          
+          await AsyncStorage.setItem( STORAGE_KEY, localData += JSON.stringify( newData ));
+        }
+        const curData = await AsyncStorage.getItem( STORAGE_KEY )
+        console.log( "Data on \n " + curData );
       }
-    } else {
-      console.log("You shall't pass")
+      catch( error ){
+        console.log( "fuck up in submitmessage asyncget " + error.message)
+      }
     }
+    else{
+      console.log( "You shall't pass" )
+    }
+    
   }
-
-  onPress() {
-    this.setState({ message: '' })
-    this.setState({ qrscanned: false })
+  async setText( ){
+    const language = await AsyncStorage.getItem( 'fi' );
+    this.state.textQuestion = language;
+  }
+  onPress( ) {
+    this.setState( { message : ''})
+    this.setState( { qrscanned : false})
     const { navigate } = this.props.navigation
-    this.submitMessage()
+    this.submitMessage( );
     navigate('Home')
   }
 
   render() {
-    const qrscanned = this.state.qrscanned
-    try {
+    const qrscanned = this.state.qrscanned;
+    this.setText( );
+    try{
       return (
-        <View style={styles.container}>
-          <Componentrender
-            storePlace={this.storePlace}
-            qrscanned={qrscanned}
-            handleChange={this.handleChange}
-            storeInput={this.storeInput}
-            text={this.message}
-          ></Componentrender>
-          <TouchableOpacity
-            style={styles.box}
-            ref={this.submitButton}
-            onPress={this.onPress}
-          >
-            <Image
-              source={require('../assets/Ikonit/QR/Home-011.png')}
-              style={styles.boxImage}
-            ></Image>
-          </TouchableOpacity>
-        </View>
-      )
-    } catch (error) {
-      console.log(error.message)
+      <KeyboardAvoidingView style={styles.Avoidcontainer}>
+        <Componentrender
+          storePlace = {this.storePlace}
+          qrscanned={qrscanned}
+          handleChange={this.handleChange}
+          storeInput={this.storeInput}
+          text={this.message}
+        ></Componentrender>
+        <TouchableOpacity style={styles.box} onPress={this.onPress}>
+          <Image
+            source={ require( filePath ) }
+            style={styles.boxImage}>
+          </Image>
+            
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    )
+    }
+    catch( error ){
+      console.log( error.message )
     }
   }
   /* define button's handleclick here. We might want to use same button with different logo.
@@ -356,76 +363,96 @@ class QrScreen extends React.Component {
 
 */
 
+
+
 const styles = StyleSheet.create({
-  ScrollView: {
-    backgroundColor: '#0000ff',
+
+  ScrollViewVertical: {
+    backgroundColor : "#0000ff",
+    height : hp( "10%")
   },
+
+  ScrollViewHorizontal:{
+    backgroundColor: '#ff0000',
+    flexDirection : 'column',
+    alignSelf : 'flex-start',
+  },
+
+  Avoidcontainer: {
+    flex: 10,
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
+    justifyContent : 'flex-end',
+  },
+
   container: {
     flex: 10,
     backgroundColor: '#ffffff',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent : 'flex-end',
   },
 
-  qrcontainer: {
-    flex: 30,
-    flexDirection: 'column',
-    alignItems: 'center',
-    borderColor: 'red',
+  qrcontainer : {
+    flex : 30,
+    flexDirection : 'column',
+    alignItems : 'center',
+    borderColor : 'red',
   },
 
   qrcamera: {
-    flex: 20,
-    flexDirection: 'row',
+    flex: 40,
+    flexDirection : 'row',
     alignSelf: 'center',
-    justifyContent: 'center',
-    borderColor: 'gray',
+    justifyContent : 'center',
+    borderColor : 'gray',
   },
 
+
   inputcontainer: {
-    flex: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'center',
-    backgroundColor: '#ffffff',
+    flex : 5,
+    flexDirection : 'row',
+    alignItems : 'center',
+    alignSelf : 'center',
+    backgroundColor : "#ffffff",
   },
 
   // inputfield field borders
-  bordercontainer: {
-    flex: 5,
-    borderColor: 'gray',
-    borderRadius: 10,
-    borderWidth: 5,
+  bordercontainer : {
+    flex : 5,
+    borderColor : 'gray',
+    borderRadius : 10,
+    borderWidth : 5,
   },
   // textinput
   inputfield: {
-    width: 300,
-    flex: 10,
-    flexDirection: 'column',
-    alignSelf: 'center',
-    backgroundColor: '#ffffff',
-    textAlignVertical: 'top',
+    width : 300,
+    flex : 10,
+    flexDirection : 'column',
+    alignSelf : 'center',
+    backgroundColor : '#ffffff',
+    textAlignVertical : 'top',
   },
 
   // inputfield top view
   viewpaddingtext: {
-    flex: 1,
-    flexDirection: 'row',
-    alignSelf: 'center',
-    backgroundColor: '#ff0000',
+    flex : 1,
+    flexDirection : 'row',
+    alignSelf : 'center',
+    backgroundColor : '#ff0000',
   },
+
 
   viewpaddingcamera: {
-    flex: 10,
-    flexDirection: 'row',
-    alignSelf: 'center',
-    backgroundColor: '#ff0000',
+    flex : 10,
+    flexDirection : 'row',
+    alignSelf : 'center',
+    backgroundColor : '#ff0000',
   },
 
-  button: {
-    flex: 10,
-    flexDirection: 'column',
-    alignSelf: 'center',
+  button : {
+    flex : 10,
+    flexDirection : 'column',
+    alignSelf : 'center',
   },
 
   box: {
@@ -433,14 +460,14 @@ const styles = StyleSheet.create({
     height: hp('9%'),
     borderColor: '#D4DDE6',
     borderWidth: 2,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
 
   boxImage: {
-    width: wp('20%'),
-    height: hp('20%'),
-    justifyContent: 'center',
-    alignSelf: 'center',
+      width: wp('20%' ),
+      height: hp('10%' ),
+      justifyContent : 'center',
+      alignSelf : 'center'
   },
 
   placesNearby: {
@@ -449,9 +476,9 @@ const styles = StyleSheet.create({
     borderColor: '#043353',
     borderRadius: 10,
     paddingVertical: 50,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
 
-  header: {},
+  header: {}
 })
 export default QrScreen
