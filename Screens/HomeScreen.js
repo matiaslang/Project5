@@ -1,5 +1,4 @@
 import React, { Component, Fragment, useState } from 'react'
-
 import {
   StyleSheet,
   Text,
@@ -11,29 +10,140 @@ import {
   Dimensions,
   ScrollView,
   Button,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
+import * as Location from 'expo-location'
+import * as Permissions from 'expo-permissions'
+import { getDistance, getPreciseDistance } from 'geolib'
 
 import { t } from '../Locales'
 
 const ScreenWidth = Dimensions.get('window').width
 const ScreenHeight = Dimensions.get('window').height
 
+const ListItem = (props) => {
+  return (
+    <TouchableOpacity
+      style={styles.box}
+      onPress={() => {
+        console.log(props.name)
+      }}
+    >
+      <Text style={styles.placeBoxText}>{props.name}</Text>
+      <Text style={styles.boxDistance}>{props.distance}m</Text>
+      <Image
+        source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+        style={styles.boxImage}
+      />
+    </TouchableOpacity>
+  )
+}
+
+async function updateList(list) {
+  /*  console.log(list)
+  try {
+    const val = AsyncStorage.getItem('AllPlaces')
+    if (val !== null) {
+      try {
+        await AsyncStorage.mergeItem('AllPlaces', JSON.stringify(list))
+        console.log('UPDATED')
+      } catch (e) {
+        console.log('ERROR HAPPENED ON UPDATING PLACES')
+        console.log(e)
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+  */
+  AsyncStorage.getItem('AllPlaces').then((value) => {
+    if (value !== null) {
+      try {
+        AsyncStorage.mergeItem('AllPlaces', JSON.stringify(list))
+        console.log('UPDATED')
+      } catch (e) {
+        console.log('ERROR HAPPENED ON UPDATING PLACES')
+        console.log(e)
+      }
+    }
+  })
+}
+const ArrangeList = (props) => {
+  const list = props.list
+  const location = props.location
+  var newList
+  var dis = 0
+  //console.log(list[0])
+  if (location !== null && list !== null) {
+    list.map((item, key) => {
+      key = item.coordinates.latitude
+      dis = getDistance(
+        {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+        {
+          latitude: item.coordinates.latitude,
+          longitude: item.coordinates.longitude,
+        }
+      )
+      item['distance'] = dis
+    })
+
+    list.sort((a, b) => a.distance > b.distance)
+  }
+  //updateList(list)
+  var cutList = list.slice(0, 5)
+  //const distances = list.map((item) => ())
+  return cutList.map((item, key) => {
+    key = item.distance
+    return (
+      <ListItem
+        name={item.Title}
+        distance={item.distance}
+        key={item.distance}
+      />
+    )
+  })
+}
+
 class HomeScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       fi: true,
-      flagUri: require('../assets/Ikonit/Kielivalinta/Lippu2-01.png')
+      flagUri: require('../assets/Ikonit/Kielivalinta/Lippu2-01.png'),
+      location: null,
+      errorMessage: '',
+      allLocations: [],
+      ready: false,
     }
   }
-  _getItem = async key => {
+
+  _getLocation = async () => {
+    try {
+      const { status } = await Permissions.getAsync(Permissions.LOCATION)
+      if (status !== 'granted') {
+        console.log('PERMISSION NOT GRANTED')
+
+        this.setState({ errorMessage: 'PERMISSION NOT GRANTED' })
+      }
+      const location = await Location.getCurrentPositionAsync({})
+      this.setState({
+        location,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  _getItem = async (key) => {
     try {
       await AsyncStorage.getItem(key, (err, value) => {
         if (err) {
@@ -53,10 +163,8 @@ class HomeScreen extends React.Component {
   _setItem = async (key, lang) => {
     try {
       await AsyncStorage.setItem(key, JSON.stringify(lang))
-      console.log('tallennettu arvo on')
-      console.log(JSON.stringify(lang))
     } catch (error) {
-      console.log('THERE HAS BEEN AN ERROR SAVING DATA')
+      console.log('THERE HAS BEEN AN ERROR SAVING DATA', error)
     }
   }
 
@@ -66,7 +174,7 @@ class HomeScreen extends React.Component {
     this.setState({
       flagUri: this.state.fi
         ? require('../assets/Ikonit/Kielivalinta/Lippu1-01.png')
-        : require('../assets/Ikonit/Kielivalinta/Lippu2-01.png')
+        : require('../assets/Ikonit/Kielivalinta/Lippu2-01.png'),
     })
     //this._getItem('FIN')
   }
@@ -74,16 +182,25 @@ class HomeScreen extends React.Component {
     return {}
   }
 
+  changeScreen = () => {
+    console.log('changeeeeee')
+    this.navigation.navigate('Places', { fi: this.state.fi })
+  }
+
   async componentDidMount() {
+    this._getLocation()
     const places = require('../assets/Places.json')
+    this.setState({ allLocations: places })
     try {
-      await AsyncStorage.setItem('AllPlaces', JSON.stringify(places))
+      await AsyncStorage.setItem('AllPlaces', JSON.stringify(places)).then(
+        this.setState({ ready: true })
+      )
     } catch (e) {
       console.log(e)
     }
     try {
       await AsyncStorage.setItem('VisitedPlaces', ' ')
-      this.getkeys()
+      //this.getkeys()
     } catch (e) {
       console.log(e)
     }
@@ -109,6 +226,7 @@ class HomeScreen extends React.Component {
           <TouchableOpacity
             onPress={() => {
               this._languageChanged(this)
+              //this.getkeys()
             }}
             //style={styles.flag}
           >
@@ -127,42 +245,12 @@ class HomeScreen extends React.Component {
           >
             <Text style={styles.upperButton}>{t('PLACES', this.state.fi)}</Text>
           </TouchableOpacity>
-
           <View style={styles.boxesInside}>
-            <TouchableOpacity style={styles.box}>
-              <Text style={styles.placeBoxText}>Crecian</Text>
-              <Text style={styles.boxDistance}>100m</Text>
-              <Image
-                source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-                style={styles.boxImage}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.box}>
-              <Text style={styles.placeBoxText}>Villa Victor</Text>
-              <Text style={styles.boxDistance}>325m</Text>
-              <Image
-                source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-                style={styles.boxImage}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.box}>
-              <Text style={styles.placeBoxText}>Viikinkiravintola Harald</Text>
-              <Text style={styles.boxDistance}>525m</Text>
-              <Image
-                source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-                style={styles.boxImage}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.box}>
-              <Text style={styles.placeBoxText}>Kaupunginteatteri</Text>
-              <Text style={styles.boxDistance}>650m</Text>
-              <Image
-                source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
-                style={styles.boxImage}
-              />
-            </TouchableOpacity>
+            <ArrangeList
+              list={this.state.allLocations}
+              location={this.state.location}
+              navigation={this.navigate}
+            />
           </View>
 
           <TouchableOpacity
@@ -224,16 +312,16 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     alignItems: 'center',
-    flex: 1
+    flex: 1,
   },
 
   historyCounter: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
 
   historyVisitedPlaces: {
-    flex: 3
+    flex: 3,
   },
 
   boxTimesUsed: {
@@ -242,7 +330,7 @@ const styles = StyleSheet.create({
     color: '#043353',
     fontSize: hp('2%'),
     alignSelf: 'center',
-    textAlignVertical: 'center'
+    textAlignVertical: 'center',
   },
 
   boxDate: {
@@ -251,26 +339,26 @@ const styles = StyleSheet.create({
     color: '#043353',
     fontSize: hp('2.5%'),
     alignSelf: 'center',
-    textAlignVertical: 'center'
+    textAlignVertical: 'center',
   },
 
   boxesInside: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
 
   boxDistance: {
     flex: 1,
     color: '#043353',
     alignSelf: 'center',
-    fontSize: hp('2%')
+    fontSize: hp('2%'),
   },
 
   boxImage: {
     height: hp('5%'),
     flex: 1,
     alignSelf: 'center',
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
 
   placeBoxText: {
@@ -279,7 +367,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: wp('2%'),
 
-    fontSize: hp('2.5%')
+    fontSize: hp('2.5%'),
   },
 
   historyBoxText: {
@@ -287,7 +375,7 @@ const styles = StyleSheet.create({
     color: '#043353',
     alignSelf: 'center',
     marginLeft: wp('2%'),
-    fontSize: hp('2.5%')
+    fontSize: hp('2.5%'),
   },
 
   historyPlacesVisited: {
@@ -295,7 +383,7 @@ const styles = StyleSheet.create({
     color: '#043353',
     alignSelf: 'center',
     fontSize: hp('2%'),
-    marginLeft: wp('2%')
+    marginLeft: wp('2%'),
   },
 
   box: {
@@ -304,13 +392,13 @@ const styles = StyleSheet.create({
 
     borderColor: '#D4DDE6',
     borderWidth: 2,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
 
   image: {
     width: wp('20%'),
     height: hp('13%'),
-    top: hp('2%')
+    top: hp('2%'),
   },
 
   lowerButton: {
@@ -321,7 +409,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp('0.1%'),
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
-    textAlign: 'center'
+    textAlign: 'center',
   },
 
   upperButton: {
@@ -332,7 +420,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp('0.5%'),
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    textAlign: 'center'
+    textAlign: 'center',
   },
 
   placesBox: {
@@ -344,7 +432,7 @@ const styles = StyleSheet.create({
 
     width: wp('90%'),
 
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   history: {
     flex: 1,
@@ -356,11 +444,11 @@ const styles = StyleSheet.create({
     width: wp('90%'),
 
     overflow: 'hidden',
-    top: '2%'
+    top: '2%',
   },
 
   bottomUpper: {
-    height: hp('4%')
+    height: hp('4%'),
   },
   flag: {
     borderWidth: 5,
@@ -369,7 +457,7 @@ const styles = StyleSheet.create({
     //color: '#9ACD32',
     width: 50,
     height: 50,
-    left: 0
+    left: 0,
     //position: "absolute",
     //alignItems: 'flex-start'
   },
@@ -379,20 +467,20 @@ const styles = StyleSheet.create({
     //flexDirection: 'row',
     //justifyContent: 'space-between',
     borderColor: '#F00',
-    backgroundColor: '#000',
+    //backgroundColor: '#000',
     position: 'absolute',
     left: 20,
-    top: 45
+    top: 45,
   },
   flagImage: {
     height: 50,
     width: 100,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
 
     //position: 'absolute',
     //left: 20,
     //top: 45
-  }
+  },
 })
 
 export default HomeScreen

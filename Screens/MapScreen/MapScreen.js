@@ -5,7 +5,7 @@ import {
   View,
   Dimensions,
   Image,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import Markers from './Markers'
@@ -28,14 +28,14 @@ const markerImages = {
   5: marker5,
   6: marker6,
   7: marker7,
-  8: marker8
+  8: marker8,
 }
 
 const initialRegion = {
   latitude: 65.011358,
   longitude: 25.464249,
   latitudeDelta: 0.015,
-  longitudeDelta: 0.0015
+  longitudeDelta: 0.0015,
 }
 
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 }
@@ -43,15 +43,15 @@ const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 }
 export const getCurrentLocation = () => {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
-      position => resolve(position),
-      e => reject(e)
+      (position) => resolve(position),
+      (e) => reject(e)
     )
   })
 }
 
 class mapScreen extends React.Component {
   static navigationOptions = {
-    title: 'Map'
+    title: 'Map',
   }
 
   constructor(props) {
@@ -59,11 +59,11 @@ class mapScreen extends React.Component {
     this.state = {
       region: initialRegion,
       isModalVisible: false,
-      fi: true
+      fi: true,
     }
   }
 
-  _getItem = async key => {
+  _getItem = async (key) => {
     try {
       await AsyncStorage.getItem(key, (err, value) => {
         if (err) {
@@ -102,13 +102,13 @@ class mapScreen extends React.Component {
   toggleModal = () => {
     //this._languageChanged(this)
     this.setState({ isModalVisible: !this.state.isModalVisible })
-    AsyncStorage.getItem('fi').then(fiValue => {
+    AsyncStorage.getItem('fi').then((fiValue) => {
       this.setState({ fi: fiValue })
     })
     //let fi = this._getItem('fi')
     //Joo, piti kokeilla että tuleeko se läpi vaikka sijoittais muuttujaan
     //this.setState({ fi: { fi } })
-    this.getkeys()
+    //this.getkeys()
   }
 
   handleCenter = () => {
@@ -116,13 +116,13 @@ class mapScreen extends React.Component {
       latitude,
       longitude,
       latitudeDelta,
-      longitudeDelta
+      longitudeDelta,
     } = this.state.location
     this.map.animateToRegion({
       latitude,
       longitude,
       latitudeDelta,
-      longitudeDelta
+      longitudeDelta,
     })
   }
 
@@ -143,38 +143,38 @@ class mapScreen extends React.Component {
   }
 
   componentDidMount() {
-    return getCurrentLocation().then(position => {
+    return getCurrentLocation().then((position) => {
       if (position) {
         this.setState({
           region: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             latitudeDelta: 0.02,
-            longitudeDelta: 0.02
-          }
+            longitudeDelta: 0.02,
+          },
         })
       }
     })
   }
 
   componentDidUpdate() {
-    AsyncStorage.getItem('fi').then(fiValue => {
+    AsyncStorage.getItem('fi').then((fiValue) => {
       if (fiValue != this.state.fi) {
         this.setState({ fi: fiValue })
       }
     })
   }
-  onMapReady = e => {
+  onMapReady = (e) => {
     if (!this.state.ready) {
       this.setState({ ready: true })
     }
   }
 
-  onRegionChange = region => {
+  onRegionChange = (region) => {
     console.log('onRegionChange', region)
   }
 
-  onRegionChangeComplete = region => {
+  onRegionChangeComplete = (region) => {
     console.log('onRegionChangeComplete', region)
   }
 
@@ -182,7 +182,7 @@ class mapScreen extends React.Component {
     const { navigation } = this.props
     const { region } = this.state
 
-    const MarkerInfo = props => {
+    const MarkerInfo = (props) => {
       return (
         <View style={{ flexDirection: 'row' }}>
           <Image source={props.image} style={{ width: 50, height: 50 }} />
@@ -190,7 +190,7 @@ class mapScreen extends React.Component {
             style={{
               flex: 1,
               height: 50,
-              width: Dimensions.get('window').width
+              width: Dimensions.get('window').width,
             }}
           >
             <Text>{props.text}</Text>
@@ -201,7 +201,7 @@ class mapScreen extends React.Component {
     return (
       <View style={styles.container}>
         <MapView
-          ref={ref => {
+          ref={(ref) => {
             this.map = ref
           }}
           style={styles.mapStyle}
@@ -268,7 +268,7 @@ class mapScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
     //alignItems: 'center',
     //justifyContent: 'center'
   },
@@ -276,14 +276,14 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     width: 260,
     alignItems: 'center',
-    backgroundColor: '#2196F3'
+    backgroundColor: '#2196F3',
   },
   mapStyle: {
     flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
     position: 'absolute',
-    top: 0
+    top: 0,
   },
   map: {
     flex: 3,
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    position: 'absolute'
+    position: 'absolute',
   },
   locationMenu: {
     width: Dimensions.get('window').width,
@@ -299,20 +299,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#bfcfff'
+    backgroundColor: '#bfcfff',
   },
   Touchable: {
     paddingTop: 2,
     backgroundColor: '#fff',
     opacity: 20,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   popupContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    padding: 10
+    padding: 10,
   },
   modalContainer: {
     position: 'absolute',
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     textAlign: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   popupContent: {
     //width: Dimensions.get('window').width - 30,
@@ -342,13 +342,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     textAlign: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   infoText: {
     justifyContent: 'center',
     textAlign: 'center',
-    padding: 10
-  }
+    padding: 10,
+  },
 })
 
 export default mapScreen

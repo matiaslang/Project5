@@ -7,16 +7,17 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  ScrollView
+  ScrollView,
+  AsyncStorage,
 } from 'react-native'
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
 
 import { t } from '../Locales'
 
-const ListItem = props => {
+/* const ListItem = props => {
   return (
     <View style={styles.listItem}>
       <View
@@ -35,6 +36,34 @@ const ListItem = props => {
       </View>
     </View>
   )
+} */
+
+const ListItem = (props) => {
+  return (
+    <TouchableOpacity style={styles.box}>
+      <Text style={styles.placeBoxText}>{props.name}</Text>
+      <Text style={styles.boxDistance}>{props.distance}</Text>
+      <Image
+        source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+        style={styles.boxImage}
+      />
+    </TouchableOpacity>
+  )
+}
+
+const ArrangeList = (props) => {
+  console.log(props)
+  const list = props.list
+  return list.map((item, key) => {
+    key = item.distance
+    return (
+      <ListItem
+        name={item.Title}
+        distance={item.distance}
+        key={item.distance}
+      />
+    )
+  })
 }
 
 export default class PlacesScreen extends Component {
@@ -42,11 +71,30 @@ export default class PlacesScreen extends Component {
     super(props)
     this.state = {
       enabled: true,
-      fi: this.props.navigation.state.params.fi
+      fi: this.props.navigation.state.params.fi,
+      locations: {},
     }
   }
   static navigationOptions = ({ route, navigation }) => {
     return {}
+  }
+
+  async componentDidMount() {
+    const keys = await AsyncStorage.getAllKeys()
+    console.log('keys are ' + keys)
+    const result = await AsyncStorage.multiGet(keys)
+    console.log('results are ' + result)
+    try {
+      var places = await AsyncStorage.getItem('AllPlaces').then((v) =>
+        JSON.parse(v)
+      )
+      this.setState({ locations: places })
+    } catch (e) {
+      console.log(e)
+    }
+    console.log(places)
+    this.setState({ locations: places })
+    console.log(this.state)
   }
 
   render() {
@@ -65,6 +113,8 @@ export default class PlacesScreen extends Component {
           </View>
 
           <ScrollView style={styles.boxesInside}>
+            <ListItem list={this.state.locations} />
+            {/*
             <TouchableOpacity style={styles.box}>
               <Text style={styles.placeBoxText}>Crecian</Text>
               <Text style={styles.boxDistance}>100m</Text>
@@ -171,6 +221,8 @@ export default class PlacesScreen extends Component {
                 style={styles.boxImage}
               />
             </TouchableOpacity>
+
+*/}
           </ScrollView>
         </View>
         <Text style={styles.bottomUpper}></Text>
@@ -183,7 +235,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     alignItems: 'center',
-    flex: 1
+    flex: 1,
   },
 
   bothButtons: {
@@ -194,7 +246,7 @@ const styles = StyleSheet.create({
 
     paddingVertical: hp('0.5%'),
     borderTopLeftRadius: 25,
-    borderTopRightRadius: 25
+    borderTopRightRadius: 25,
   },
 
   backButton: {
@@ -203,28 +255,28 @@ const styles = StyleSheet.create({
     color: '#F7F7F7',
     alignSelf: 'center',
     marginLeft: wp('2%'),
-    textAlignVertical: 'center'
+    textAlignVertical: 'center',
   },
 
   upperButton: {
     flex: 1,
     fontSize: hp('3.5%'),
     color: '#F7F7F7',
-    marginLeft: wp('25%')
+    marginLeft: wp('25%'),
     //:DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
   },
   boxDistance: {
     flex: 1,
     color: '#043353',
     alignSelf: 'center',
-    fontSize: hp('2%')
+    fontSize: hp('2%'),
   },
 
   boxImage: {
     height: hp('5%'),
     flex: 1,
     alignSelf: 'center',
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
   placeBoxText: {
     flex: 3,
@@ -232,18 +284,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: wp('2%'),
 
-    fontSize: hp('2.5%')
+    fontSize: hp('2.5%'),
   },
   box: {
     color: '#D4DDE6',
     height: hp('9%'),
     borderColor: '#D4DDE6',
     borderWidth: 2,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   boxesInside: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   placesBox: {
     flex: 2,
@@ -254,14 +306,14 @@ const styles = StyleSheet.create({
 
     width: wp('90%'),
 
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
 
   upperBottom: {
-    height: hp('6%')
+    height: hp('6%'),
   },
 
   bottomUpper: {
-    height: hp('2%')
-  }
+    height: hp('2%'),
+  },
 })
