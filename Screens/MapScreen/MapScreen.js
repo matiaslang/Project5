@@ -8,7 +8,7 @@ import {
   AsyncStorage,
 } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
-import Markers from './Markers'
+import Markers from '../../assets/Places.json'
 import FloatingButton from './FloatingButton'
 import Modal from 'react-native-modal'
 import { t } from '../../Locales'

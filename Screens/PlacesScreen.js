@@ -14,6 +14,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
+import * as Permissions from 'expo-permissions'
+import * as Location from 'expo-location'
+import { getDistance, getPreciseDistance } from 'geolib'
 
 import { t } from '../Locales'
 
@@ -52,17 +55,33 @@ const ListItem = (props) => {
 }
 
 const ArrangeList = (props) => {
-  console.log(props)
   const list = props.list
-  return list.map((item, key) => {
-    key = item.distance
-    return (
-      <ListItem
-        name={item.Title}
-        distance={item.distance}
-        key={item.distance}
-      />
-    )
+  const location = props.location
+  var newList
+  var dis = 0
+  //console.log(list[0])
+  if (location !== null && list !== null) {
+    list.map((item, key) => {
+      key = item.coordinates.latitude
+      dis = getDistance(
+        {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+        {
+          latitude: item.coordinates.latitude,
+          longitude: item.coordinates.longitude,
+        }
+      )
+      item['distance'] = dis
+    })
+
+    list.sort((a, b) => a.distance > b.distance)
+  }
+  //updateList(list)
+  //const distances = list.map((item) => ())
+  return list.map((item, index) => {
+    return <ListItem key={index} name={item.Title} distance={item.distance} />
   })
 }
 
@@ -72,34 +91,48 @@ export default class PlacesScreen extends Component {
     this.state = {
       enabled: true,
       fi: this.props.navigation.state.params.fi,
-      locations: {},
+      location: null,
+      errorMessage: '',
+      allLocations: [],
     }
   }
   static navigationOptions = ({ route, navigation }) => {
     return {}
   }
 
-  async componentDidMount() {
-    const keys = await AsyncStorage.getAllKeys()
-    console.log('keys are ' + keys)
-    const result = await AsyncStorage.multiGet(keys)
-    console.log('results are ' + result)
+  _getLocation = async () => {
     try {
-      var places = await AsyncStorage.getItem('AllPlaces').then((v) =>
-        JSON.parse(v)
+      const { status } = await Permissions.getAsync(Permissions.LOCATION)
+      if (status !== 'granted') {
+        console.log('PERMISSION NOT GRANTED')
+
+        this.setState({ errorMessage: 'PERMISSION NOT GRANTED' })
+      }
+      const location = await Location.getCurrentPositionAsync({})
+      this.setState({
+        location,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async componentDidMount() {
+    this._getLocation()
+    const places = require('../assets/Places.json')
+    this.setState({ allLocations: places })
+    try {
+      await AsyncStorage.setItem('AllPlaces', JSON.stringify(places)).then(
+        this.setState({ ready: true })
       )
-      this.setState({ locations: places })
     } catch (e) {
       console.log(e)
     }
-    console.log(places)
-    this.setState({ locations: places })
-    console.log(this.state)
   }
 
   render() {
     const { navigate } = this.props.navigation
-    console.log(this.state.fi)
+    //console.log(this.state.fi)
     return (
       <View style={styles.container}>
         <Text style={styles.upperBottom}></Text>
@@ -113,7 +146,10 @@ export default class PlacesScreen extends Component {
           </View>
 
           <ScrollView style={styles.boxesInside}>
-            <ListItem list={this.state.locations} />
+            <ArrangeList
+              list={this.state.allLocations}
+              location={this.state.location}
+            />
             {/*
             <TouchableOpacity style={styles.box}>
               <Text style={styles.placeBoxText}>Crecian</Text>

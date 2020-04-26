@@ -30,6 +30,7 @@ const ScreenHeight = Dimensions.get('window').height
 const ListItem = (props) => {
   return (
     <TouchableOpacity
+      key={props.name}
       style={styles.box}
       onPress={() => {
         console.log(props.name)
@@ -101,15 +102,8 @@ const ArrangeList = (props) => {
   //updateList(list)
   var cutList = list.slice(0, 5)
   //const distances = list.map((item) => ())
-  return cutList.map((item, key) => {
-    key = item.distance
-    return (
-      <ListItem
-        name={item.Title}
-        distance={item.distance}
-        key={item.distance}
-      />
-    )
+  return cutList.map((item, index) => {
+    return <ListItem key={index} name={item.Title} distance={item.distance} />
   })
 }
 
@@ -199,8 +193,8 @@ class HomeScreen extends React.Component {
       console.log(e)
     }
     try {
-      await AsyncStorage.setItem('VisitedPlaces', ' ')
-      //this.getkeys()
+      var visitedPlaces = await AsyncStorage.getItem('key')
+      this.setState({ visitedPlaces: visitedPlaces })
     } catch (e) {
       console.log(e)
     }
@@ -277,7 +271,7 @@ class HomeScreen extends React.Component {
 
           <View style={styles.historyCounter}>
             <Text style={styles.historyPlacesVisited}>
-              {t('PLACES_VISITED', this.state.fi)}: 5
+              {t('PLACES_VISITED', this.state.fi)}:{this.state.visitedPlaces}
             </Text>
             <Text style={styles.boxTimesUsed}>
               {t('TIMES_USED', this.state.fi)}: 16
