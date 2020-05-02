@@ -183,6 +183,8 @@ class HomeScreen extends React.Component {
   }
 
   _CountHistory = () => {
+    //SAMU TÄÄLLÄ ON TÄMÄ TIETO
+    console.log(this.state.visitedPlaces)
     var data = this.state.visitedPlaces
     var luk = data.split('place').length - 1
     this.setState({ visitedCount: luk })
