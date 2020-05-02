@@ -117,6 +117,7 @@ class HomeScreen extends React.Component {
       errorMessage: '',
       allLocations: [],
       ready: false,
+      visitedCount: 0,
     }
   }
 
@@ -181,6 +182,12 @@ class HomeScreen extends React.Component {
     this.navigation.navigate('Places', { fi: this.state.fi })
   }
 
+  _CountHistory = () => {
+    var data = this.state.visitedPlaces
+    var luk = data.split('place').length - 1
+    this.setState({ visitedCount: luk })
+  }
+
   async componentDidMount() {
     this._getLocation()
     const places = require('../assets/Places.json')
@@ -195,6 +202,7 @@ class HomeScreen extends React.Component {
     try {
       var visitedPlaces = await AsyncStorage.getItem('key')
       this.setState({ visitedPlaces: visitedPlaces })
+      this._CountHistory()
     } catch (e) {
       console.log(e)
     }
@@ -271,10 +279,10 @@ class HomeScreen extends React.Component {
 
           <View style={styles.historyCounter}>
             <Text style={styles.historyPlacesVisited}>
-              {t('PLACES_VISITED', this.state.fi)}:{this.state.visitedPlaces}
+              {t('PLACES_VISITED', this.state.fi)}:{this.state.visitedCount}
             </Text>
             <Text style={styles.boxTimesUsed}>
-              {t('TIMES_USED', this.state.fi)}: 16
+              {t('TIMES_USED', this.state.fi)}: {this.state.visitedCount}
             </Text>
           </View>
 
