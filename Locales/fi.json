@@ -8,6 +8,6 @@
   "PLACES_VISITED": "Käydyt paikat",
   "TIMES_USED": "Käyttökerrat",
   "BACK": "Takaisin",
-  "MAPINFOTEXT": "Tähän tulee kuvausteksti suomeksi. Muistetaanhan kirjoittaa teksti auki jookos? :) ",
-  "MAPMARKERINFOTEXT": "JA MARKKERIN TEKSTI PITÄÄ MYÖSKIN KEKSIÄ, EIKSJE!"
+  "MAPINFOTEXT": "Tässä meillä on karttanäkymä, joka sisältää useita merkkejä, joissa on mahdollista käydä harjoittelemassa englantia. Jokaisessa paikassa on QR-koodi, jonka voi skannata, jolloin se tallentaa vierailusi kyseisessä paikassa.",
+  "MAPMARKERINFOTEXT": "Tämä ikoni näyttää paikat, joissa voit käydä harjoittelemassa englannin kieltäsi."
 }

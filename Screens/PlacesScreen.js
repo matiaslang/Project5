@@ -43,9 +43,15 @@ import { t } from '../Locales'
 
 const ListItem = (props) => {
   return (
-    <TouchableOpacity style={styles.box}>
+    <TouchableOpacity
+      style={styles.box}
+      onPress={() => {
+        props.navigation('Map', { coordinates: props.coordinates })
+        console.log(props.name)
+      }}
+    >
       <Text style={styles.placeBoxText}>{props.name}</Text>
-      <Text style={styles.boxDistance}>{props.distance}</Text>
+      <Text style={styles.boxDistance}>{props.distance} m</Text>
       <Image
         source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
         style={styles.boxImage}
@@ -81,7 +87,15 @@ const ArrangeList = (props) => {
   //updateList(list)
   //const distances = list.map((item) => ())
   return list.map((item, index) => {
-    return <ListItem key={index} name={item.Title} distance={item.distance} />
+    return (
+      <ListItem
+        key={index}
+        name={item.Title}
+        distance={item.distance}
+        navigation={props.navigation}
+        coordinates={item.coordinates}
+      />
+    )
   })
 }
 
@@ -149,6 +163,7 @@ export default class PlacesScreen extends Component {
             <ArrangeList
               list={this.state.allLocations}
               location={this.state.location}
+              navigation={navigate}
             />
             {/*
             <TouchableOpacity style={styles.box}>

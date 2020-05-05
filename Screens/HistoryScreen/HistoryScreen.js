@@ -4,7 +4,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ScrollView,
-  FlatList
+  FlatList,
 } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import placehistory from './placehistory'
@@ -13,36 +13,36 @@ import { t } from '../../Locales'
 const ScreenWidth = Dimensions.get('window').width
 const ScreenHeight = Dimensions.get('window').height
 
-const ListItem = props => {
+const ListItem = (props) => {
   return (
-    <View style={styles.listItem}>
+    <TouchableOpacity style={styles.listItem}>
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
           //flex: 1
         }}
       >
-        <TouchableOpacity>
+        <View>
           <Text style={{ fontSize: 20 }}>{props.place}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
+        </View>
+        <View>
           <Text style={{ fontSize: 20 }}>{props.date}</Text>
-        </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
 export default class HistoryScreen extends Component {
   static navigationOptions = {
-    title: 'Welcome'
+    title: 'Welcome',
   }
   constructor(props) {
     super(props)
     this.state = {
       enabled: true,
-      fi: this.props.navigation.state.params.fi
+      fi: this.props.navigation.state.params.fi,
     }
   }
 
@@ -75,7 +75,6 @@ export default class HistoryScreen extends Component {
               <Text>{t('PLACES_VISITED', this.state.fi)}: 5</Text>
               <Text>{t('TIMES_USED', this.state.fi)}: 16</Text>
             </View>
-            <View style={styles.hairline} />
           </View>
           <FlatList
             style={{ flex: 1 }}
@@ -83,7 +82,7 @@ export default class HistoryScreen extends Component {
             renderItem={({ item, index }) => (
               <ListItem place={item.place} date={item.date} />
             )}
-            keyExtractor={item => item.key}
+            keyExtractor={(item) => item.key}
           />
         </View>
       </View>
@@ -93,14 +92,14 @@ export default class HistoryScreen extends Component {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#000'
+    backgroundColor: '#000',
   },
   container: {
     flex: 1,
     //height: ScreenHeight,
     backgroundColor: '#fff',
     padding: 30,
-    paddingTop: 40
+    paddingTop: 40,
   },
   History: {
     //padding: 30,
@@ -111,7 +110,7 @@ const styles = StyleSheet.create({
     //height: ScreenHeight,
     bottom: 0,
     top: 0,
-    overflow: 'hidden'
+    overflow: 'hidden',
 
     //alignItems: 'center'
   },
@@ -119,27 +118,27 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     //flex: 1,
     fontSize: 14,
-    color: '#fff'
+    color: '#fff',
     //position: 'absolute'
   },
   HistoryText: {
     alignSelf: 'center',
     //flex: 1,
     fontSize: 24,
-    color: '#fff'
+    color: '#fff',
   },
   blank: {
     //flex: 1,
-    fontSize: 24
+    fontSize: 24,
   },
   bluebar: {
-    flex: 0.13,
+    flex: 0.07,
     backgroundColor: '#043353',
     padding: 10,
     paddingRight: 40,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
     //position: 'absolute'
   },
   counteritem: {
@@ -147,21 +146,20 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
     borderColor: '#000',
-    flex: 0.15,
-
+    flex: 0.1,
     justifyContent: 'space-around',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   listItem: {
     borderWidth: 2,
     paddingVertical: 20,
     borderColor: '#D4DDE6',
-    padding: 10
+    padding: 10,
   },
   hairline: {
     backgroundColor: '#A2A2A2',
     height: 3,
     width: (ScreenWidth * 75) / 100,
-    alignSelf: 'center'
-  }
+    alignSelf: 'center',
+  },
 })

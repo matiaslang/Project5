@@ -12,6 +12,7 @@ import Markers from '../../assets/Places.json'
 import FloatingButton from './FloatingButton'
 import Modal from 'react-native-modal'
 import { t } from '../../Locales'
+import { Router } from 'react-native-router-flux'
 
 const marker1 = require('../../assets/Ikonit/Markkerit/Marker_1-01.png')
 const marker2 = require('../../assets/Ikonit/Markkerit/Marker_2-01.png')
@@ -123,6 +124,7 @@ class mapScreen extends React.Component {
       longitude,
       latitudeDelta,
       longitudeDelta,
+      coordinates,
     })
   }
 
@@ -158,6 +160,17 @@ class mapScreen extends React.Component {
   }
 
   componentDidUpdate() {
+    if (typeof this.props.navigation.state.params !== 'undefined') {
+      coordinates = this.props.navigation.state.params.coordinates
+      var coordinatesAndDelta = {
+        ...coordinates,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      }
+      if (coordinates != this.state.coordinates) {
+        this.map.animateToRegion(coordinatesAndDelta)
+      }
+    }
     AsyncStorage.getItem('fi').then((fiValue) => {
       if (fiValue != this.state.fi) {
         this.setState({ fi: fiValue })
@@ -181,6 +194,7 @@ class mapScreen extends React.Component {
   render() {
     const { navigation } = this.props
     const { region } = this.state
+    //console.log(this.props.navigation.state.params.coordinates)
 
     const MarkerInfo = (props) => {
       return (

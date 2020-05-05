@@ -33,6 +33,7 @@ const ListItem = (props) => {
       key={props.name}
       style={styles.box}
       onPress={() => {
+        props.navigation('Map', { coordinates: props.coordinates })
         console.log(props.name)
       }}
     >
@@ -103,7 +104,15 @@ const ArrangeList = (props) => {
   var cutList = list.slice(0, 5)
   //const distances = list.map((item) => ())
   return cutList.map((item, index) => {
-    return <ListItem key={index} name={item.Title} distance={item.distance} />
+    return (
+      <ListItem
+        key={index}
+        name={item.Title}
+        distance={item.distance}
+        navigation={props.navigation}
+        coordinates={item.coordinates}
+      />
+    )
   })
 }
 
@@ -179,7 +188,7 @@ class HomeScreen extends React.Component {
 
   changeScreen = () => {
     console.log('changeeeeee')
-    this.navigation.navigate('Places', { fi: this.state.fi })
+    this.navigation.navigate('Map', { fi: this.state.fi })
   }
 
   _CountHistory = () => {
@@ -223,6 +232,7 @@ class HomeScreen extends React.Component {
 
   render() {
     const { fi } = this.state
+    const { navigate } = this.props.navigation
 
     return (
       <View style={styles.container}>
@@ -253,7 +263,7 @@ class HomeScreen extends React.Component {
             <ArrangeList
               list={this.state.allLocations}
               location={this.state.location}
-              navigation={this.navigate}
+              navigation={navigate}
             />
           </View>
 
