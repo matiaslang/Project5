@@ -61,6 +61,7 @@ class mapScreen extends React.Component {
       region: initialRegion,
       isModalVisible: false,
       fi: true,
+      markerPlace: '',
     }
   }
 
@@ -160,6 +161,7 @@ class mapScreen extends React.Component {
   }
 
   componentDidUpdate() {
+    //setTimeout(() => this.map.animateToRegion(this.state.region))
     if (typeof this.props.navigation.state.params !== 'undefined') {
       coordinates = this.props.navigation.state.params.coordinates
       var coordinatesAndDelta = {
@@ -167,8 +169,12 @@ class mapScreen extends React.Component {
         latitudeDelta: 0.005,
         longitudeDelta: 0.005,
       }
-      if (coordinates != this.state.coordinates) {
-        this.map.animateToRegion(coordinatesAndDelta)
+      if (coordinates !== this.state.markerPlace) {
+        setTimeout(() => this.map.animateToRegion(coordinatesAndDelta, 2000), 1)
+        console.log('WOOOW')
+        this.setState({ markerPlace: coordinates })
+      } else {
+        this.map.animateToRegion(coordinatesAndDelta, 2000)
       }
     }
     AsyncStorage.getItem('fi').then((fiValue) => {
