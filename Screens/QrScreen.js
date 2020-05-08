@@ -232,7 +232,7 @@ class QrScreen extends React.Component {
       message: undefined,
       newPlace : '',
       passed : false,
-      fi : "true",
+      fi : "false",
       checkQuestion : false,
       checked : false,
     }
@@ -245,11 +245,13 @@ class QrScreen extends React.Component {
   }
   
   checkLanguage( ){
-    if( this.state.fi == "true" ){
-      return false;
+    //console.log( " state fi is " + this.state.fi + " typeof " + typeof( this.state.fi ) );
+    //console.log( " is true " + this.state.fi == "true" )
+    if( this.state.fi == "false" ){
+      return true;
     }
     else{
-      return true;
+      return false;
     }
   }
 
@@ -322,25 +324,17 @@ class QrScreen extends React.Component {
   
   componentDidMount( ){
     //AsyncStorage.clear( STORAGE_KEY );
-    AsyncStorage.getItem( 'fi' ).then( (fiValue ) => {
-      this.setState( { fi : fiValue } )
-      
-    } );
+    this.setState( { fi : "false" } )
     this.setState( { qrscanned : false } )
     this.setState( { message : undefined } )
     this.setState( { newPlace : '' } )
     this.setState( { passed : false } )
-    //console.log( " fi Value is " + this.state.fi )
+    console.log( " mounted fi is " + this.state.fi )
     this.interval = setInterval( ( ) => this.setState( { timer : Date.now( ) } ), 1000 );
   }
 
   componentDidUpdate() {
-    AsyncStorage.getItem('fi').then((fiValue) => {
-      if( this.state.fi != fiValue ){
-        this.setState({ fi: fiValue })
-      }
-    })
-    //console.log( " fi value is " + this.state.fi );
+    this.setState( { fi : this.state.props.fi })
   }
   componentWillUnmount( ){
     clearInterval( this.interval );
@@ -468,16 +462,16 @@ const styles = StyleSheet.create({
   // return Home opacity
   box: {
     color: '#D4DDE6',
-    height: hp('9%'),
-    width: wp( '10%'),
+    height: hp('11%'),
+    width: wp( '20%'),
     borderColor: '#D4DDE6',
     borderWidth: 2,
     flexDirection: 'row'
   },
   // return Home image
   boxImage: {
-      width: wp('10%' ),
-      height: hp('10%' ),
+      width: wp('20%' ),
+      height: hp('11%' ),
       justifyContent : 'flex-end',
       alignSelf : 'flex-end'
   },
