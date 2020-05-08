@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     //height: ScreenHeight,
-    backgroundColor: '#fff',
+    backgroundColor: '#E8E8E8',
     padding: 30,
     paddingTop: 40,
   },
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     //padding: 30,
     borderRadius: 25,
     borderWidth: 3,
-    borderColor: '#043353',
+    borderColor: '#2C656B',
     flex: 1,
     //height: ScreenHeight,
     bottom: 0,
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   bluebar: {
     flex: 0.07,
-    backgroundColor: '#043353',
+    backgroundColor: '#2C656B',
     padding: 10,
     paddingRight: 40,
     flexDirection: 'row',

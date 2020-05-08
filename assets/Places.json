@@ -18,7 +18,7 @@
     "image": 3
   },
   {
-    "Title": "Library",
+    "Title": "Pegasus Library",
     "Description": "This is the place for you to rent new books!/ MARKER 5",
     "coordinates": {
       "latitude": 65.061333,
@@ -48,7 +48,7 @@
     "Title": "Cafe Rooster",
     "Description": "Popular restaurant / MARKER 8",
     "coordinates": {
-      "latitude": 65.011453, 
+      "latitude": 65.011453,
       "longitude": 25.466745
     },
     "image": 3
@@ -57,7 +57,7 @@
     "Title": "Oulun teatteri",
     "Description": "This is where you can watch theater shows / MARKER 9",
     "coordinates": {
-      "latitude": 65.014924, 
+      "latitude": 65.014924,
       "longitude": 25.460967
     },
     "image": 3
@@ -66,7 +66,7 @@
     "Title": "Raatin uimahalli",
     "Description": "Popular swimming hall / MARKER 10",
     "coordinates": {
-      "latitude": 65.020088, 
+      "latitude": 65.020088,
       "longitude": 25.464456
     },
     "image": 3
@@ -75,8 +75,8 @@
     "Title": "Teerenpeli",
     "Description": "Recently opened highly praised pub / MARKER 11",
     "coordinates": {
-      "latitude": 65.012268, 
-      "longitude": 25.467490
+      "latitude": 65.012268,
+      "longitude": 25.46749
     },
     "image": 3
   },
@@ -84,7 +84,7 @@
     "Title": "Hevimesta",
     "Description": "Legendary bar / MARKER 12",
     "coordinates": {
-      "latitude": 65.011926, 
+      "latitude": 65.011926,
       "longitude": 25.478154
     },
     "image": 3
@@ -93,7 +93,7 @@
     "Title": "Finnkino",
     "Description": "Large movie theater / MARKER 13",
     "coordinates": {
-      "latitude": 65.011044, 
+      "latitude": 65.011044,
       "longitude": 25.465697
     },
     "image": 3
@@ -102,7 +102,7 @@
     "Title": "Star",
     "Description": "Smaller movie theater / MARKER 14",
     "coordinates": {
-      "latitude": 65.024635, 
+      "latitude": 65.024635,
       "longitude": 25.482745
     },
     "image": 3
@@ -111,7 +111,7 @@
     "Title": "Kauppuri 5",
     "Description": "Legendary burgers / MARKER 15",
     "coordinates": {
-      "latitude": 65.012822, 
+      "latitude": 65.012822,
       "longitude": 25.466898
     },
     "image": 3

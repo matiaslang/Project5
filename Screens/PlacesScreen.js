@@ -53,7 +53,7 @@ const ListItem = (props) => {
       <Text style={styles.placeBoxText}>{props.name}</Text>
       <Text style={styles.boxDistance}>{props.distance} m</Text>
       <Image
-        source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+        source={require('../assets/Ikonit/Markkerit/Marker_3-01.png')}
         style={styles.boxImage}
       />
     </TouchableOpacity>
@@ -284,17 +284,15 @@ export default class PlacesScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#E8E8E8',
     alignItems: 'center',
     flex: 1,
   },
 
   bothButtons: {
     flexDirection: 'row',
-
-    backgroundColor: '#043353',
+    backgroundColor: '#2C656B',
     color: '#F7F7F7',
-
     paddingVertical: hp('0.5%'),
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -304,6 +302,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: hp('2%'),
     color: '#F7F7F7',
+    backgroundColor: '#2C656B',
     alignSelf: 'center',
     marginLeft: wp('2%'),
     textAlignVertical: 'center',
@@ -313,6 +312,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: hp('3.5%'),
     color: '#F7F7F7',
+    backgroundColor: '#2C656B',
     marginLeft: wp('25%'),
     //:DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
   },
@@ -351,12 +351,10 @@ const styles = StyleSheet.create({
   placesBox: {
     flex: 2,
     backgroundColor: '#F7F7F7',
-    borderColor: '#043353',
+    borderColor: '#2C656B',
     borderRadius: 30,
     borderWidth: 3,
-
     width: wp('90%'),
-
     overflow: 'hidden',
   },
 

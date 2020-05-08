@@ -40,7 +40,7 @@ const ListItem = (props) => {
       <Text style={styles.placeBoxText}>{props.name}</Text>
       <Text style={styles.boxDistance}>{props.distance}m</Text>
       <Image
-        source={require('../assets/Ikonit/Markkerit/Marker_1-01.png')}
+        source={require('../assets/Ikonit/Markkerit/Marker_3-01.png')}
         style={styles.boxImage}
       />
     </TouchableOpacity>
@@ -197,6 +197,50 @@ class HomeScreen extends React.Component {
     var data = this.state.visitedPlaces
     var luk = data.split('place').length - 1
     this.setState({ visitedCount: luk })
+
+    var message
+    var y
+
+    for (y in data) {
+      if (y == '"') {
+        y = ''
+      }
+      message += y
+    }
+    var yksittain
+    yksittain = message.split('}')
+
+    var x
+    var i
+    var objekti
+
+    for (i in yksittain) {
+      if (i == '\n') {
+        break
+      }
+      var handling = yksittain[x]
+      console.log(handling)
+
+      var yksikot = handling.split(',', 2)
+
+      var place = yksikot[0].split(':')
+      var placename = place[1]
+
+      var aika = yksikot[1].split(':')
+      var time = aika[1]
+
+      var fraasi = yksikot[2].split(':', 1)
+      var phrase = fraasi[1]
+
+      objekti += [[placename, time, phrase]]
+      x += 1
+    }
+
+    console.log(objekti)
+    console.log(objekti[0])
+    console.log(objekti[1])
+    var ekaolio = objekti[0]
+    console.log(ekaolio[1])
   }
 
   async componentDidMount() {
@@ -324,7 +368,7 @@ class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#E8E8E8',
     alignItems: 'center',
     flex: 1,
   },
@@ -404,8 +448,8 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#D4DDE6',
 
-    borderColor: '#D4DDE6',
-    borderWidth: 2,
+    borderColor: '#2C656B',
+    borderWidth: 0.9,
     flexDirection: 'row',
   },
 
@@ -416,7 +460,7 @@ const styles = StyleSheet.create({
   },
 
   lowerButton: {
-    backgroundColor: '#043353',
+    backgroundColor: '#2C656B',
     color: '#F7F7F7',
     fontSize: hp('3%'),
 
@@ -427,7 +471,7 @@ const styles = StyleSheet.create({
   },
 
   upperButton: {
-    backgroundColor: '#043353',
+    backgroundColor: '#2C656B',
     color: '#F7F7F7',
     fontSize: hp('3.5%'),
 
@@ -439,8 +483,8 @@ const styles = StyleSheet.create({
 
   placesBox: {
     flex: 2,
-    backgroundColor: '#F7F7F7',
-    borderColor: '#043353',
+    backgroundColor: '#F7F8F3',
+    borderColor: '#2C656B',
     borderRadius: 30,
     borderWidth: 3,
 
@@ -450,8 +494,8 @@ const styles = StyleSheet.create({
   },
   history: {
     flex: 1,
-    backgroundColor: '#F7F7F7',
-    borderColor: '#043353',
+    backgroundColor: '#F7F8F3',
+    borderColor: '#2C656B',
     borderRadius: 30,
     borderWidth: 3,
 

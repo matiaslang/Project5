@@ -5,7 +5,7 @@ import {
   Text,
   View,
   Image,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#d12a2a',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   placesNearby: {
     flex: 1,
@@ -81,21 +81,21 @@ const styles = StyleSheet.create({
     borderColor: '#043353',
     borderRadius: 10,
     paddingVertical: 50,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
 
-  header: {}
+  header: {},
 })
 
 const HomeStack = createStackNavigator(
   {
     Home: { screen: HomeScreen },
     Places: { screen: PlacesScreen },
-    History: { screen: HistoryScreen }
+    History: { screen: HistoryScreen },
   },
   {
     mode: 'modal',
-    headerMode: 'none'
+    headerMode: 'none',
   }
 )
 
@@ -107,8 +107,8 @@ const config = {
     mass: 3,
     overshootClamping: true,
     restDisplacementThreshold: 0.01,
-    restSpeedThreshold: 0.01
-  }
+    restSpeedThreshold: 0.01,
+  },
 }
 
 export default createAppContainer(
@@ -116,19 +116,19 @@ export default createAppContainer(
     {
       Map: { screen: mapScreen },
       Home: { screen: HomeStack },
-      QRcode: { screen: QrScreen }
+      QRcode: { screen: QrScreen },
     },
     {
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarIcon: ({ focused, tintColor }) =>
-          getTabBarIcon(navigation, focused, tintColor)
+          getTabBarIcon(navigation, focused, tintColor),
       }),
       initialRouteName: 'Home',
 
       tabBarOptions: {
         activeTintColor: '#043353',
-        inactiveTintColor: '#cad4db'
-      }
+        inactiveTintColor: '#cad4db',
+      },
     }
   )
 )
