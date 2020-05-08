@@ -34,7 +34,7 @@ const ListItem = (props) => {
       style={styles.box}
       onPress={() => {
         props.navigation('Map', { coordinates: props.coordinates })
-        console.log(props.name)
+        //console.log(props.name)
       }}
     >
       <Text style={styles.placeBoxText}>{props.name}</Text>
@@ -127,6 +127,8 @@ class HomeScreen extends React.Component {
       allLocations: [],
       ready: false,
       visitedCount: 0,
+      visitedArray: [],
+      lastPlace: '',
     }
   }
 
@@ -193,54 +195,30 @@ class HomeScreen extends React.Component {
 
   _CountHistory = () => {
     //SAMU TÄÄLLÄ ON TÄMÄ TIETO
-    console.log(this.state.visitedPlaces)
     var data = this.state.visitedPlaces
     var luk = data.split('place').length - 1
     this.setState({ visitedCount: luk })
 
-    var message
-    var y
+    data = data.split('}')
+    data = data.map((m) => (m = m.substring(1)))
+    data = data.map((d) => d.split(','))
+    data = data.slice(0, -1)
+    data.forEach((el) => {
+      el.forEach((piece, index) => {
+        el[index] = piece.split(':').pop()
+        el[index] = el[index].replace(/^"(.+(?="$))"$/, '$1')
+      })
+    })
 
-    for (y in data) {
-      if (y == '"') {
-        y = ''
-      }
-      message += y
-    }
-    var yksittain
-    yksittain = message.split('}')
+    //console.log(data[0][1])
+    var lastItem = data.slice(-1)[0]
+    this.setState({ visitedArray: data })
+    this.setState({ lastPlace: lastItem })
+    //console.log(this.state.visitedArray)
+  }
 
-    var x
-    var i
-    var objekti
-
-    for (i in yksittain) {
-      if (i == '\n') {
-        break
-      }
-      var handling = yksittain[x]
-      console.log(handling)
-
-      var yksikot = handling.split(',', 2)
-
-      var place = yksikot[0].split(':')
-      var placename = place[1]
-
-      var aika = yksikot[1].split(':')
-      var time = aika[1]
-
-      var fraasi = yksikot[2].split(':', 1)
-      var phrase = fraasi[1]
-
-      objekti += [[placename, time, phrase]]
-      x += 1
-    }
-
-    console.log(objekti)
-    console.log(objekti[0])
-    console.log(objekti[1])
-    var ekaolio = objekti[0]
-    console.log(ekaolio[1])
+  async componentDidUpdate() {
+    //console.log('UPDATE')
   }
 
   async componentDidMount() {
@@ -325,7 +303,10 @@ class HomeScreen extends React.Component {
         <View style={styles.history}>
           <TouchableOpacity
             onPress={() =>
-              this.props.navigation.navigate('History', { fi: this.state.fi })
+              this.props.navigation.navigate('History', {
+                fi: this.state.fi,
+                visitedArray: this.state.visitedArray,
+              })
             }
           >
             <Text style={styles.upperButton}>
@@ -344,13 +325,18 @@ class HomeScreen extends React.Component {
 
           <View style={styles.historyVisitedPlaces}>
             <TouchableOpacity style={styles.box}>
-              <Text style={styles.historyBoxText}>Subway Tuira</Text>
-              <Text style={styles.boxDate}>21.01.2020</Text>
+              <Text style={styles.historyBoxText}>
+                {this.state.lastPlace[0]}
+              </Text>
+              <Text style={styles.boxDate}>{this.state.lastPlace[1]}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() =>
-                this.props.navigation.navigate('History', { fi: this.state.fi })
+                this.props.navigation.navigate('History', {
+                  fi: this.state.fi,
+                  visitedArray: this.state.visitedArray,
+                })
               }
             >
               <Text style={styles.lowerButton}>

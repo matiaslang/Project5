@@ -43,7 +43,12 @@ export default class HistoryScreen extends Component {
     this.state = {
       enabled: true,
       fi: this.props.navigation.state.params.fi,
+      visitedPlaces: this.props.navigation.state.params.visitedArray,
     }
+  }
+
+  async componentDidMount() {
+    //console.log(this.props)
   }
 
   render() {
@@ -72,15 +77,22 @@ export default class HistoryScreen extends Component {
             <View
               style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}
             >
-              <Text>{t('PLACES_VISITED', this.state.fi)}: 5</Text>
-              <Text>{t('TIMES_USED', this.state.fi)}: 16</Text>
+              <Text>
+                {t('PLACES_VISITED', this.state.fi)}:{' '}
+                {this.state.visitedPlaces.length}
+              </Text>
+              <Text>
+                {t('TIMES_USED', this.state.fi)}:
+                {this.state.visitedPlaces.length}
+              </Text>
             </View>
           </View>
           <FlatList
+            key={this.state.visitedPlaces[0]}
             style={{ flex: 1 }}
-            data={placehistory}
+            data={this.state.visitedPlaces}
             renderItem={({ item, index }) => (
-              <ListItem place={item.place} date={item.date} />
+              <ListItem key={index} place={item[0]} date={item[1]} />
             )}
             keyExtractor={(item) => item.key}
           />
