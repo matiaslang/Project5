@@ -130,6 +130,7 @@ class HomeScreen extends React.Component {
       visitedArray: [],
       lastPlace: '',
     }
+    this._CountHistory
   }
 
   _getLocation = async () => {
@@ -217,18 +218,19 @@ class HomeScreen extends React.Component {
   }
 
   async componentDidUpdate() {
-    console.log('COMPONENTTI PÄIVITTYI')
     var visitedPlaces = await AsyncStorage.getItem('Key')
     if (this.state.visitedPlaces !== visitedPlaces) {
+      console.log('visitedPlaces päivitettiin')
       this.setState({ visitedPlaces: visitedPlaces })
       this._CountHistory()
     }
   }
-  async componentWillUnmount() {
-    console.log('COMPONENTTI epäpäivitttyi')
-  }
 
   async componentDidMount() {
+    this.timer = setInterval(() => {
+      this._CountHistory()
+      console.log('_Counthistory on nyt ajettu')
+    }, 5000)
     this._getLocation()
     const places = require('../assets/Places.json')
     this.setState({ allLocations: places })
