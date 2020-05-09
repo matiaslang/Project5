@@ -101,11 +101,27 @@ function Qrcamera(props) {
       setHasPermission(status === 'granted')
     })()
   }, [])
+  
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true)
     handleChange(true)
     storePlace( data );
+  }
+  const renderCamera = ( ) =>{
+    const focused = props.nav.isFocused( )
+    if( focused ){
+      return ( 
+        <Camera
+        style= {{ flex : 8,  width : window.width/1.2, height: window.height/3 }}
+        onBarCodeScanned={( scanned && focused ) ? undefined : handleBarCodeScanned}
+        barCodeScannerSettings={{
+          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
+        }}
+      ></Camera>
+      )
+    }
+    return null;
   }
 
   if (hasPermission === undefined) {
@@ -119,13 +135,7 @@ function Qrcamera(props) {
     <View style={ styles.qrcontainer}>
       <View style={ styles.viewpaddingcamera}></View>
       <Text style= { {alignSelf:'center' } }>{ t( 'QRQUESTION', checkLanguage()  ) }</Text>
-      <Camera
-        style= {{ flex : 8,  width : window.width/1.2, height: window.height/3 }}
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        barCodeScannerSettings={{
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
-        }}
-      ></Camera>
+      { renderCamera( ) }
       <View style={ styles.viewpaddingcamera}></View>
     </View>
   )
@@ -187,6 +197,7 @@ function Inputfield(props) {
 */
 
 function ComponentRender(props) {
+  const focus = props.focus
   const qrscanned = props.qrscanned
   const handleChange = props.handleChange
   const storeInput = props.storeInput
@@ -195,7 +206,7 @@ function ComponentRender(props) {
   const checkLanguage = props.checkLanguage;
   if (qrscanned === false) {
     return( 
-      <Qrcamera key={ "qrcamera" }  handleChange={handleChange} storePlace={ storePlace } checkLanguage={checkLanguage} />
+      <Qrcamera key={ "qrcamera" } nav={props.nav} handleChange={handleChange} storePlace={ storePlace } checkLanguage={checkLanguage} />
     )
   }
   if (qrscanned === true) {
@@ -229,6 +240,7 @@ class QrScreen extends React.Component {
     super(props)
     this.state = {
       qrscanned: true,
+      sentence: " ",
       message: undefined,
       newPlace : '',
       passed : false,
@@ -242,16 +254,17 @@ class QrScreen extends React.Component {
     this.submitMessage = this.submitMessage.bind( this )
     this.storePlace = this.storePlace.bind( this )
     this.checkLanguage = this.checkLanguage.bind( this )
+    this.checkButtonSentence = this.checkButtonSentence.bind( this )
   }
   
   checkLanguage( ){
     //console.log( " state fi is " + this.state.fi + " typeof " + typeof( this.state.fi ) );
     //console.log( " is true " + this.state.fi == "true" )
-    if( this.state.fi == "true" ){
-      return false;
+    if( this.state.fi == "false" ){
+      return true;
     }
     else{
-      return true;
+      return false;
     }
   }
 
@@ -266,7 +279,7 @@ class QrScreen extends React.Component {
   storePlace( data ){
     this.state.checkQuestion = true;
     var parsedData = data.split( STORAGE_DELIMITER );
-    //console.log( "parsedData " + parsedData )
+    console.log( "parsedData " + parsedData )
     if( parsedData[0] == PASSPHRASE ){
       this.newPlace = parsedData[1]
       this.passed = true;
@@ -294,7 +307,9 @@ class QrScreen extends React.Component {
         }
         console.log( "paikka " + newData.place + " aika " + newData.time + " lause " + newData.phrase );
         if( localData == undefined ){
-          await AsyncStorage.setItem( STORAGE_KEY, JSON.stringify( newData ) );
+          var dataString = JSON.stringify( newData );
+          dataString.replace( '\n', '' )
+          await AsyncStorage.setItem( STORAGE_KEY, dataString );
         }
         else{
           
@@ -321,28 +336,41 @@ class QrScreen extends React.Component {
     this.submitMessage( );
     navigate('Home')
   }
-  
+  checkButtonSentence( ){
+    var inFinnish = this.state.fi
+    if( this.state.qrscanned == false ){
+      var newSentence = t( 'BUTTONBACK', "false" == inFinnish )
+    }
+    else{
+      var newSentence = t( 'BUTTONSAVE',  "false" == inFinnish)
+    }
+    if( newSentence != this.state.sentence ){
+      this.setState( { sentence : newSentence })
+    }
+  }
   componentDidMount( ){
     //AsyncStorage.clear( STORAGE_KEY );
-    this.setState( { fi : "true" } )
+    this.setState( { fi : "false" } )
     this.setState( { qrscanned : false } )
     this.setState( { message : undefined } )
     this.setState( { newPlace : '' } )
     this.setState( { passed : false } )
     //console.log( " mounted fi is " + this.state.fi )
-
-    this.interval = setInterval( ( ) => this.setState( { timer : Date.now( ) } ), 1000 );
+    
+    this.checkButtonSentence( );
+    this.interval = setInterval( ( ) => this.setState( { timer : Date.now( ) } ), 100 );
   }
 
   componentDidUpdate() {
-    //console.log( "updated " )
+    console.log( "updated " )
     AsyncStorage.getItem('fi').then((fiValue) => {
-    //  console.log( "update fi is " + this.state.fi + "  fiValue is " + fiValue )
       if( this.state.fi != fiValue ){
-    //    console.log( "update fi is " + this.state.fi + "  fiValue is " + fiValue )
+        console.log( "update fi is " + this.state.fi + "  fiValue is " + fiValue )
         this.setState({ fi: fiValue })
+
       }
     })
+    this.checkButtonSentence( );
   }
   componentWillUnmount( ){
     clearInterval( this.interval );
@@ -353,18 +381,17 @@ class QrScreen extends React.Component {
       return (
       <KeyboardAvoidingView style={styles.Avoidcontainer}> 
         <ComponentRender
-          storePlace = {this.storePlace}
+          nav={this.props.navigation}
+          storePlace={this.storePlace}
           qrscanned={this.state.qrscanned}
           handleChange={this.handleChange}
           storeInput={this.storeInput}
           checkLanguage={this.checkLanguage}
         ></ComponentRender>
         <TouchableOpacity style={styles.box} onPress={this.onPress}>
-          <Image
-            source={ require( filePath ) }
-            style={styles.boxImage}>
-          </Image>
-            
+          <Text style={styles.boxImage}>
+             {this.state.sentence }
+          </Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     )
