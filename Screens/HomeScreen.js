@@ -229,7 +229,6 @@ class HomeScreen extends React.Component {
   async componentDidMount() {
     this.timer = setInterval(() => {
       this._CountHistory()
-      console.log('_Counthistory on nyt ajettu')
     }, 5000)
     this._getLocation()
     const places = require('../assets/Places.json')
