@@ -247,11 +247,11 @@ class QrScreen extends React.Component {
   checkLanguage( ){
     //console.log( " state fi is " + this.state.fi + " typeof " + typeof( this.state.fi ) );
     //console.log( " is true " + this.state.fi == "true" )
-    if( this.state.fi == "false" ){
-      return true;
+    if( this.state.fi == "true" ){
+      return false;
     }
     else{
-      return false;
+      return true;
     }
   }
 
@@ -266,7 +266,7 @@ class QrScreen extends React.Component {
   storePlace( data ){
     this.state.checkQuestion = true;
     var parsedData = data.split( STORAGE_DELIMITER );
-    console.log( "parsedData " + parsedData )
+    //console.log( "parsedData " + parsedData )
     if( parsedData[0] == PASSPHRASE ){
       this.newPlace = parsedData[1]
       this.passed = true;
@@ -324,17 +324,25 @@ class QrScreen extends React.Component {
   
   componentDidMount( ){
     //AsyncStorage.clear( STORAGE_KEY );
-    this.setState( { fi : "false" } )
+    this.setState( { fi : "true" } )
     this.setState( { qrscanned : false } )
     this.setState( { message : undefined } )
     this.setState( { newPlace : '' } )
     this.setState( { passed : false } )
-    console.log( " mounted fi is " + this.state.fi )
+    //console.log( " mounted fi is " + this.state.fi )
+
     this.interval = setInterval( ( ) => this.setState( { timer : Date.now( ) } ), 1000 );
   }
 
   componentDidUpdate() {
-    this.setState( { fi : this.state.props.fi })
+    //console.log( "updated " )
+    AsyncStorage.getItem('fi').then((fiValue) => {
+    //  console.log( "update fi is " + this.state.fi + "  fiValue is " + fiValue )
+      if( this.state.fi != fiValue ){
+    //    console.log( "update fi is " + this.state.fi + "  fiValue is " + fiValue )
+        this.setState({ fi: fiValue })
+      }
+    })
   }
   componentWillUnmount( ){
     clearInterval( this.interval );
