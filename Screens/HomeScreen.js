@@ -198,7 +198,6 @@ class HomeScreen extends React.Component {
     var data = this.state.visitedPlaces
     var luk = data.split('place').length - 1
     this.setState({ visitedCount: luk })
-
     data = data.split('}')
     data = data.map((m) => (m = m.substring(1)))
     data = data.map((d) => d.split(','))
@@ -218,7 +217,15 @@ class HomeScreen extends React.Component {
   }
 
   async componentDidUpdate() {
-    //console.log('UPDATE')
+    console.log('COMPONENTTI PÄIVITTYI')
+    var visitedPlaces = await AsyncStorage.getItem('Key')
+    if (this.state.visitedPlaces !== visitedPlaces) {
+      this.setState({ visitedPlaces: visitedPlaces })
+      this._CountHistory()
+    }
+  }
+  async componentWillUnmount() {
+    console.log('COMPONENTTI epäpäivitttyi')
   }
 
   async componentDidMount() {
@@ -233,7 +240,7 @@ class HomeScreen extends React.Component {
       console.log(e)
     }
     try {
-      var visitedPlaces = await AsyncStorage.getItem('key')
+      var visitedPlaces = await AsyncStorage.getItem('Key')
       this.setState({ visitedPlaces: visitedPlaces })
       this._CountHistory()
     } catch (e) {

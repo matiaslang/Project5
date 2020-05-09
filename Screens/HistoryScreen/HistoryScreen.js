@@ -48,7 +48,7 @@ export default class HistoryScreen extends Component {
   }
 
   async componentDidMount() {
-    //console.log(this.props)
+    this.setState({ visitedPlaces: this.state.visitedPlaces.reverse() })
   }
 
   render() {
@@ -88,13 +88,12 @@ export default class HistoryScreen extends Component {
             </View>
           </View>
           <FlatList
-            key={this.state.visitedPlaces[0]}
             style={{ flex: 1 }}
             data={this.state.visitedPlaces}
             renderItem={({ item, index }) => (
               <ListItem key={index} place={item[0]} date={item[1]} />
             )}
-            keyExtractor={(item) => item.key}
+            keyExtractor={(item, index) => 'key' + index}
           />
         </View>
       </View>
