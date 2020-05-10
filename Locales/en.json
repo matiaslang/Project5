@@ -11,7 +11,7 @@
   "MAPINFOTEXT": "Here we have a map that includes multiple markers, where you can go and practice your Finnish. All these places have a QR-code which you can scan and save your visit.",
   "MAPMARKERINFOTEXT": "This icon shows the place where you can go and practice your Finnish.",
   "QRQUESTION" : "Scan QR code",
-  "INPUTQUESTION" : "What Did you Say?",
+  "INPUTQUESTION" : "What did you Say?",
   "BUTTONBACK" : "Go back",
   "BUTTONSAVE" : "Save"
 }

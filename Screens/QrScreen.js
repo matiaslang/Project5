@@ -46,54 +46,47 @@ import { Textinput, ScrollView } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
 
-// for render control
-import ReactDom from 'react-dom'
-
 //For translations
 import { t } from '../Locales'
-import { AuthSession } from 'expo'
-import { setConfigurationAsync } from 'expo/build/AR'
 
 
 // for asyncstorage
+/* Constants for qrcode reading and dealing with data.
+   STORAGE_KEY       : is key for sentence data.
+   STORAGE_DELIMITER : separates QR-code data into password and place.  Assumes that data is formated password DELIMITER place
+   PASSPHRASE        : Used for checking if QR-code read is for this application. 
+*/
 const STORAGE_KEY = 'Key'
 const STORAGE_DELIMITER = ':'
 const PASSPHRASE = 'YouShallPass'
 const filePath = '../assets/Ikonit/QR/Home-01.png'
 
 
-/* funktio Qrcamera Qr koodi lukemiseen
+/* Function for reading QrCode, responsible for camera. uses t imported from locales. 
   Decsription:
       for reading qr code
-      TODO decide qr code format.
+
   variables:
-      storePlace : function.
-      handleChange : callback function from QrScreen and passed by Componentrender, updates Qrscreen qrsscanned state
-      hasPermission : tracks phone permission for app 
+      setQrState       : callback function from QrScreen and passed by Componentrender, updates Qrscreen qrsscanned state.
+      hasPermission    : tracks phone permission for app 
       setHasPermission : hook for hasPermission
-      scanned :  tracks if qr value has been read.
-      setScanner : hook for scanned
-      window : get 
-      storePlace : function. 
-      storePlace : function. 
-      
-      handleChange : callback function from QrScreen and passed by Componentrender, updates Qrscreen qrsscanned state
-      
-
-
-  hooks:
-      useEffect : waits for permission from. Uses BarCodeScanner library
-      handleBarCodeScanned : changes state scanned and handleChange.
-      handleChange : 
-
+      scanned          : tracks if qr value has been read.
+      setScanner       : setter for scanned
+      window           : dimensions for component
+      checkLanguage    : getter for fi variable from QrScreen
+      storePlace       : responsible for storing data from QR-code. Check QrScreen for further detail.
+      renderCamera     : check if camera is focussed.
+  function:
+      useEffect            : responsbile for checking permission update
+      handleBarCodeScanner : sets scanned true in this function and QrScreen passes data to storeplace function 
 */
 function Qrcamera(props) {
-  const storePlace = props.storePlace
-  const handleChange = props.handleChange
-  const [hasPermission, setHasPermission] = useState(undefined)
-  const [scanned, setScanned] = useState(false)
+  const setQrState = props.setQrState;
+  const [hasPermission, setHasPermission] = useState(undefined);
+  const [scanned, setScanned] = useState(false);
   var checkLanguage = props.checkLanguage;
-  const window = Dimensions.get( 'window' )
+  const window = Dimensions.get( 'window' );
+  const storePlace = props.storePlace;
 
   useEffect(() => {
     ;(async () => {
@@ -105,9 +98,15 @@ function Qrcamera(props) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true)
-    handleChange(true)
+    setQrState(true)
     storePlace( data );
   }
+
+  /* renderCamera  constant function.  Uses handleBarCodeScanner function, scanned variable and navigation( nav ) prop.
+     Parameters : no parameters
+     Decsription: Responsible for making sure that camera is alive when Screen is in use. Uses nav from ComponentRender and
+                  QrScreen, for some reason this only works like this. 
+   */
   const renderCamera = ( ) =>{
     const focused = props.nav.isFocused( )
     if( focused ){
@@ -131,6 +130,8 @@ function Qrcamera(props) {
     return <Text> Permission not granted. </Text>
   }
   
+  /* t impored from en.json and fi.json. Used for choocing correct language. Uses checkLanguage.
+  */
   return (
     <View style={ styles.qrcontainer}>
       <View style={ styles.viewpaddingcamera}></View>
@@ -141,20 +142,16 @@ function Qrcamera(props) {
   )
 }
 
-/* function inputfield 
+/* function inputfield
    Description: 
-      renders text input field. 
+      renders text input field. import t from locales.
    variables: 
-        value : input value
-        onChangeText : handler not defined explicitly
-        storeInput : hook function from QrScreen
-        text : written text. Isn't equal to value in inputfield. 
-        textQuestion = defines text about inputfield
-    return:
-           ScrollViews : allow shutting keyboard
-           returnKeyType, onKeyPress : dismisses keyboard on enter press, works in IOS.
-
-    
+        value         : input value
+        onChangeText  : handler not defined explicitly
+        storeInput    : hook function from QrScreen, responsible for saving input text.
+        text          : written text. Isn't equal to value in inputfield.
+        checkLanguage : returns true or false based on language choice. Received from QrScreen.
+        
 */
 function Inputfield(props) {
   const [value, onChangeText] = useState(undefined)
@@ -186,52 +183,66 @@ function Inputfield(props) {
         Responsible choosing component that is rendered.
         Return Qrcamera or Inputfield function. if neither returns text
   variables:
-        qrsscanned       : QrScreen state that tracks status of qrscanner. Used to pick right component to be rended.
-        handleChange     : handler function for tracking status, defined in and passed from QrScreen, further passed to Qrcamera function.
+        qrsscanned       : QrScreen state that tracks status of qrscanner. Used to pick right component for render.
+        setQrState       : handler function for tracking status, defined in and passed from QrScreen, further passed to Qrcamera function.
         storeInput       : Function for inputfield. Check inputfield function This function only passes hook functions down.
-        screenText       : Function for inputfield. Check inputfield function. This function only passes hook functions down.
         storePlace       : Function for qrcamera. Check qrcamera function. This function only passes hook functions down.
-        inputQuestion    : Fucntion for inputfield. Check inputfield function. This function only passes variable down
-        qrQeustion       : Text to be handed down to qrcamera function. Definied in QrScreen, based on language choice.
-  setText : Solves in which language text is shown. 
 */
 
 function ComponentRender(props) {
-  const focus = props.focus
   const qrscanned = props.qrscanned
-  const handleChange = props.handleChange
+  const setQrState = props.setQrState
   const storeInput = props.storeInput
-  const screenText = props.text;
   const storePlace = props.storePlace
   const checkLanguage = props.checkLanguage;
+
   if (qrscanned === false) {
     return( 
-      <Qrcamera key={ "qrcamera" } nav={props.nav} handleChange={handleChange} storePlace={ storePlace } checkLanguage={checkLanguage} />
+      <Qrcamera key={ "qrcamera" } nav={props.nav} setQrState={setQrState} storePlace={ storePlace } checkLanguage={checkLanguage} />
     )
   }
   if (qrscanned === true) {
     return( 
-      <Inputfield key={ "inputfield" } storeInput={storeInput} qrscanned={ qrscanned } text={screenText} checkLanguage={checkLanguage}  />
+      <Inputfield key={ "inputfield" } storeInput={storeInput} checkLanguage={checkLanguage}  />
     )
   }
   return <Text> No bueno qrscanned is null </Text>
 }
 /*
   QrScreen
-   Description:
-          Defines screens functions 
-   Variables:
-       qrsscanned : tracks status of qrcamera. Passed down to qrcamera function.
-       message : Tracks content of Inputfield. Passed down to inputfield function.
-       newPlace : Used to save place name.
-       passed : Tracks if qr code is valid
-       textQuestion : check inputfield. Defines text above for inputfield.
+   Description: 
+       Screen responsible for reading qrcode and writing what was said.
 
-    handleChange : callback function for Componentrender handlesChange changes value of qrsscanned
-    storeInput : callback function for saving text from Inputfieeld  to message variable. 
-    onPress : callback function for button "Return home page".   
-    submitMessage : async function. stores time, place and message to asyncstorage
-    storePlace :  stores a place to variable.
+   Variables:
+       qrsscanned   : tracks status of qrcamera. Passed down to qrcamera function. Used in SetQrState
+       buttonInfo   : what words are used for buttons. Gets values by t( NAME, fi state ). Used in checkButtonSentence
+       fi           : what langugage is being used currently. Currently "false" = finnish  "true" = english. Used in CheckButtonSentence 
+                                                                                                             and ComponentDidUpdate
+       message      : Written input.  Passed down to inputfield function. 
+       newPlace     : Used to save place name. Used in storePlace, submitMessage, compontentDidMount
+       passed       : Tracks if qr code is valid. Submitmessage. 
+
+       interval     : defined in componentDidMount and componentDidUpdate, responsible for starting Screen update.
+
+    Functions:
+      setQrState          : callback function for Componentrender,  changes value of qrsscanned
+      storeInput          : callback function for saving text from Inputfieeld  to message variable. 
+      onPress             : callback function for button "Return home page".   
+      submitMessage       : async function. stores time, place and message to asyncstorage
+      storePlace          : stores a place to variable.
+      checkLanguage       : returns true if fi variable is "false" otherwise "true"
+      checkButtonSentence : function for setting buttonInfo variable.
+
+      componentDidMount   : setVariables and timer
+      componentDidUpdate  : checks for changes in language, set new timer. 
+      componentWillUnmount: destroys timer.
+
+  Possible improvement:
+        Centralization of updating: currently this screen uses timer for initlization updating, 
+                                    otherwise update would happen when user presses return button which is too late for 
+                                    user. Info for user and button text( buttonInfo ) needs to be in correct language immediately.
+                                    Currently screen uses timer for updating itself, this would'nt be needed if update in HomeScreen
+                                    propagated to this screen. Update could be initiaed when use moves to this screen.
        
 */
 
@@ -240,23 +251,28 @@ class QrScreen extends React.Component {
     super(props)
     this.state = {
       qrscanned: true,
-      sentence: " ",
+      buttonInfo: " ",
       message: undefined,
       newPlace : '',
       passed : false,
       fi : "false",
-      checkQuestion : false,
-      checked : false,
+      filePath : ''
     }
-    this.handleChange = this.handleChange.bind(this)
+    this.setQrState = this.setQrState.bind(this)
     this.storeInput = this.storeInput.bind(this)
     this.onPress = this.onPress.bind(this)
     this.submitMessage = this.submitMessage.bind( this )
     this.storePlace = this.storePlace.bind( this )
     this.checkLanguage = this.checkLanguage.bind( this )
-    this.checkButtonSentence = this.checkButtonSentence.bind( this )
+    this.checkButton = this.checkButton.bind( this )
   }
   
+  /* Function checkLanguage. 
+    Description:
+      Checks what language is currently selected 
+    return:
+        returns true if fi variable is "false" otherwise return false 
+  */
   checkLanguage( ){
     //console.log( " state fi is " + this.state.fi + " typeof " + typeof( this.state.fi ) );
     //console.log( " is true " + this.state.fi == "true" )
@@ -268,16 +284,24 @@ class QrScreen extends React.Component {
     }
   }
 
-  handleChange(is_scanned) {
+  /* Function setQrState. set qrscanned variable. Used in QrCamera function. 
+     param: is_scanned 
+
+  */
+  setQrState( is_scanned ) {
     this.setState({ qrscanned: is_scanned })
   }
 
-  storeInput(text) {
+  /* Function storeInput. Used in Inputfield function
+  */
+  storeInput( text ) {
     this.message = text
   }
 
+  /* Function storePlace
+     param: data location name, used in QrCamera function.  
+  */
   storePlace( data ){
-    this.state.checkQuestion = true;
     var parsedData = data.split( STORAGE_DELIMITER );
     console.log( "parsedData " + parsedData )
     if( parsedData[0] == PASSPHRASE ){
@@ -289,23 +313,29 @@ class QrScreen extends React.Component {
     }
   }
 
+  /* Function submitMessage. 
+     Defines current data, loads previous data and appends it with new data. Saves data. 
+     Require qrcode having password.
+     
+  */ 
   async submitMessage( ){
     if( this.passed === true ){
       try{
-        console.log( "You shall pass")
+        //console.log( "You shall pass")
         var day = new Date().getDate( );
         var year = new Date().getFullYear( );
         var month = new Date().getMonth( );
         var hour = new Date().getHours( );
         var minute = new Date( ).getMinutes( );
         var date = day + "." + month + "." + year + " " + hour + "." + minute;
+
         let localData = await AsyncStorage.getItem( STORAGE_KEY )
         let newData = {
           place : this.newPlace,
           time : date,
           phrase : this.message
         }
-        console.log( "paikka " + newData.place + " aika " + newData.time + " lause " + newData.phrase );
+        //console.log( "paikka " + newData.place + " aika " + newData.time + " lause " + newData.phrase );
         if( localData == undefined ){
           var dataString = JSON.stringify( newData );
           dataString.replace( '\n', '' )
@@ -327,27 +357,46 @@ class QrScreen extends React.Component {
     }
   }
 
-  // Saves message and leaves Screen.
+  // Saves message and leaves Screen. Used by button
   onPress( ) {
     this.setState( { message : ''})
     this.setState( { qrscanned : false})
-    this.setState( { checked : false} )
     const { navigate } = this.props.navigation
     this.submitMessage( );
     navigate('Home')
   }
-  checkButtonSentence( ){
-    var inFinnish = this.state.fi
-    if( this.state.qrscanned == false ){
-      var newSentence = t( 'BUTTONBACK', "false" == inFinnish )
+
+
+  /* Function checkButtonSentence. Insprect and if required set buttonInfo variable. Uses locale( t ). 
+  */
+  checkButton( ){
+    var newPath = '';
+    if( this.state.qrscanned == true && this.state.fi == 'true'){
+       newPath = '../assets/Ikonit/QR/Painike_takaisin-01.png'
     }
-    else{
-      var newSentence = t( 'BUTTONSAVE',  "false" == inFinnish)
+    else if ( this.state.qrscanned == false && this.state.fi == 'false' ){
+       newPath = '../assets/Ikonit/QR/Painike_Back-01.png'
     }
-    if( newSentence != this.state.sentence ){
-      this.setState( { sentence : newSentence })
+    else if ( this.state.qrscanned == true && this.state.fi == 'false'){
+       newPath = '../assets/Ikonit/QR/Painike_save-01.png'
     }
+    else if ( this.state.qrscanned == false && this.state.fi == 'true'){
+      newPath = '../assets/Ikonit/QR/Painike_tallenna-01.png'
+    }
+    if( this.state.filePath != newPath ){
+      this.setState( { filePath : newPath } )
+    }
+    return newPath;
   }
+
+
+  /* Function componentDidMount 
+     Description: 
+          sets state variables and timer.
+          checkButtonSentence checks what text should be selected for buttonInfo variable.
+          Timer is currently set for 100 microseconds, 1/10 of a second. This was required for focusing camera,
+          moving to other screen from this screen by lower navigation bar leads to blank screen in Qrcamera.
+  */
   componentDidMount( ){
     //AsyncStorage.clear( STORAGE_KEY );
     this.setState( { fi : "false" } )
@@ -357,26 +406,48 @@ class QrScreen extends React.Component {
     this.setState( { passed : false } )
     //console.log( " mounted fi is " + this.state.fi )
     
-    this.checkButtonSentence( );
+    this.checkButton( );
     this.interval = setInterval( ( ) => this.setState( { timer : Date.now( ) } ), 100 );
   }
 
+  /* Function componentDidUpdate
+     Description: 
+          Updates fi value and  buttonInfo( by  checkButtonSentence )
+  */
   componentDidUpdate() {
-    console.log( "updated " )
+    //console.log( "updated " )
     AsyncStorage.getItem('fi').then((fiValue) => {
       if( this.state.fi != fiValue ){
-        console.log( "update fi is " + this.state.fi + "  fiValue is " + fiValue )
+        //console.log( "update fi is " + this.state.fi + "  fiValue is " + fiValue )
         this.setState({ fi: fiValue })
 
       }
     })
-    this.checkButtonSentence( );
+    this.checkButton( );
   }
+
+  /* Function componentWillUnMount
+     Description:
+         Ensures that timer is destroyed.
+   */
   componentWillUnmount( ){
     clearInterval( this.interval );
   }
 
   render() {
+    var path;
+    if( this.state.qrscanned == false && this.state.fi == 'false'){
+      path = require ('../assets/Ikonit/QR/Painike_takaisin-01.png' )
+    }
+    else if ( this.state.qrscanned == false && this.state.fi == 'true' ){
+      path = require ( '../assets/Ikonit/QR/Painike_Back-01.png' )
+    }
+    else if ( this.state.qrscanned == true && this.state.fi == 'true'){
+      path = require ( '../assets/Ikonit/QR/Painike_save-01.png' )
+    }
+    else if ( this.state.qrscanned == true && this.state.fi == 'false'){
+      path = require ( '../assets/Ikonit/QR/Painike_tallenna-01.png' )
+    }
     try{
       return (
       <KeyboardAvoidingView style={styles.Avoidcontainer}> 
@@ -384,14 +455,16 @@ class QrScreen extends React.Component {
           nav={this.props.navigation}
           storePlace={this.storePlace}
           qrscanned={this.state.qrscanned}
-          handleChange={this.handleChange}
+          setQrState={this.setQrState}
           storeInput={this.storeInput}
           checkLanguage={this.checkLanguage}
         ></ComponentRender>
-        <TouchableOpacity style={styles.box} onPress={this.onPress}>
-          <Text style={styles.boxImage}>
-             {this.state.sentence }
-          </Text>
+        <TouchableOpacity style={styles.actionBox} onPress={this.onPress}>
+          <Image
+            source={ path }
+            style={styles.actionButton}
+            >
+          </Image>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     )
@@ -489,26 +562,22 @@ const styles = StyleSheet.create({
     backgroundColor : '#ff0000',
   },
 
-  button : {
-    flex : 10,
-    flexDirection : 'column',
-    alignSelf : 'center',
-  },
   // return Home opacity
-  box: {
+  actionBox: {
     color: '#D4DDE6',
-    height: hp('11%'),
-    width: wp( '20%'),
+    height: hp('10%'),
+    width: wp( '40%'),
     borderColor: '#D4DDE6',
     borderWidth: 2,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent : 'center',
   },
   // return Home image
-  boxImage: {
-      width: wp('20%' ),
-      height: hp('11%' ),
-      justifyContent : 'flex-end',
-      alignSelf : 'flex-end'
+  actionButton: {
+    
+    width: wp('40%' ),
+    height: hp('10%' ),
+    alignSelf : 'center'
   },
 
   placesNearby: {
