@@ -215,14 +215,15 @@ function ComponentRender(props) {
 
    Variables:
        qrsscanned   : tracks status of qrcamera. Passed down to qrcamera function. Used in SetQrState
-       buttonInfo   : what words are used for buttons. Gets values by t( NAME, fi state ). Used in checkButtonSentence
        fi           : what langugage is being used currently. Currently "false" = finnish  "true" = english. Used in CheckButtonSentence 
                                                                                                              and ComponentDidUpdate
        message      : Written input.  Passed down to inputfield function. 
        newPlace     : Used to save place name. Used in storePlace, submitMessage, compontentDidMount
        passed       : Tracks if qr code is valid. Submitmessage. 
 
-       interval     : defined in componentDidMount and componentDidUpdate, responsible for starting Screen update.
+    Important variables:
+       interval     : Timer defined in componentDidMount and componentDidUpdate, responsible for starting Screen update.
+       filePath     : require( path ) defined in render. 
 
     Functions:
       setQrState          : callback function for Componentrender,  changes value of qrsscanned
@@ -231,7 +232,6 @@ function ComponentRender(props) {
       submitMessage       : async function. stores time, place and message to asyncstorage
       storePlace          : stores a place to variable.
       checkLanguage       : returns true if fi variable is "false" otherwise "true"
-      checkButtonSentence : function for setting buttonInfo variable.
 
       componentDidMount   : setVariables and timer
       componentDidUpdate  : checks for changes in language, set new timer. 
@@ -251,12 +251,9 @@ class QrScreen extends React.Component {
     super(props)
     this.state = {
       qrscanned: true,
-      buttonInfo: " ",
       message: undefined,
       newPlace : '',
-      passed : false,
       fi : "false",
-      filePath : ''
     }
     this.setQrState = this.setQrState.bind(this)
     this.storeInput = this.storeInput.bind(this)
@@ -264,7 +261,6 @@ class QrScreen extends React.Component {
     this.submitMessage = this.submitMessage.bind( this )
     this.storePlace = this.storePlace.bind( this )
     this.checkLanguage = this.checkLanguage.bind( this )
-    this.checkButton = this.checkButton.bind( this )
   }
   
   /* Function checkLanguage. 
@@ -299,7 +295,8 @@ class QrScreen extends React.Component {
   }
 
   /* Function storePlace
-     param: data location name, used in QrCamera function.  
+     Decsription: checks if location data is valid.
+      
   */
   storePlace( data ){
     var parsedData = data.split( STORAGE_DELIMITER );
@@ -314,7 +311,7 @@ class QrScreen extends React.Component {
   }
 
   /* Function submitMessage. 
-     Defines current data, loads previous data and appends it with new data. Saves data. 
+     Defines current data ( newData variable in function), loads previous data and appends it with new data. Saves data. 
      Require qrcode having password.
      
   */ 
@@ -357,7 +354,12 @@ class QrScreen extends React.Component {
     }
   }
 
-  // Saves message and leaves Screen. Used by button
+  /* Function onPress 
+    Description:
+        Responsible for reseting QrScreen and saving message until navigating to Home Screen
+        Used by button( touchable opacity ) in render. 
+
+     */
   onPress( ) {
     this.setState( { message : ''})
     this.setState( { qrscanned : false})
@@ -365,30 +367,6 @@ class QrScreen extends React.Component {
     this.submitMessage( );
     navigate('Home')
   }
-
-
-  /* Function checkButtonSentence. Insprect and if required set buttonInfo variable. Uses locale( t ). 
-  */
-  checkButton( ){
-    var newPath = '';
-    if( this.state.qrscanned == true && this.state.fi == 'true'){
-       newPath = '../assets/Ikonit/QR/Painike_takaisin-01.png'
-    }
-    else if ( this.state.qrscanned == false && this.state.fi == 'false' ){
-       newPath = '../assets/Ikonit/QR/Painike_Back-01.png'
-    }
-    else if ( this.state.qrscanned == true && this.state.fi == 'false'){
-       newPath = '../assets/Ikonit/QR/Painike_save-01.png'
-    }
-    else if ( this.state.qrscanned == false && this.state.fi == 'true'){
-      newPath = '../assets/Ikonit/QR/Painike_tallenna-01.png'
-    }
-    if( this.state.filePath != newPath ){
-      this.setState( { filePath : newPath } )
-    }
-    return newPath;
-  }
-
 
   /* Function componentDidMount 
      Description: 
@@ -403,10 +381,8 @@ class QrScreen extends React.Component {
     this.setState( { qrscanned : false } )
     this.setState( { message : undefined } )
     this.setState( { newPlace : '' } )
-    this.setState( { passed : false } )
     //console.log( " mounted fi is " + this.state.fi )
     
-    this.checkButton( );
     this.interval = setInterval( ( ) => this.setState( { timer : Date.now( ) } ), 100 );
   }
 
@@ -423,7 +399,6 @@ class QrScreen extends React.Component {
 
       }
     })
-    this.checkButton( );
   }
 
   /* Function componentWillUnMount
@@ -435,18 +410,18 @@ class QrScreen extends React.Component {
   }
 
   render() {
-    var path;
+    var filePath;
     if( this.state.qrscanned == false && this.state.fi == 'false'){
-      path = require ('../assets/Ikonit/QR/Painike_takaisin-01.png' )
+      filePath = require ('../assets/Ikonit/QR/Painike_takaisin-01.png' )
     }
     else if ( this.state.qrscanned == false && this.state.fi == 'true' ){
-      path = require ( '../assets/Ikonit/QR/Painike_Back-01.png' )
+      filePath = require ( '../assets/Ikonit/QR/Painike_Back-01.png' )
     }
     else if ( this.state.qrscanned == true && this.state.fi == 'true'){
-      path = require ( '../assets/Ikonit/QR/Painike_save-01.png' )
+      filePath = require ( '../assets/Ikonit/QR/Painike_save-01.png' )
     }
     else if ( this.state.qrscanned == true && this.state.fi == 'false'){
-      path = require ( '../assets/Ikonit/QR/Painike_tallenna-01.png' )
+      filePath = require ( '../assets/Ikonit/QR/Painike_tallenna-01.png' )
     }
     try{
       return (
@@ -461,7 +436,7 @@ class QrScreen extends React.Component {
         ></ComponentRender>
         <TouchableOpacity style={styles.actionBox} onPress={this.onPress}>
           <Image
-            source={ path }
+            source={ filePath }
             style={styles.actionButton}
             >
           </Image>
