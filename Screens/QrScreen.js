@@ -52,14 +52,13 @@ import { t } from '../Locales'
 
 // for asyncstorage
 /* Constants for qrcode reading and dealing with data.
-   STORAGE_KEY       : is key for sentence data.
-   STORAGE_DELIMITER : separates QR-code data into password and place.  Assumes that data is formated password DELIMITER place
+   STORAGE_KEY       : is asyncstorage key for data.
+   STORAGE_DELIMITER : separates QR-code data into password and place.  Assumes that data is formated PASSPHRASE DELIMITER place
    PASSPHRASE        : Used for checking if QR-code read is for this application. 
 */
 const STORAGE_KEY = 'Key'
 const STORAGE_DELIMITER = ':'
 const PASSPHRASE = 'YouShallPass'
-const filePath = '../assets/Ikonit/QR/Home-01.png'
 
 
 /* Function for reading QrCode, responsible for camera. uses t imported from locales. 
@@ -130,7 +129,7 @@ function Qrcamera(props) {
     return <Text> Permission not granted. </Text>
   }
   
-  /* t impored from en.json and fi.json. Used for choocing correct language. Uses checkLanguage.
+  /* t impored from locales. For picking right pharese en.json and fi.json for choocing correct language. Uses checkLanguage.
   */
   return (
     <View style={ styles.qrcontainer}>
@@ -181,7 +180,7 @@ function Inputfield(props) {
 /* Componentrender
   Description:
         Responsible choosing component that is rendered.
-        Return Qrcamera or Inputfield function. if neither returns text
+        Returns Qrcamera or Inputfield function. if neither returns <Text> 
   variables:
         qrsscanned       : QrScreen state that tracks status of qrscanner. Used to pick right component for render.
         setQrState       : handler function for tracking status, defined in and passed from QrScreen, further passed to Qrcamera function.
@@ -218,12 +217,13 @@ function ComponentRender(props) {
        fi           : what langugage is being used currently. Currently "false" = finnish  "true" = english. Used in CheckButtonSentence 
                                                                                                              and ComponentDidUpdate
        message      : Written input.  Passed down to inputfield function. 
-       newPlace     : Used to save place name. Used in storePlace, submitMessage, compontentDidMount
-       passed       : Tracks if qr code is valid. Submitmessage. 
+       
 
-    Important variables:
+    Non-state variables:
+       passed       : Tracks if qr code is valid. Used in submitMessage and storePlace functions.  
        interval     : Timer defined in componentDidMount and componentDidUpdate, responsible for starting Screen update.
        filePath     : require( path ) defined in render. 
+       newPlace     : Used to save place name. Used in storePlace, submitMessage, compontentDidMount
 
     Functions:
       setQrState          : callback function for Componentrender,  changes value of qrsscanned
@@ -252,7 +252,6 @@ class QrScreen extends React.Component {
     this.state = {
       qrscanned: true,
       message: undefined,
-      newPlace : '',
       fi : "false",
     }
     this.setQrState = this.setQrState.bind(this)
@@ -265,7 +264,7 @@ class QrScreen extends React.Component {
   
   /* Function checkLanguage. 
     Description:
-      Checks what language is currently selected 
+      Returns boolean based on what language is currently selected in the app( HomeScreen )
     return:
         returns true if fi variable is "false" otherwise return false 
   */
@@ -295,7 +294,8 @@ class QrScreen extends React.Component {
   }
 
   /* Function storePlace
-     Decsription: checks if location data is valid.
+     Decsription: checks if location data is valid. Expected data format is PASSPHRASE STORAGE_DELIMITER PLACE
+                  Defines this.newPlace variable as PLACE or parsedData[1]
       
   */
   storePlace( data ){
@@ -311,9 +311,13 @@ class QrScreen extends React.Component {
   }
 
   /* Function submitMessage. 
-     Defines current data ( newData variable in function), loads previous data and appends it with new data. Saves data. 
-     Require qrcode having password.
-     
+     Description: Defines current data ( newData variable in function), loads previous data and appends it with new data.
+                  If QR code is valid, function definies data variable based on day.month.year hour.minute format.
+                  New data is create with newData variable. In case of there not being local data 
+
+     Variables:
+          this.passed
+          
   */ 
   async submitMessage( ){
     if( this.passed === true ){
@@ -339,11 +343,12 @@ class QrScreen extends React.Component {
           await AsyncStorage.setItem( STORAGE_KEY, dataString );
         }
         else{
-          
-          await AsyncStorage.setItem( STORAGE_KEY, localData += JSON.stringify( newData ));
+          var dataString = JSON.stringify( newData );
+          dataString.replace( '\n', '' )
+          await AsyncStorage.setItem( STORAGE_KEY, localData += dataString );
         }
-        const curData = await AsyncStorage.getItem( STORAGE_KEY )
-        console.log( "Data on \n " + curData );
+        //const curData = await AsyncStorage.getItem( STORAGE_KEY )
+        //console.log( "Data on \n " + curData );
       }
       catch( error ){
         console.log( "Error in submitmessage asyncget " + error.message)
@@ -356,7 +361,7 @@ class QrScreen extends React.Component {
 
   /* Function onPress 
     Description:
-        Responsible for reseting QrScreen and saving message until navigating to Home Screen
+        Responsible for reseting QrScreen and saving message to asyncstorage until moving (navigate) to Home Screen.
         Used by button( touchable opacity ) in render. 
 
      */
@@ -380,7 +385,6 @@ class QrScreen extends React.Component {
     this.setState( { fi : "false" } )
     this.setState( { qrscanned : false } )
     this.setState( { message : undefined } )
-    this.setState( { newPlace : '' } )
     //console.log( " mounted fi is " + this.state.fi )
     
     this.interval = setInterval( ( ) => this.setState( { timer : Date.now( ) } ), 100 );
